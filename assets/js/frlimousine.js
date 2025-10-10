@@ -4,6 +4,382 @@
  * Interactions essentielles pour un site haut de gamme
  */
 
+// ============================================
+//    FONCTIONS GLOBALES (ACCESSIBLES DEPUIS HTML)
+// ============================================
+
+// ============================================
+//    VALIDATION DU FORMULAIRE DE RÉSERVATION
+// ============================================
+
+function validateReservation(event) {
+    event.preventDefault();
+
+    // Récupération des données du formulaire
+    const formData = new FormData(event.target);
+    const reservationData = {
+        nom: formData.get('nom'),
+        telephone: formData.get('telephone'),
+        email: formData.get('email'),
+        service: formData.get('service'),
+        vehicule: formData.get('vehicule'),
+        passagers: formData.get('passagers'),
+        date: formData.get('date'),
+        heureDebut: formData.get('heure-debut'),
+        heureFin: formData.get('heure-fin'),
+        duree: formData.get('duree'),
+        lieuDepart: formData.get('lieu-depart'),
+        lieuArrivee: formData.get('lieu-arrivee'),
+        options: formData.getAll('options[]'),
+        message: formData.get('message')
+    };
+
+    // Validation des champs requis
+    if (!reservationData.nom || !reservationData.telephone || !reservationData.email ||
+        !reservationData.vehicule || !reservationData.passagers || !reservationData.date ||
+        !reservationData.heureDebut || !reservationData.duree || !reservationData.lieuDepart ||
+        !reservationData.lieuArrivee) {
+
+        alert('Veuillez remplir tous les champs obligatoires.');
+        return false;
+    }
+
+    // Validation du nombre de passagers selon le véhicule
+    const maxPassagers = getMaxPassagers(reservationData.vehicule);
+    if (parseInt(reservationData.passagers) > maxPassagers) {
+        alert(`Ce véhicule ne peut pas accueillir plus de ${maxPassagers} passagers.`);
+        return false;
+    }
+
+    // Envoi de l'email
+    sendReservationEmail(reservationData);
+
+    return false; // Empêche la soumission normale du formulaire
+}
+
+function getMaxPassagers(vehicule) {
+    const maxPassagers = {
+        'mercedes-s': 4,
+        'lincoln': 10,
+        'hummer': 20
+    };
+    return maxPassagers[vehicule] || 4;
+}
+
+// ============================================
+//    ENVOI D'EMAIL AVEC EMAILJS
+// ============================================
+
+function sendReservationEmail(data) {
+    // Préparation des données pour le template EmailJS
+    const templateParams = {
+        // Destinataire
+        to_email: 'proayoubfarkh@gmail.com',
+
+        // Informations du client
+        from_name: data.nom,
+        client_name: data.nom,
+        client_email: data.email,
+        client_phone: data.telephone,
+        client_service: getServiceName(data.service),
+
+        // Détails de réservation
+        vehicule_name: getVehiculeName(data.vehicule),
+        vehicule_passagers: data.passagers,
+        reservation_date: formatDate(data.date),
+        start_time: data.heureDebut,
+        end_time: data.heureFin,
+        duration: data.duree + ' heures',
+        departure_location: data.lieuDepart,
+        arrival_location: data.lieuArrivee,
+
+        // Prix et options
+        base_price: (VEHICULE_PRICES[data.vehicule] * parseInt(data.duree)) + '€',
+        options_price: data.options.length > 0 ?
+            data.options.reduce((total, option) => total + OPTIONS_PRICES[option], 0) + '€' : '0€',
+        total_price: calculatePriceForEmail(data) + '€',
+        options_list: data.options.length > 0 ?
+            data.options.map(opt => '• ' + getOptionName(opt)).join('\n') : 'Aucune option',
+
+        // Message complémentaire
+        client_message: data.message || 'Aucun message complémentaire',
+
+        // Métadonnées
+        submission_date: new Date().toLocaleString('fr-FR')
+    };
+
+    // Affichage du loader
+    const submitBtn = document.querySelector('.submit-btn');
+    const originalText = submitBtn.innerHTML;
+    submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Envoi en cours...';
+    submitBtn.disabled = true;
+
+    // Envoi de l'email via EmailJS
+    emailjs.send(
+        EMAILJS_CONFIG.SERVICE_ID,
+        EMAILJS_CONFIG.TEMPLATE_ID,
+        templateParams,
+        EMAILJS_CONFIG.PUBLIC_KEY
+    )
+    .then((response) => {
+        console.log('✅ Email envoyé avec succès!', response.status, response.text);
+
+        // Remettre le bouton à l'état normal
+        submitBtn.innerHTML = '<i class="fas fa-check"></i> Réservation confirmée !';
+        submitBtn.style.background = '#28a745';
+
+        // Afficher le message de confirmation
+        showConfirmationMessage();
+
+        // Générer le PDF
+        generatePDF(data);
+
+        // Reset après 4 secondes
+        setTimeout(() => {
+            submitBtn.innerHTML = originalText;
+            submitBtn.disabled = false;
+            submitBtn.style.background = '';
+        }, 4000);
+
+    })
+    .catch((error) => {
+        console.error('❌ Erreur lors de l\'envoi:', error);
+
+        // Remettre le bouton à l'état normal
+        submitBtn.innerHTML = originalText;
+        submitBtn.disabled = false;
+
+        // Afficher l'erreur
+        alert('❌ Erreur lors de l\'envoi de l\'email.\n\nVeuillez nous contacter directement :\n📞 06 12 94 05 40\n📧 proayoubfarkh@gmail.com');
+    });
+}
+
+// ============================================
+//    FONCTIONS UTILITAIRES GLOBALES
+// ============================================
+
+function getServiceName(code) {
+    const services = {
+        'mariage': 'Mariage',
+        'evenement-pro': 'Événement d\'entreprise',
+        'transfert-aeroport': 'Transfert aéroport',
+        'soiree-privee': 'Soirée privée',
+        'autre': 'Autre'
+    };
+    return services[code] || code;
+}
+
+function getOptionName(code) {
+    const options = {
+        'decoration-florale': 'Décoration florale (+50€)',
+        'boissons': 'Pack boissons (+30€)',
+        'musique': 'Système audio premium (+25€)',
+        'chauffeur-costume': 'Chauffeur en costume (+20€)'
+    };
+    return options[code] || code;
+}
+
+function formatDate(dateString) {
+    const date = new Date(dateString);
+    return date.toLocaleDateString('fr-FR', {
+        weekday: 'long',
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric'
+    });
+}
+
+function calculatePriceForEmail(data) {
+    const prixVehicule = VEHICULE_PRICES[data.vehicule] * parseInt(data.duree);
+    const prixOptions = data.options.reduce((total, option) => total + OPTIONS_PRICES[option], 0);
+    return prixVehicule + prixOptions;
+}
+
+function generatePDF(data) {
+    const pdfContent = `
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Devis FRLimousine</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .header { text-align: center; margin-bottom: 30px; }
+        .logo { font-size: 24px; font-weight: bold; color: #d42121; }
+        .details { margin: 20px 0; }
+        .total { font-size: 18px; font-weight: bold; margin-top: 20px; }
+        table { width: 100%; border-collapse: collapse; }
+        td { padding: 8px; border-bottom: 1px solid #ddd; }
+        .label { font-weight: bold; }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="logo">FRLimousine</div>
+        <h2>Devis de Réservation</h2>
+        <p>Date: ${formatDate(data.date)}</p>
+    </div>
+
+    <div class="details">
+        <h3>Informations Client</h3>
+        <p><strong>Nom:</strong> ${data.nom}</p>
+        <p><strong>Téléphone:</strong> ${data.telephone}</p>
+        <p><strong>Email:</strong> ${data.email}</p>
+        <p><strong>Service:</strong> ${getServiceName(data.service)}</p>
+    </div>
+
+    <div class="details">
+        <h3>Détails de Réservation</h3>
+        <table>
+            <tr><td class="label">Véhicule:</td><td>${getVehiculeName(data.vehicule)}</td></tr>
+            <tr><td class="label">Passagers:</td><td>${data.passagers}</td></tr>
+            <tr><td class="label">Date:</td><td>${formatDate(data.date)}</td></tr>
+            <tr><td class="label">Heure début:</td><td>${data.heureDebut}</td></tr>
+            <tr><td class="label">Heure fin:</td><td>${data.heureFin}</td></tr>
+            <tr><td class="label">Durée:</td><td>${data.duree} heures</td></tr>
+            <tr><td class="label">Départ:</td><td>${data.lieuDepart}</td></tr>
+            <tr><td class="label">Arrivée:</td><td>${data.lieuArrivee}</td></tr>
+            ${data.options.length > 0 ? `<tr><td class="label">Options:</td><td>${data.options.map(opt => getOptionName(opt)).join(', ')}</td></tr>` : ''}
+        </table>
+    </div>
+
+    <div class="total">
+        <p><strong>Total: ${calculatePriceForEmail(data)}€</strong></p>
+        <p style="font-size: 12px; color: #666;">* Tarifs indicatifs. Devis personnalisé sur demande.</p>
+        <p style="font-size: 12px; color: #666;">* Minimum de facturation : 2 heures.</p>
+    </div>
+</body>
+</html>
+    `;
+
+    // Ouverture du PDF dans une nouvelle fenêtre (pour impression)
+    const pdfWindow = window.open('', '_blank');
+    pdfWindow.document.write(pdfContent);
+    pdfWindow.document.close();
+    pdfWindow.print();
+}
+
+function showConfirmationMessage() {
+    document.getElementById('confirmation-message').style.display = 'block';
+
+    // Scroll vers le message de confirmation
+    document.getElementById('confirmation-message').scrollIntoView({
+        behavior: 'smooth',
+        block: 'center'
+    });
+
+    // Masquer le message après 10 secondes
+    setTimeout(() => {
+        document.getElementById('confirmation-message').style.display = 'none';
+    }, 10000);
+}
+
+function calculatePrice() {
+    const vehicule = document.getElementById('vehicule-select').value;
+    const duree = parseInt(document.getElementById('duree-select').value);
+    const options = document.querySelectorAll('input[name="options[]"]:checked');
+
+    if (!vehicule || !duree) {
+        document.getElementById('price-calculation').style.display = 'none';
+        return;
+    }
+
+    // Calcul du prix du véhicule
+    const prixVehicule = VEHICULE_PRICES[vehicule] * duree;
+
+    // Calcul du prix des options
+    let prixOptions = 0;
+    options.forEach(option => {
+        prixOptions += OPTIONS_PRICES[option.value];
+    });
+
+    const prixTotal = prixVehicule + prixOptions;
+
+    // Mise à jour de l'affichage
+    document.getElementById('selected-vehicule').textContent = getVehiculeName(vehicule);
+    document.getElementById('vehicule-price').textContent = prixVehicule + '€';
+    document.getElementById('selected-duree').textContent = duree;
+    document.getElementById('duree-price').textContent = prixVehicule + '€';
+
+    if (prixOptions > 0) {
+        document.getElementById('options-price-row').style.display = 'flex';
+        document.getElementById('options-price').textContent = prixOptions + '€';
+    } else {
+        document.getElementById('options-price-row').style.display = 'none';
+    }
+
+    document.getElementById('total-price').innerHTML = '<strong>' + prixTotal + '€</strong>';
+
+    // Afficher le récapitulatif
+    document.getElementById('price-calculation').style.display = 'block';
+}
+
+function getVehiculeName(code) {
+    const names = {
+        'mercedes-s': 'Mercedes Classe S',
+        'lincoln': 'Limousine Lincoln',
+        'hummer': 'Limousine Hummer'
+    };
+    return names[code] || 'Non sélectionné';
+}
+
+function calculateEndTime() {
+    const startTimeInput = document.getElementById('heure-debut-input');
+    const dureeSelect = document.getElementById('duree-select');
+    const endTimeInput = document.getElementById('heure-fin-input');
+
+    if (!startTimeInput.value || !dureeSelect.value) {
+        endTimeInput.value = '';
+        return;
+    }
+
+    const startTime = new Date('2000-01-01T' + startTimeInput.value);
+    const duree = parseInt(dureeSelect.value);
+
+    startTime.setHours(startTime.getHours() + duree);
+    const endTime = startTime.toTimeString().slice(0, 5);
+
+    endTimeInput.value = endTime;
+}
+
+function validatePassagers() {
+    const vehicule = document.getElementById('vehicule-select').value;
+    const passagersInput = document.getElementById('passagers-input');
+
+    if (vehicule && passagersInput.value) {
+        const maxPassagers = getMaxPassagers(vehicule);
+        if (parseInt(passagersInput.value) > maxPassagers) {
+            alert(`Ce véhicule ne peut pas accueillir plus de ${maxPassagers} passagers.`);
+            passagersInput.value = maxPassagers;
+        }
+    }
+}
+
+// ============================================
+//    CONFIGURATION EMAILJS
+// ============================================
+
+// ⚠️ NE PAS MODIFIER CES VALEURS - Vos vraies clés EmailJS
+const EMAILJS_CONFIG = {
+    SERVICE_ID: 'service_tckekpc',        // Votre Service ID
+    TEMPLATE_ID: 'template_y3w1ubf',      // Votre Template ID ✅
+    PUBLIC_KEY: 'jQk6uZum97YcxU7p-'       // Votre Public Key ✅
+};
+
+/* Tarifs des véhicules (basés sur le site existant) */
+const VEHICULE_PRICES = {
+    'mercedes-s': 80,  // €/heure
+    'lincoln': 120,    // €/heure
+    'hummer': 150      // €/heure
+};
+
+const OPTIONS_PRICES = {
+    'decoration-florale': 50,
+    'boissons': 30,
+    'musique': 25,
+    'chauffeur-costume': 20
+};
+
 // Attendre que le DOM soit chargé
 document.addEventListener('DOMContentLoaded', function() {
 
