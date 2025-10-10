@@ -810,42 +810,50 @@ document.addEventListener('DOMContentLoaded', function() {
 
     function sendReservationEmail(data) {
         // Préparation des données pour le template EmailJS FRLimousine
-        // ⚠️ Template spécifique aux réservations de limousines
+        // ⚠️ Variables doivent correspondre EXACTEMENT à votre template
         const templateParams = {
             // Destinataire
             to_email: 'proayoubfarkh@gmail.com',
     
-            // Informations du client
-            client_nom: data.nom,
-            client_telephone: data.telephone,
+            // Informations du client (variables qui fonctionnent)
             client_email: data.email,
             client_service: getServiceName(data.service),
-    
-            // Détails de réservation
-            vehicule_nom: getVehiculeName(data.vehicule),
             vehicule_passagers: data.passagers,
             reservation_date: formatDate(data.date),
-            heure_debut: data.heureDebut,
-            heure_fin: data.heureFin,
-            duree_reservation: data.duree + ' heures',
     
-            // Lieux
-            lieu_depart: data.lieuDepart,
-            lieu_arrivee: data.lieuArrivee,
+            // Nouvelles variables avec les bons noms pour votre template
+            user_os: 'Windows 10.0',
+            user_platform: 'Microsoft Windows',
+            user_browser: 'Chrome',
+            user_country: 'France',
+            user_ip: '2b0f737346da3cd1b6585f25f213a087',
+            user_referrer: 'https://ayoub-informatique.netlify.app',
+            from_name: data.nom,
+            client_name: data.nom,
+            client_phone: data.telephone,
+    
+            // Détails de réservation
+            vehicule_name: getVehiculeName(data.vehicule),
+            start_time: data.heureDebut,
+            end_time: data.heureFin,
+            duration: data.duree + ' heures',
+            departure_location: data.lieuDepart,
+            arrival_location: data.lieuArrivee,
     
             // Prix et options
-            prix_base: (VEHICULE_PRICES[data.vehicule] * parseInt(data.duree)) + '€',
-            prix_options: data.options.length > 0 ?
+            base_price: (VEHICULE_PRICES[data.vehicule] * parseInt(data.duree)) + '€',
+            options_price: data.options.length > 0 ?
                 data.options.reduce((total, option) => total + OPTIONS_PRICES[option], 0) + '€' : '0€',
-            prix_total: calculatePriceForEmail(data) + '€',
-            liste_options: data.options.length > 0 ?
+            total_price: calculatePriceForEmail(data) + '€',
+            options_list: data.options.length > 0 ?
                 data.options.map(opt => '• ' + getOptionName(opt)).join('\n') : 'Aucune option',
     
             // Message complémentaire
-            message_client: data.message || 'Aucun message complémentaire',
+            client_message: data.message || 'Aucun message complémentaire',
+            message: data.message || 'Aucun message complémentaire',
     
             // Métadonnées
-            date_envoi: new Date().toLocaleString('fr-FR')
+            submission_date: new Date().toLocaleString('fr-FR')
         };
 
         // Affichage du loader
