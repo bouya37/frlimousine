@@ -24,8 +24,6 @@
 
 **Développement Web & Solutions Digitales**
 
-[![Logo IT](https://ayoub-informatique.netlify.app/logo.png)](https://ayoub-informatique.netlify.app)
-
 *Expert en création de sites web professionnels et applications modernes*
 
 </div>
