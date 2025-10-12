@@ -434,8 +434,113 @@ input, select, textarea {
 .vehicle-specs {
 	display: flex;
 	gap: 1rem;
-	margin-bottom: 1.5rem;
+	margin-bottom: 2rem;
 	flex-wrap: wrap;
+}
+
+/* Galerie photos des véhicules */
+.vehicle-gallery {
+	margin-bottom: 2rem;
+}
+
+.gallery-grid {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+	gap: 0.5rem;
+	margin-top: 1rem;
+}
+
+.gallery-grid img {
+	width: 100%;
+	height: 100px;
+	object-fit: cover;
+	border-radius: 8px;
+	transition: transform 0.3s ease;
+	cursor: pointer;
+	border: 2px solid rgba(255, 255, 255, 0.1);
+}
+
+.gallery-grid img:hover {
+	transform: scale(1.05);
+	border-color: rgba(255, 255, 255, 0.3);
+}
+
+/* Boutons d'action des véhicules */
+.vehicle-actions {
+	display: flex;
+	gap: 1rem;
+	justify-content: center;
+	flex-wrap: wrap;
+	margin-top: 1.5rem;
+}
+
+.discover-btn {
+	background: linear-gradient(135deg, #2c2c2c, #000000);
+	color: white;
+	border: 2px solid rgba(255, 255, 255, 0.2);
+	padding: 0.8rem 1.5rem;
+	border-radius: 25px;
+	font-size: 0.9rem;
+	font-weight: 600;
+	cursor: pointer;
+	transition: all 0.3s ease;
+	display: flex;
+	align-items: center;
+	gap: 0.5rem;
+	text-transform: none;
+	min-width: 160px;
+	justify-content: center;
+}
+
+.discover-btn:hover {
+	background: linear-gradient(135deg, #000000, #2c2c2c);
+	border-color: rgba(255, 255, 255, 0.4);
+	transform: translateY(-2px);
+	box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+}
+
+.discover-btn i {
+	font-size: 1rem;
+}
+
+/* Responsive pour les nouvelles fonctionnalités */
+@media screen and (max-width: 768px) {
+	.gallery-grid {
+		grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+		gap: 0.3rem;
+	}
+
+	.gallery-grid img {
+		height: 80px;
+	}
+
+	.vehicle-actions {
+		flex-direction: column;
+		gap: 0.8rem;
+	}
+
+	.discover-btn {
+		min-width: 200px;
+		padding: 0.7rem 1rem;
+		font-size: 0.85rem;
+	}
+}
+
+@media screen and (max-width: 480px) {
+	.gallery-grid {
+		grid-template-columns: repeat(2, 1fr);
+		gap: 0.3rem;
+	}
+
+	.gallery-grid img {
+		height: 70px;
+	}
+
+	.discover-btn {
+		min-width: 180px;
+		padding: 0.6rem 0.8rem;
+		font-size: 0.8rem;
+	}
 }
 
 .spec-item {

@@ -1353,5 +1353,47 @@ document.addEventListener('DOMContentLoaded', function() {
         option.addEventListener('change', calculatePrice);
     });
 
+    // ============================================
+    // FONCTION POUR LES BOUTONS "EN DÉCOUVRIR PLUS"
+    // ============================================
+
+    window.discoverVehicle = function(vehicleType) {
+        // Animation de scroll vers la section contact
+        document.getElementById('contact').scrollIntoView({
+            behavior: 'smooth',
+            block: 'start'
+        });
+
+        // Pré-remplir le formulaire selon le véhicule
+        setTimeout(() => {
+            const vehiculeSelect = document.getElementById('vehicule-select');
+            const passagersInput = document.getElementById('passagers-input');
+
+            if (vehiculeSelect && passagersInput) {
+                // Sélectionner le véhicule selon le type
+                switch(vehicleType) {
+                    case 'hummer':
+                        vehiculeSelect.value = 'hummer';
+                        passagersInput.value = '15'; // Valeur par défaut pour Hummer
+                        break;
+                    case 'lincoln':
+                        vehiculeSelect.value = 'lincoln';
+                        passagersInput.value = '8'; // Valeur par défaut pour Lincoln
+                        break;
+                    case 'mercedes':
+                        vehiculeSelect.value = 'mercedes-s';
+                        passagersInput.value = '3'; // Valeur par défaut pour Mercedes
+                        break;
+                }
+
+                // Recalculer le prix
+                calculatePrice();
+
+                // Mettre le focus sur le formulaire
+                vehiculeSelect.focus();
+            }
+        }, 800); // Délai pour laisser le temps du scroll
+    };
+
     console.log('🚀 FRLimousine website loaded - Élégant & Professionnel');
 });
