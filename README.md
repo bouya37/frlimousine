@@ -1,33 +1,33 @@
-# FR Limousine
+# Projet Limousine - Ayoub Informatique
 
-**Location de Limousines de Luxe à Paris depuis 2001**
+**Site web de location de limousines développé par Ayoub Informatique**
 
-Site web professionnel pour FRLimousine, entreprise française leader dans la location de limousines de luxe et le transport privé haut de gamme à Paris et en Île-de-France.
+## À propos du développeur
 
-## À propos de l'entreprise
+**Ayoub Informatique** - Service informatique professionnel spécialisé dans le développement web et la création de sites internet sur mesure.
 
-FRLimousine est une entreprise française spécialisée dans la **location de limousines de luxe** et le **transport privé haut de gamme** à Paris et en Île-de-France. Depuis notre création en **2001**, nous nous engageons à offrir à notre clientèle un service d'excellence, alliant **raffinement**, **confort** et **professionnalisme**.
+- **Email** : proayoubfarkh@gmail.com
+- **Site web** : [ayoub-informatique.netlify.app](https://ayoub-informatique.netlify.app)
+- **Spécialités** : Développement web, création de sites vitrine, applications web
 
-Notre flotte de véhicules d'exception, entretenue avec le plus grand soin, répond aux exigences les plus élevées de notre clientèle. Que ce soit pour un **mariage prestigieux**, un **événement d'entreprise**, un **transfert aéroport** ou une **soirée privée**, nous mettons tout en œuvre pour faire de chaque déplacement un moment inoubliable.
+## Description du projet
 
-## Services proposés
+Site web professionnel pour une entreprise de location de limousines de luxe, incluant :
 
-- **Location de Limousines pour Mariage** - Rendez votre journée de mariage inoubliable avec nos limousines d'exception
-- **Événements d'Entreprise** - Renforcez l'image de votre entreprise avec nos services de transport VIP
-- **Transferts Aéroport & Gare** - Service de transfert premium vers tous les aéroports et gares de Paris
-- **Soirées & Événements Privés** - Transformez vos soirées privées en moments d'exception
+- **Page d'accueil** - Présentation des services et flotte de véhicules
+- **Galerie photos** - Vitrine des limousines disponibles
+- **Configuration serveur** - Scripts d'optimisation et sécurité
+- **Gestion PDF** - Système de réception et traitement des documents
+- **Monitoring** - Outils de surveillance du site
 
-## Flotte de véhicules
+## Fonctionnalités
 
-- **Limousine Hummer** (jusqu'à 20 passagers) - 150€/heure
-- **Limousine Lincoln** (jusqu'à 10 passagers) - 120€/heure
-- **Mercedes Classe S** (jusqu'à 4 passagers) - 80€/heure
-
-## Informations de contact
-
-- **Téléphone** : 06 12 94 05 40 (24h/24 - 7j/7)
-- **Email** : contact@transvoyage.fr (réponse sous 2 heures)
-- **Zone d'intervention** : Paris & Île-de-France, Toute la France sur devis
+- Interface responsive et moderne
+- Galerie photos optimisée
+- Configuration automatique serveur OVH
+- Optimisation des performances
+- Sécurité renforcée
+- Gestion documentaire PDF
 
 ## Technologies utilisées
 
@@ -96,10 +96,9 @@ Notre flotte de véhicules d'exception, entretenue avec le plus grand soin, rép
 
 ## Support et Contact
 
-Pour toute demande de réservation, devis ou information :
+Pour toute question concernant le développement de ce site ou pour vos projets informatiques :
 
-- **Téléphone** : 06 12 94 05 40 (24h/24 - 7j/7)
-- **Email** : contact@transvoyage.fr (réponse sous 2 heures)
-- **Site web** : www.frlimousine.com
+- **Email** : proayoubfarkh@gmail.com
+- **Site web** : [ayoub-informatique.netlify.app](https://ayoub-informatique.netlify.app)
 
-Nous intervenons principalement à Paris et en Île-de-France, avec possibilité d'intervention dans toute la France sur devis personnalisé.
+**Ayoub Informatique** - Votre partenaire pour tous vos projets web et informatiques.
