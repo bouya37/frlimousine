@@ -31,11 +31,11 @@ Site web professionnel pour une entreprise de location de limousines de luxe, in
 
 ## Technologies utilisées
 
-- **Frontend** : HTML5, CSS3, JavaScript, jQuery
-- **Backend** : PHP 7+
+- **Frontend** : HTML5, CSS3, JavaScript (Vanilla)
+- **Backend** : PHP
 - **Serveur** : Apache avec configuration optimisée
-- **Sécurité** : Headers de sécurité, protection CSRF
-- **Performance** : Compression, cache, optimisation images
+- **Sécurité** : Headers de sécurité, protection CSRF intégrée
+- **Performance** : Code optimisé, images optimisées
 
 ## Structure du projet
 
@@ -43,34 +43,37 @@ Site web professionnel pour une entreprise de location de limousines de luxe, in
 ├── index.html              # Page d'accueil
 ├── galerie.html           # Galerie photos
 ├── .htaccess              # Configuration serveur
-├── monitor.php            # Surveillance du site
-├── security.php           # Configuration sécurité
-├── performance-config.php # Optimisation performances
-├── optimize-images.php    # Optimisation des images
-├── receive-pdf.php        # Gestion des PDFs
+├── main.js                # JavaScript principal unifié
+├── receive-pdf.php        # Gestion des réservations et PDFs
 ├── README.md              # Documentation
 ├── assets/                # Ressources frontend
 │   ├── css/              # Feuilles de styles
-│   ├── js/               # Scripts JavaScript
-│   ├── images/           # Images du site
-│   └── webfonts/         # Polices d'écriture
+│   │   ├── main_clean.css
+│   │   ├── galerie.css
+│   │   └── noscript.css
+│   └── images/           # Images du site (SVG)
+│       ├── arrow.svg
+│       ├── bars.svg
+│       └── close.svg
 ├── images/               # Images des véhicules
-└── pdfs/                 # Documents PDF
+│   ├── Excalibur PS/     # Photos Excalibur
+│   ├── Mustang Bleue PS/ # Photos Mustang Bleue
+│   ├── Mustang Rouge PS/ # Photos Mustang Rouge
+│   └── Viano PS/         # Photos Mercedes Viano
+└── pdfs/                 # Documents PDF et sécurité
 ```
-## Scripts disponibles
+## Fonctionnalités principales
 
-- `monitor.php` - Surveillance de l'état du site
-- `security.php` - Configuration des headers de sécurité
-- `performance-config.php` - Optimisation des performances
-- `optimize-images.php` - Traitement et optimisation des images
-- `receive-pdf.php` - Réception et gestion des documents PDF
+- `main.js` - JavaScript unifié pour toutes les interactions
+- `receive-pdf.php` - Traitement des réservations et génération PDF
+- `.htaccess` - Configuration serveur et sécurité
 
 ## Sécurité
 
-- Headers de sécurité avancés
-- Protection contre les attaques XSS
+- Headers de sécurité avancés (.htaccess)
+- Protection CSRF intégrée dans receive-pdf.php
+- Validation et sanitisation des données
 - Configuration CORS sécurisée
-- Cache et compression automatique
 
 ## Support et Contact
 

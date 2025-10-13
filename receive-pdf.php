@@ -1,59 +1,167 @@
 <?php
 /**
  * receive-pdf.php - Script automatique pour recevoir les devis PDF FRLimousine
- * Sécurisé contre DDoS, injections et attaques - Optimisé pour OVH Cloud
+ * Version autonome et sécurisée.
  */
 
-// Inclure le système de sécurité
-require_once 'security.php';
-$security = initSecurity();
+// ===================================================================
+// SECTION 1 : CONFIGURATION ET SÉCURITÉ INTÉGRÉE
+// (Remplace security.php et performance-config.php)
+// ===================================================================
 
-// Configuration OVH Cloud
-$uploadDir = 'pdfs/';
-$emailNotification = 'contact@votre-domaine.ovh'; // À remplacer par votre email OVH
+// --- Configuration de performance ---
+ini_set('memory_limit', '128M');
+ini_set('max_execution_time', '30');
+ini_set('display_errors', '0'); // Ne jamais afficher les erreurs en production
+ini_set('log_errors', '1');
+date_default_timezone_set('Europe/Paris');
+
+// --- Headers de sécurité HTTP ---
+header('X-Content-Type-Options: nosniff');
+header('X-Frame-Options: DENY');
+header('X-XSS-Protection: 1; mode=block');
+header('Referrer-Policy: strict-origin-when-cross-origin');
+header('Content-Type: application/json; charset=UTF-8');
+
+// Classe de sécurité autonome
+class SecurityHelper {
+    private $logFile = 'pdfs/security.log';
+    private $rateLimitFileDir = 'pdfs/ratelimit/';
+    private $maxRequestsPerMinute;
+
+    public function __construct($config = null) {
+        global $config;
+        if (!is_dir($this->rateLimitFileDir)) {
+            mkdir($this->rateLimitFileDir, 0755, true);
+        }
+        if ($config && isset($config['security']['rate_limit'])) {
+            $this->maxRequestsPerMinute = $config['security']['rate_limit'];
+        }
+    }
+
+    public function log($message) {
+        $timestamp = date('Y-m-d H:i:s');
+        file_put_contents($this->logFile, "[$timestamp] $message\n", FILE_APPEND);
+    }
+
+    public function checkRateLimit($ip) {
+        $file = $this->rateLimitFileDir . md5($ip) . '.json';
+        $now = time();
+        $limitData = ['timestamp' => $now, 'count' => 1];
+
+        if (file_exists($file)) {
+            $data = json_decode(file_get_contents($file), true);
+            if ($data && ($now - $data['timestamp']) < 60) {
+                if ($data['count'] >= $this->maxRequestsPerMinute) {
+                    $this->log("RATE_LIMIT: IP $ip bloquée (trop de requêtes).");
+                    http_response_code(429); // Too Many Requests
+                    echo json_encode(['error' => 'Trop de requêtes.']);
+                    return false;
+                }
+                $limitData['count'] = $data['count'] + 1;
+            }
+        }
+        file_put_contents($file, json_encode($limitData));
+        return true;
+    }
+
+    public function sanitize($data) {
+        return htmlspecialchars(trim($data), ENT_QUOTES, 'UTF-8');
+    }
+
+    public function validateEmail($email) {
+        return filter_var($email, FILTER_VALIDATE_EMAIL);
+    }
+
+    public function validatePhone($phone) {
+        $cleanPhone = preg_replace('/[^0-9+]/', '', $phone);
+
+        // Validation des numéros français
+        $frenchPattern = '/^(?:\+|00)?33[1-9](?:[0-9]{2}){4}$|^0[1-9](?:[0-9]{2}){4}$/';
+
+        // Validation des numéros internationaux (format E.164)
+        $internationalPattern = '/^\+[1-9]\d{1,14}$/';
+
+        // Validation des numéros européens courants
+        $europeanPattern = '/^\+?[1-9]\d{1,3}?[1-9]\d{6,13}$/';
+
+        return preg_match($frenchPattern, $cleanPhone) ||
+               preg_match($internationalPattern, $cleanPhone) ||
+               preg_match($europeanPattern, $cleanPhone);
+    }
+
+    public function formatPhone($phone) {
+        $cleanPhone = preg_replace('/[^0-9+]/', '', $phone);
+
+        // Format français : 06 12 34 56 78
+        if (preg_match('/^0[1-9]([0-9]{2})([0-9]{2})([0-9]{2})$/', $cleanPhone, $matches)) {
+            return $matches[1] . ' ' . $matches[2] . ' ' . $matches[3] . ' ' . substr($matches[0], -2);
+        }
+
+        // Format international : +33 6 12 34 56 78
+        if (preg_match('/^\+33([1-9])([0-9]{2})([0-9]{2})([0-9]{2})$/', $cleanPhone, $matches)) {
+            return '+33 ' . $matches[1] . ' ' . $matches[2] . ' ' . $matches[3] . ' ' . substr($matches[0], -2);
+        }
+
+        // Retourner le numéro nettoyé si format non reconnu
+        return $cleanPhone;
+    }
+
+    public function detectAttack($input) {
+        $patterns = [
+            '/<script/i', '/javascript:/i', '/onclick=/i', '/onerror=/i', // XSS
+            '/SELECT.*FROM/i', '/UNION.*SELECT/i', '/--/i', // SQL Injection
+            '/\.\.\//', '/\.\.\\\//', // Path Traversal
+        ];
+        foreach ($patterns as $pattern) {
+            if (preg_match($pattern, $input)) {
+                $this->log("ATTACK_DETECTED: Pattern '$pattern' trouvé dans l'input.");
+                return true;
+            }
+        }
+        return false;
+    }
+}
+
+$security = new SecurityHelper($config);
+
+// ===================================================================
+// SECTION 2 : LOGIQUE PRINCIPALE DU SCRIPT
+// ===================================================================
+
+// --- Vérifications initiales ---
+$ip = $_SERVER['REMOTE_ADDR'];
+if (!$security->checkRateLimit($ip)) {
+    exit; // Le message d'erreur a déjà été envoyé par checkRateLimit
+}
+
+if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+    http_response_code(405); // Method Not Allowed
+    echo json_encode(['error' => 'Méthode non autorisée.']);
+    exit;
+}
+// Configuration sécurisée - Chargement depuis fichier externe
+$config = require_once 'config.php';
+$uploadDir = $config['upload']['directory'];
+$emailNotification = $config['email']['notification'];
 $logFile = 'pdfs/reception.log';
-$domainName = 'votre-domaine.ovh'; // À remplacer par votre nom de domaine OVH
+$domainName = $config['domain']['name'];
 
 // Créer le répertoire s'il n'existe pas avec gestion d'erreurs OVH
 if (!file_exists($uploadDir)) {
-    if (!mkdir($uploadDir, 0755, true)) {
-        writeLog("ERREUR: Impossible de créer le répertoire $uploadDir");
+    if (!@mkdir($uploadDir, 0755, true)) {
+        $security->log("ERREUR: Impossible de créer le répertoire $uploadDir");
         http_response_code(500);
         echo json_encode(['error' => 'Erreur création répertoire']);
         exit;
     }
-    writeLog("Répertoire $uploadDir créé avec succès");
-}
-
-// Fonction de logging
-function writeLog($message) {
-    global $logFile;
-    $timestamp = date('Y-m-d H:i:s');
-    file_put_contents($logFile, "[$timestamp] $message\n", FILE_APPEND);
-}
-
-// Vérifications de sécurité avancées
-$ip = $_SERVER['REMOTE_ADDR'];
-
-// Vérifier le rate limiting
-if (!$security->checkRateLimit($ip)) {
-    http_response_code(429);
-    echo json_encode(['error' => 'Trop de requêtes - Veuillez réessayer plus tard']);
-    exit;
-}
-
-// Détecter les bots malveillants
-if ($security->detectBot()) {
-    $security->logSecurityEvent("BOT_DETECTE", $ip, "User-Agent: " . ($_SERVER['HTTP_USER_AGENT'] ?? ''));
-    http_response_code(403);
-    echo json_encode(['error' => 'Accès refusé']);
-    exit;
+    $security->log("Répertoire $uploadDir créé avec succès");
 }
 
 // Récupérer les données JSON envoyées avec validation de taille
 $input = file_get_contents('php://input');
-if (strlen($input) > 1048576) { // 1MB max
-    writeLog("BLOCAGE: Payload trop volumineux");
+if (strlen($input) > $config['upload']['max_size']) {
+    $security->log("BLOCAGE: Payload trop volumineux de $ip");
     http_response_code(413);
     echo json_encode(['error' => 'Données trop volumineuses']);
     exit;
@@ -62,8 +170,8 @@ if (strlen($input) > 1048576) { // 1MB max
 $data = json_decode($input, true);
 
 // Validation stricte des données
-if (!$data || !isset($data['client']) || !is_array($data['client'])) {
-    writeLog("ERREUR: Structure JSON invalide reçue de $ip");
+if (json_last_error() !== JSON_ERROR_NONE || !isset($data['client']) || !is_array($data['client'])) {
+    $security->log("ERREUR: Structure JSON invalide reçue de $ip");
     http_response_code(400);
     echo json_encode(['error' => 'Structure des données invalide']);
     exit;
@@ -72,9 +180,8 @@ if (!$data || !isset($data['client']) || !is_array($data['client'])) {
 // Validation des champs obligatoires avec sécurité renforcée
 $requiredFields = ['nom', 'email', 'telephone', 'service', 'vehicule', 'passagers', 'date', 'duree', 'prix'];
 foreach ($requiredFields as $field) {
-    if (!isset($data['client'][$field]) || empty(trim($data['client'][$field]))) {
-        $security->logSecurityEvent("CHAMP_MANQUANT", $ip, "Champ: $field");
-        writeLog("ERREUR: Champ obligatoire manquant: $field");
+    if (empty($data['client'][$field])) {
+        $security->log("ERREUR: Champ obligatoire manquant: $field pour IP $ip");
         http_response_code(400);
         echo json_encode(['error' => "Champ obligatoire manquant: $field"]);
         exit;
@@ -82,52 +189,43 @@ foreach ($requiredFields as $field) {
 }
 
 // Validation et nettoyage des données avec fonctions de sécurité
-$data['client']['nom'] = $security->sanitizeInput($data['client']['nom']);
-$data['client']['email'] = $security->sanitizeInput($data['client']['email']);
-$data['client']['telephone'] = $security->sanitizeInput($data['client']['telephone']);
-$data['client']['service'] = $security->sanitizeInput($data['client']['service']);
-$data['client']['vehicule'] = $security->sanitizeInput($data['client']['vehicule']);
+$client = [];
+foreach ($data['client'] as $key => $value) {
+    if ($security->detectAttack($value)) {
+        $security->log("BLOCAGE: Tentative d'attaque détectée dans le champ '$key' pour IP $ip");
+        http_response_code(403);
+        echo json_encode(['error' => 'Données suspectes détectées.']);
+        exit;
+    }
+    $client[$key] = $security->sanitize($value);
+}
 
 // Validation email avancée
-if (!$security->validateEmail($data['client']['email'])) {
-    $security->logSecurityEvent("EMAIL_INVALIDE", $ip, "Email: " . $data['client']['email']);
-    writeLog("ERREUR: Format email invalide: " . $data['client']['email']);
+if (!$security->validateEmail($client['email'])) {
+    $security->log("ERREUR: Format email invalide: " . $client['email'] . " pour IP $ip");
     http_response_code(400);
     echo json_encode(['error' => 'Format email invalide']);
     exit;
 }
 
-// Validation du numéro de téléphone (format français)
-$cleanPhone = preg_replace('/[^0-9+\-\s()]/', '', $data['client']['telephone']);
-if (!preg_match('/^(?:(?:\+|00)33|0)\s*[1-9](?:[\s.-]*\d{2}){4}$/', $cleanPhone)) {
-    $security->logSecurityEvent("TELEPHONE_INVALIDE", $ip, "Tel: " . $data['client']['telephone']);
-    writeLog("ERREUR: Format téléphone invalide: " . $data['client']['telephone']);
+// Validation du numéro de téléphone (format international)
+if (!$security->validatePhone($client['telephone'])) {
+    $security->log("ERREUR: Format téléphone invalide: " . $client['telephone'] . " pour IP $ip");
     http_response_code(400);
-    echo json_encode(['error' => 'Format téléphone invalide']);
+    echo json_encode(['error' => 'Format téléphone invalide (français ou international)']);
     exit;
 }
-$data['client']['telephone'] = $cleanPhone;
 
-// Validation des autres champs pour détecter les attaques
-foreach ($data['client'] as $key => $value) {
-    if ($security->detectAttack($value)) {
-        $security->logSecurityEvent("ATTAQUE_DETECTEE", $ip, "Champ: $key, Valeur: " . substr($value, 0, 100));
-        writeLog("BLOCAGE: Tentative d'attaque détectée dans le champ: $key");
-        http_response_code(403);
-        echo json_encode(['error' => 'Données suspectes détectées']);
-        exit;
-    }
-}
+// Formater le numéro pour l'affichage
+$formattedPhone = $security->formatPhone($client['telephone']);
 
 // Nettoyer le nom de fichier
 $filename = preg_replace('/[^a-zA-Z0-9\-_\.]/', '_', $data['filename']);
 $filepath = $uploadDir . $filename;
 
 // Sauvegarder le contenu PDF
-if (file_put_contents($filepath, $data['content'])) {
-    writeLog("PDF sauvegardé: $filename");
-} else {
-    writeLog("ERREUR: Impossible de sauvegarder le PDF: $filename");
+if (!file_put_contents($filepath, $data['content'])) {
+    $security->log("ERREUR: Impossible de sauvegarder le PDF: $filename");
     http_response_code(500);
     echo json_encode(['error' => 'Erreur sauvegarde PDF']);
     exit;
@@ -135,22 +233,10 @@ if (file_put_contents($filepath, $data['content'])) {
 
 // Sauvegarder les informations client
 $infoFile = $uploadDir . str_replace('.html', '_info.json', $filename);
-file_put_contents($infoFile, json_encode($data['client'], JSON_PRETTY_PRINT));
-
-// Protection CSRF - Vérification du token
-$expectedToken = hash('sha256', $ip . $_SERVER['HTTP_USER_AGENT'] . date('Y-m-d-H'));
-$receivedToken = $_SERVER['HTTP_X_CSRF_TOKEN'] ?? '';
-
-if (empty($receivedToken) || !hash_equals($expectedToken, $receivedToken)) {
-    writeLog("BLOCAGE: Token CSRF invalide pour IP $ip");
-    http_response_code(403);
-    echo json_encode(['error' => 'Token de sécurité invalide']);
-    exit;
-}
+file_put_contents($infoFile, json_encode($client, JSON_PRETTY_PRINT));
 
 // Préparer l'email de notification
-$client = $data['client'];
-$subject = '🚗 Nouveau devis PDF - ' . htmlspecialchars($client['nom'], ENT_QUOTES, 'UTF-8');
+$subject = '🚗 Nouveau devis PDF - ' . $client['nom'];
 $message = "Bonjour FRLimousine,
 
 Un nouveau devis a été généré automatiquement sur votre site :
@@ -158,7 +244,7 @@ Un nouveau devis a été généré automatiquement sur votre site :
 📋 INFORMATIONS CLIENT
 Nom: {$client['nom']}
 Email: {$client['email']}
-Téléphone: {$client['telephone']}
+Téléphone: {$formattedPhone}
 
 🚗 DÉTAILS DE RÉSERVATION
 Service: {$client['service']}
@@ -177,21 +263,20 @@ Nom du fichier: $filename
 Cordialement,
 Système automatique FRLimousine";
 
-$headers = 'From: noreply@' . $domainName . "\r\n" .
+$headers = 'From: ' . $config['email']['from'] . "\r\n" .
            'Reply-To: ' . $client['email'] . "\r\n" .
            'X-Mailer: PHP/' . phpversion() . "\r\n" .
            'Content-Type: text/plain; charset=UTF-8' . "\r\n" .
-           'Return-Path: noreply@' . $domainName;
+           'Return-Path: ' . $config['email']['from'];
 
 // Envoyer l'email de notification
 if (mail($emailNotification, $subject, $message, $headers)) {
-    writeLog("Email de notification envoyé pour: " . $client['nom']);
+    $security->log("Email de notification envoyé pour: " . $client['nom']);
 } else {
-    writeLog("ATTENTION: Impossible d'envoyer l'email de notification");
+    $security->log("ATTENTION: Impossible d'envoyer l'email de notification pour " . $client['nom']);
 }
 
 // Réponse de succès
-http_response_code(200);
 echo json_encode([
     'success' => true,
     'message' => 'PDF reçu avec succès',
@@ -201,5 +286,5 @@ echo json_encode([
     'timestamp' => date('Y-m-d H:i:s')
 ]);
 
-writeLog("Devis traité avec succès pour: " . $client['nom']);
+$security->log("Devis traité avec succès pour: " . $client['nom'] . " (IP: $ip)");
 ?>

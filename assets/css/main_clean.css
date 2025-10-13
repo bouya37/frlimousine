@@ -1,4 +1,3 @@
-@import "fontawesome-all.min.css";
 
 /* Fichier nettoyé - conflits résolus avec frlimousine.css */
 
@@ -2153,7 +2152,7 @@ input[type="submit"].disabled, input[type="submit"]:disabled, input[type="reset"
 }
 
 #menu .close {
-	background-image: url(images/close.svg);
+	background-image: url(../images/close.svg);
 	background-position: 4.85em 1em;
 	background-repeat: no-repeat;
 	border: 0;
@@ -2263,7 +2262,7 @@ body.is-menu-visible #menu {
 }
 
 #header nav > ul > li > a.menuToggle:after {
-	background-image: url(images/bars.svg);
+	background-image: url(../images/bars.svg);
 	background-position: right center;
 	background-repeat: no-repeat;
 	content: '';
@@ -2409,7 +2408,7 @@ body.is-menu-visible #menu {
 }
 
 #banner .more:after {
-	background-image: url(images/arrow.svg);
+	background-image: url(../images/arrow.svg);
 	background-position: center;
 	background-repeat: no-repeat;
 	background-size: contain;

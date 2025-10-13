@@ -45,13 +45,7 @@
 
 	<!-- Préchargement des ressources critiques -->
 	<link rel="preload" href="assets/css/main_clean.css" as="style">
-	<link rel="preload" href="assets/js/jquery.min.js" as="script">
 
-	<!-- Optimisation des performances -->
-	<link rel="preconnect" href="https://fonts.googleapis.com">
-	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-	<link rel="dns-prefetch" href="//fonts.googleapis.com">
-	<link rel="dns-prefetch" href="//fonts.gstatic.com">
 
 	<!-- Meta pour optimiser le rendu -->
 	<meta name="format-detection" content="telephone=no">
@@ -59,7 +53,6 @@
 
 	<!-- Styles -->
 	<link rel="stylesheet" href="assets/css/main_clean.css" />
-	<link rel="stylesheet" href="assets/css/frlimousine.css">
 	<noscript><link rel="stylesheet" href="assets/css/noscript.css" /></noscript>
 
 	<!-- Styles d'accessibilité -->
@@ -477,17 +470,17 @@
 					</div>
 
 					<div class="slider-controls">
-						<button class="slider-btn prev" onclick="previousTestimonial()" aria-label="Témoignage précédent">
+						<button class="slider-btn prev" aria-label="Témoignage précédent">
 							<i class="fas fa-chevron-left"></i>
 							<span class="sr-only">Témoignage précédent</span>
 						</button>
 						<div class="slider-dots" role="tablist" aria-label="Navigation des témoignages">
-							<span class="dot active" onclick="goToTestimonial(0)" role="tab" aria-label="Témoignage 1" tabindex="0"></span>
-							<span class="dot" onclick="goToTestimonial(1)" role="tab" aria-label="Témoignage 2" tabindex="0"></span>
-							<span class="dot" onclick="goToTestimonial(2)" role="tab" aria-label="Témoignage 3" tabindex="0"></span>
-							<span class="dot" onclick="goToTestimonial(3)" role="tab" aria-label="Témoignage 4" tabindex="0"></span>
+							<span class="dot active" role="tab" aria-label="Témoignage 1" tabindex="0" data-index="0"></span>
+							<span class="dot" role="tab" aria-label="Témoignage 2" tabindex="0" data-index="1"></span>
+							<span class="dot" role="tab" aria-label="Témoignage 3" tabindex="0" data-index="2"></span>
+							<span class="dot" role="tab" aria-label="Témoignage 4" tabindex="0" data-index="3"></span>
 						</div>
-						<button class="slider-btn next" onclick="nextTestimonial()" aria-label="Témoignage suivant">
+						<button class="slider-btn next" aria-label="Témoignage suivant">
 							<i class="fas fa-chevron-right"></i>
 							<span class="sr-only">Témoignage suivant</span>
 						</button>
@@ -635,22 +628,22 @@
 						</div>
 
 						<div class="contact-form">
-							<form class="booking-form" onsubmit="return validateReservation(event)" role="form" aria-labelledby="contact-title">
+							<form class="booking-form" role="form" aria-labelledby="contact-title">
 								<!-- Informations personnelles -->
 								<div class="form-row">
 									<div class="form-group">
-										<label for="nom-input">Nom complet *</label>
+										<label for="nom-input">Nom complet <span class="required" aria-label="obligatoire">*</span></label>
 										<input type="text" name="nom" id="nom-input" required aria-required="true" aria-describedby="nom-help">
 									</div>
 									<div class="form-group">
-										<label for="telephone-input">Téléphone *</label>
+										<label for="telephone-input">Téléphone <span class="required" aria-label="obligatoire">*</span></label>
 										<input type="tel" name="telephone" id="telephone-input" required aria-required="true" aria-describedby="telephone-help">
 									</div>
 								</div>
 
 								<div class="form-row">
 									<div class="form-group">
-										<label for="email-input">Email *</label>
+										<label for="email-input">Email <span class="required" aria-label="obligatoire">*</span></label>
 										<input type="email" name="email" id="email-input" required aria-required="true" aria-describedby="email-help">
 									</div>
 									<div class="form-group">
@@ -669,7 +662,7 @@
 								<!-- Sélection du véhicule -->
 								<div class="form-row">
 									<div class="form-group">
-										<label for="vehicule-select">Véhicule souhaité *</label>
+										<label for="vehicule-select">Véhicule souhaité <span class="required" aria-label="obligatoire">*</span></label>
 										<select name="vehicule" id="vehicule-select" required aria-required="true" aria-describedby="vehicule-help">
 											<option value="">Choisissez un véhicule</option>
 											<option value="mustang-rouge">Mustang Rouge (4 passagers) - 90€/h</option>
@@ -679,7 +672,7 @@
 										</select>
 									</div>
 									<div class="form-group">
-										<label for="passagers-input">Nombre de passagers *</label>
+										<label for="passagers-input">Nombre de passagers <span class="required" aria-label="obligatoire">*</span></label>
 										<input type="number" name="passagers" id="passagers-input" min="1" max="20" required aria-required="true" aria-describedby="passagers-help">
 									</div>
 								</div>
@@ -687,18 +680,18 @@
 								<!-- Détails de la réservation -->
 								<div class="form-row">
 									<div class="form-group">
-										<label for="date-input">Date de réservation *</label>
+										<label for="date-input">Date de réservation <span class="required" aria-label="obligatoire">*</span></label>
 										<input type="date" name="date" id="date-input" min="2024-01-01" max="2030-12-31" required aria-required="true" aria-describedby="date-help">
 									</div>
 									<div class="form-group">
-										<label for="heure-debut-input">Heure de début *</label>
+										<label for="heure-debut-input">Heure de début <span class="required" aria-label="obligatoire">*</span></label>
 										<input type="time" name="heure-debut" id="heure-debut-input" required aria-required="true" aria-describedby="heure-help">
 									</div>
 								</div>
 
 								<div class="form-row">
 									<div class="form-group">
-										<label for="duree-select">Durée (heures) *</label>
+										<label for="duree-select">Durée (heures) <span class="required" aria-label="obligatoire">*</span></label>
 										<select name="duree" id="duree-select" required aria-required="true" aria-describedby="duree-help">
 											<option value="">Choisissez la durée</option>
 											<option value="2">2 heures (minimum)</option>
@@ -713,7 +706,7 @@
 										</select>
 									</div>
 									<div class="form-group">
-										<label for="heure-fin-input">Heure de fin *</label>
+										<label for="heure-fin-input">Heure de fin <span class="required" aria-label="obligatoire">*</span></label>
 										<input type="time" name="heure-fin" id="heure-fin-input" readonly>
 									</div>
 								</div>
@@ -721,12 +714,12 @@
 								<!-- Lieux de prise en charge et destination -->
 								<div class="form-row">
 									<div class="form-group">
-										<label>Lieu de prise en charge *</label>
-										<input type="text" name="lieu-depart" placeholder="Adresse complète de départ" required>
+										<label>Lieu de prise en charge <span class="required" aria-label="obligatoire">*</span></label>
+										<input type="text" name="lieu-depart" placeholder="Adresse complète de départ" required aria-required="true">
 									</div>
 									<div class="form-group">
-										<label>Lieu de destination *</label>
-										<input type="text" name="lieu-arrivee" placeholder="Adresse complète d'arrivée" required>
+										<label>Lieu de destination <span class="required" aria-label="obligatoire">*</span></label>
+										<input type="text" name="lieu-arrivee" placeholder="Adresse complète d'arrivée" required aria-required="true">
 									</div>
 								</div>
 
@@ -837,7 +830,7 @@
 
 								<!-- Boutons d'action -->
 								<div class="form-actions">
-									<button type="button" class="btn-secondary" onclick="generatePDF()" aria-describedby="pdf-help">
+									<button type="button" class="btn-secondary" aria-describedby="pdf-help">
 										<i class="fas fa-file-pdf"></i>
 										Générer le devis PDF
 									</button>
@@ -991,8 +984,8 @@
 
 	</div>
 
-	<!-- Scripts optimisés pour les performances -->
-	<script src="assets/js/frlimousine-optimized.js" defer></script>
+	<!-- Scripts principaux -->
+	<script src="main.js" defer></script>
 
 </body>
 </html>
