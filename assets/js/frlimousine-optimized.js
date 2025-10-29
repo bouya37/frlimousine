@@ -5,6 +5,38 @@
  */
 
 // ============================================
+// MENU BURGER - INTERACTIVITÉ
+// ============================================
+
+function initBurgerMenu() {
+    const burgerMenu = document.querySelector('.burger-menu');
+    const navLinks = document.querySelector('.nav-links');
+    const navLinkItems = document.querySelectorAll('.nav-link');
+
+    if (burgerMenu && navLinks) {
+        burgerMenu.addEventListener('click', () => {
+            navLinks.classList.toggle('active');
+            burgerMenu.classList.toggle('active');
+            burgerMenu.setAttribute('aria-expanded', navLinks.classList.contains('active'));
+            // Empêche le scroll de la page quand le menu est ouvert
+            document.body.classList.toggle('menu-open');
+        });
+
+        // Ferme le menu quand on clique sur un lien (pour la navigation sur une seule page)
+        navLinkItems.forEach(link => {
+            link.addEventListener('click', () => {
+                if (navLinks.classList.contains('active')) {
+                    navLinks.classList.remove('active');
+                    burgerMenu.classList.remove('active');
+                    burgerMenu.setAttribute('aria-expanded', 'false');
+                    document.body.classList.remove('menu-open');
+                }
+            });
+        });
+    }
+}
+
+// ============================================
 // CONFIGURATION CENTRALISÉE
 // ============================================
 
@@ -12,29 +44,32 @@ const VEHICULE_PRICES = {
     'mustang-rouge': 90,
     'mustang-bleu': 95,
     'excalibur': 110,
-    'mercedes-viano': 85
+    'lincoln-limousine': 120,
+    'hummer-limousine': 150,
+    'mercedes-viano': 85,
 };
 
 const OPTIONS_PRICES = {
-    'decoration-florale': 50,
-    'boissons': 30,
-    'musique': 25,
-    'chauffeur-costume': 20,
-    'photographie-video': 100
+    'decoration-florale-sur-devis': 0, // Le prix est sur devis, donc 0 dans le calcul auto
+    'photographie-video': 100,
 };
 
 const VEHICULE_NAMES = {
     'mustang-rouge': 'Mustang Rouge',
     'mustang-bleu': 'Mustang Bleu',
     'excalibur': 'Excalibur',
-    'mercedes-viano': 'Mercedes Viano'
+    'lincoln-limousine': 'Lincoln Limousine',
+    'hummer-limousine': 'Hummer Limousine',
+    'mercedes-viano': 'Mercedes Viano',
 };
 
 const MAX_PASSAGERS = {
     'mustang-rouge': 4,
     'mustang-bleu': 4,
     'excalibur': 4,
-    'mercedes-viano': 8
+    'mercedes-viano': 8,
+    'lincoln-limousine': 8,
+    'hummer-limousine': 12,
 };
 
 // ============================================
@@ -54,11 +89,8 @@ function getServiceName(code) {
 
 function getOptionName(code) {
     const options = {
-        'decoration-florale': 'Décoration florale (+50€)',
-        'boissons': 'Pack boissons (+30€)',
-        'musique': 'Système audio premium (+25€)',
-        'chauffeur-costume': 'Chauffeur en costume (+20€)',
-        'photographie-video': 'Service photographie/vidéo professionnel (+100€/heure)'
+        'decoration-florale-sur-devis': 'Décoration florale (Sur devis)',
+        'photographie-video': 'Service photographie/vidéo professionnel (+100€/h)',
     };
     return options[code] || code;
 }
@@ -131,6 +163,7 @@ function validateReservation(event) {
         passagers: formData.get('passagers'),
         date: formData.get('date'),
         duree: formData.get('duree'),
+        heureDebut: formData.get('heure-debut'), // Ajout de l'heure de début
         lieuDepart: formData.get('lieu-depart'),
         lieuArrivee: formData.get('lieu-arrivee'),
         options: formData.getAll('options[]'),
@@ -149,11 +182,11 @@ function validateReservation(event) {
         return false;
     }
 
-    sendReservationEmail(data);
+    sendReservationEmail(data, form); // Passer l'élément 'form' à la fonction suivante
     return false;
 }
 
-function sendReservationEmail(data) {
+function sendReservationEmail(data, form) { // Accepter 'form' comme argument
     // Calcul du prix
     const prixVehicule = VEHICULE_PRICES[data.vehicule] * parseInt(data.duree);
     const prixOptions = data.options.reduce((total, option) => total + OPTIONS_PRICES[option], 0);
@@ -193,17 +226,23 @@ function sendReservationEmail(data) {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-            filename: `Devis_FRLimousine_${data.nom.replace(/\s+/g, '_')}_${new Date().toISOString().split('T')[0]}.html`,
-            content: generatePDF(data),
             client: {
+                nom: data.nom,
+                email: data.email,
+                telephone: data.telephone,
+            },
+            details: {
                 nom: data.nom,
                 email: data.email,
                 telephone: data.telephone,
                 service: getServiceName(data.service),
                 vehicule: VEHICULE_NAMES[data.vehicule],
                 passagers: data.passagers,
-                date: formatDate(data.date),
+                date: formatDate(data.date) + ' à ' + data.heureDebut, // Combinaison date et heure
                 duree: data.duree + ' heures',
+                lieuDepart: data.lieuDepart,
+                lieuArrivee: data.lieuArrivee,
+                options: data.options.length > 0 ? data.options.map(opt => getOptionName(opt)).join(', ') : 'Aucune',
                 prix: prixTotal + '€',
                 message: data.message || 'Aucun message'
             },
@@ -211,8 +250,8 @@ function sendReservationEmail(data) {
         })
     })
     .then(response => {
-        console.log('✅ Devis envoyé avec succès!');
-        alert('✅ Devis envoyé automatiquement !\n\nLe PDF a été envoyé directement à votre serveur.');
+        console.log('✅ Devis PDF généré avec succès!');
+        alert('✅ Devis envoyé automatiquement !\n\nLe devis PDF a été généré sur votre serveur.');
     })
     .catch(error => {
         console.error('❌ Erreur envoi:', error);
@@ -236,6 +275,7 @@ function sendReservationEmail(data) {
 // ============================================
 // GÉNÉRATION DE PDF OPTIMISÉE
 // ============================================
+// NOTE: Cette fonction n'est plus utilisée pour l'envoi serveur, mais peut être conservée pour un bouton "Générer PDF" côté client.
 
 function generatePDF(data) {
     const prixVehicule = VEHICULE_PRICES[data.vehicule] * parseInt(data.duree);
@@ -311,8 +351,12 @@ function calculateEndTime() {
 
     const startTime = new Date('2000-01-01T' + startTimeInput.value);
     const duree = parseInt(dureeSelect.value);
+    const endDate = new Date(startTime.getTime()); // Crée une copie
+    endDate.setHours(startTime.getHours() + duree);
+
     startTime.setHours(startTime.getHours() + duree);
-    endTimeInput.value = startTime.toTimeString().slice(0, 5);
+    // Gère le changement de jour
+    endTimeInput.value = endDate.toTimeString().slice(0, 5);
 }
 
 function validatePassagers() {
@@ -338,50 +382,194 @@ function showConfirmationMessage() {
 }
 
 // ============================================
-// SLIDER D'AVIS CLIENTS - OPTIMISÉ
+// CARROUSEL NATIF - FONCTIONNEL
 // ============================================
 
-function initTestimonialsSlider() {
-    const testimonials = document.querySelectorAll('.testimonial-card');
-    const dots = document.querySelectorAll('.dot');
+/**
+ * Fonction générique pour initialiser un carrousel.
+ * @param {string} selector - Le sélecteur CSS de l'élément du carrousel.
+ * @param {object} options - Options de configuration { autoplay: boolean }.
+ */
+function initCarousel(selector, options = {}) {
+    const carouselElement = document.querySelector(selector);
+    if (!carouselElement) return;
+
+    const wrapper = carouselElement.querySelector('.carousel-wrapper');
+    const slides = carouselElement.querySelectorAll('.carousel-slide');
+    const prevBtn = carouselElement.querySelector('.carousel-prev');
+    const nextBtn = carouselElement.querySelector('.carousel-next');
+    const pagination = carouselElement.querySelector('.carousel-pagination');
+    if (!wrapper || slides.length === 0 || !pagination) return;
+    
     let currentIndex = 0;
-    let autoSlideInterval;
+    let slidesPerView = getSlidesPerView();
+    let autoPlayInterval;
+    let touchStartX = 0;
+    let touchEndX = 0;
 
-    function showTestimonial(index) {
-        testimonials.forEach(testimonial => testimonial.classList.remove('active'));
-        dots.forEach(dot => dot.classList.remove('active'));
+    // Créer la pagination
+    slides.forEach((_, index) => {
+        const dot = document.createElement('div');
+        dot.className = 'carousel-pagination-dot';
+        if (index === 0) dot.classList.add('active');
+        dot.addEventListener('click', () => {
+            currentIndex = index;
+            updateCarousel(true); // true pour indiquer une navigation manuelle
+        });
+        pagination.appendChild(dot);
+    });
 
-        if (testimonials[index]) testimonials[index].classList.add('active');
-        if (dots[index]) dots[index].classList.add('active');
-
-        currentIndex = index;
+    function getSlidesPerView() {
+        // Toujours afficher un seul élément à la fois
+        return 1;
     }
 
-    function nextTestimonial() {
-        showTestimonial((currentIndex + 1) % testimonials.length);
+    function updateCarousel(manualNav = false) {
+        // Si navigation manuelle, on réinitialise l'autoplay
+        if (manualNav && options.autoplay) {
+            resetAutoPlay();
+        }
+
+        // Animation professionnelle: fade + slide
+        slides.forEach((slide, index) => {
+            slide.style.transition = 'opacity .5s ease, transform .5s ease';
+            if (index === currentIndex) {
+                slide.style.display = 'flex';
+                requestAnimationFrame(() => {
+                    slide.classList.add('is-active');
+                });
+            } else {
+                slide.classList.remove('is-active');
+                // après l'animation, masquer
+                setTimeout(() => { if (index !== currentIndex) slide.style.display = 'none'; }, 500);
+            }
+        });
+        
+        // Mettre à jour la pagination
+        const dots = pagination.querySelectorAll('.carousel-pagination-dot');
+        dots.forEach((dot, index) => {
+            if (index === currentIndex) {
+                dot.classList.add('active');
+            } else {
+                dot.classList.remove('active');
+            }
+        });
+
+        // Gérer les boutons
+        if (prevBtn && nextBtn) {
+            const loop = options.loop !== false; // loop par défaut
+            prevBtn.style.opacity = !loop && currentIndex === 0 ? '0.5' : '1';
+            prevBtn.style.pointerEvents = !loop && currentIndex === 0 ? 'none' : 'auto';
+
+            const maxIndex = slides.length - slidesPerView;
+            nextBtn.style.opacity = !loop && currentIndex >= maxIndex ? '0.5' : '1';
+            nextBtn.style.pointerEvents = !loop && currentIndex >= maxIndex ? 'none' : 'auto';
+        }
     }
 
-    // Écouteurs d'événements délégués
-    document.addEventListener('click', function(e) {
-        if (e.target.matches('.slider-btn.next')) {
-            clearInterval(autoSlideInterval);
-            nextTestimonial();
-            autoSlideInterval = setInterval(nextTestimonial, 10000);
-        } else if (e.target.matches('.slider-btn.prev')) {
-            clearInterval(autoSlideInterval);
-            showTestimonial((currentIndex - 1 + testimonials.length) % testimonials.length);
-            autoSlideInterval = setInterval(nextTestimonial, 10000);
-        } else if (e.target.matches('.dot')) {
-            clearInterval(autoSlideInterval);
-            showTestimonial(parseInt(e.target.getAttribute('onclick').match(/\d+/)[0]));
-            autoSlideInterval = setInterval(nextTestimonial, 10000);
+    function nextSlide() {
+        const maxIndex = slides.length - slidesPerView;
+        currentIndex = (currentIndex < maxIndex) ? currentIndex + 1 : (options.loop !== false ? 0 : currentIndex);
+        updateCarousel();
+    }
+
+    function prevSlide() {
+        const maxIndex = slides.length - slidesPerView;
+        if (currentIndex > 0) {
+            currentIndex--;
+        } else {
+            currentIndex = maxIndex; // boucle vers la fin
+        }
+        updateCarousel();
+    }
+
+    // Événements des boutons
+    if (nextBtn && prevBtn) {
+        nextBtn.addEventListener('click', () => {
+            currentIndex = (currentIndex < slides.length - 1) ? currentIndex + 1 : 0;
+            updateCarousel(true);
+        });
+        prevBtn.addEventListener('click', () => {
+            currentIndex = (currentIndex > 0) ? currentIndex - 1 : slides.length - 1;
+            updateCarousel(true);
+        });
+    }
+
+    // Auto-play 10s
+    function startAutoPlay() {
+        autoPlayInterval = setInterval(nextSlide, 10000);
+    }
+    function stopAutoPlay() {
+        if (autoPlayInterval) clearInterval(autoPlayInterval);
+    }
+    function resetAutoPlay() {
+        stopAutoPlay();
+        startAutoPlay();
+    }
+
+    if (options.autoplay) {
+        // Pause au survol
+        carouselElement.addEventListener('mouseenter', stopAutoPlay);
+        carouselElement.addEventListener('mouseleave', startAutoPlay);
+    }
+    
+    // Swipe tactile
+    wrapper.addEventListener('touchstart', (e) => {
+        touchStartX = e.touches[0].clientX;
+        stopAutoPlay();
+    });
+    wrapper.addEventListener('touchmove', (e) => {
+        touchEndX = e.touches[0].clientX;
+    });
+    wrapper.addEventListener('touchend', () => {
+        const diff = touchStartX - touchEndX;
+        const swipeThreshold = 50;
+        if (Math.abs(diff) > swipeThreshold) {
+            if (diff > 0) nextSlide(); else prevSlide();
+        }
+        if (options.autoplay) {
+            resetAutoPlay();
         }
     });
 
-    // Démarrer le slider automatique
-    if (testimonials.length > 0) {
-        showTestimonial(0);
-        autoSlideInterval = setInterval(nextTestimonial, 10000);
+    // Zones de tap (mobile): cliquer moitié gauche/droite pour naviguer
+    function attachTapZones() {
+        if (window.innerWidth <= 768) {
+            carouselElement.addEventListener('click', (e) => {
+                // ignorer clics sur liens/boutons internes
+                if (e.target.closest('a, button')) return;
+                const rect = carouselElement.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                if (x < rect.width / 2) { prevSlide(); } else { nextSlide(); }
+                if (options.autoplay) {
+                    resetAutoPlay();
+                }
+            });
+        }
+    }
+    attachTapZones();
+
+    // Réinitialiser au redimensionnement
+    let resizeTimer;
+    window.addEventListener('resize', () => {
+        clearTimeout(resizeTimer);
+        resizeTimer = setTimeout(() => {
+            slidesPerView = getSlidesPerView();
+            if (currentIndex > slides.length - slidesPerView) {
+                currentIndex = Math.max(0, slides.length - slidesPerView);
+            }
+            updateCarousel();
+            if (options.autoplay) {
+                resetAutoPlay();
+            }
+            attachTapZones();
+        }, 250);
+    });
+
+    // Initialisation
+    updateCarousel();
+    if (options.autoplay) {
+        startAutoPlay();
     }
 }
 
@@ -414,7 +602,11 @@ function initSmoothScrolling() {
 document.addEventListener('DOMContentLoaded', function() {
     // Initialiser les fonctionnalités essentielles uniquement
     initSmoothScrolling();
-    initTestimonialsSlider();
+    initBurgerMenu();
+    // Initialisation des carrousels avec la fonction générique
+    initCarousel('.fleet-carousel', { autoplay: true, loop: true });
+    initCarousel('.testimonials-carousel', { autoplay: true, loop: true });
+    initCarousel('.pricing-carousel', { autoplay: true, loop: true });
 
     // Écouteurs d'événements pour le formulaire
     const vehiculeSelect = document.getElementById('vehicule-select');

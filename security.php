@@ -12,10 +12,11 @@ class FRLimousineSecurity {
     private $maxRequestsPerHour;
     private $blockedIPs;
 
-    public function __construct() {
+    public function __construct($config = []) {
         $this->logFile = 'pdfs/security.log';
-        $this->maxRequestsPerMinute = 20;
-        $this->maxRequestsPerHour = 100;
+        // Utilise la configuration si elle est fournie, sinon valeurs par défaut
+        $this->maxRequestsPerMinute = $config['security']['rate_limit_minute'] ?? 20;
+        $this->maxRequestsPerHour = $config['security']['rate_limit_hour'] ?? 100;
         $this->blockedIPs = [];
         $this->loadBlockedIPs();
     }
@@ -236,7 +237,8 @@ class FRLimousineSecurity {
 
 // Fonction d'initialisation de la sécurité
 function initSecurity() {
-    $security = new FRLimousineSecurity();
+    global $config; // Assure que la config est accessible
+    $security = new FRLimousineSecurity($config ?? []);
 
     // Nettoyer les anciens fichiers
     $security->cleanupOldRateLimitFiles();

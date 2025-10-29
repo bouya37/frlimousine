@@ -264,27 +264,27 @@ Cordialement,
 Système automatique FRLimousine";
 
 $headers = 'From: ' . $config['email']['from'] . "\r\n" .
-           'Reply-To: ' . $client['email'] . "\r\n" .
+           'Reply-To: ' . $clientDetails['email'] . "\r\n" .
            'X-Mailer: PHP/' . phpversion() . "\r\n" .
            'Content-Type: text/plain; charset=UTF-8' . "\r\n" .
            'Return-Path: ' . $config['email']['from'];
 
 // Envoyer l'email de notification
 if (mail($emailNotification, $subject, $message, $headers)) {
-    $security->log("Email de notification envoyé pour: " . $client['nom']);
+    $security->logSecurityEvent("EMAIL_SENT", $ip, "Email de notification envoyé pour: " . $clientDetails['nom']);
 } else {
-    $security->log("ATTENTION: Impossible d'envoyer l'email de notification pour " . $client['nom']);
+    $security->logSecurityEvent("EMAIL_ERROR", $ip, "Impossible d'envoyer l'email de notification pour " . $clientDetails['nom']);
 }
 
 // Réponse de succès
 echo json_encode([
     'success' => true,
-    'message' => 'PDF reçu avec succès',
+    'message' => 'Devis reçu avec succès',
     'filename' => $filename,
     'filepath' => $filepath,
     'server' => $_SERVER['SERVER_NAME'],
     'timestamp' => date('Y-m-d H:i:s')
 ]);
 
-$security->log("Devis traité avec succès pour: " . $client['nom'] . " (IP: $ip)");
+$security->logSecurityEvent("SUCCESS", $ip, "Devis traité avec succès pour: " . $clientDetails['nom']);
 ?>

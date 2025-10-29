@@ -45,7 +45,6 @@
 
 	<!-- Préchargement des ressources critiques -->
 	<link rel="preload" href="assets/css/main_clean.css" as="style">
-	<link rel="preload" href="assets/js/jquery.min.js" as="script">
 
 	<!-- Optimisation des performances -->
 	<link rel="preconnect" href="https://fonts.googleapis.com">
@@ -58,8 +57,9 @@
 	<meta name="HandheldFriendly" content="true">
 
 	<!-- Styles -->
-	<link rel="stylesheet" href="assets/css/main_clean.css" />
-	<link rel="stylesheet" href="assets/css/frlimousine.css">
+	<link rel="stylesheet" href="assets/css/main_clean.css?v=1.1" />
+	<link rel="stylesheet" href="assets/css/frlimousine.css?v=1.1">
+
 	<noscript><link rel="stylesheet" href="assets/css/noscript.css" /></noscript>
 
 	<!-- Styles d'accessibilité -->
@@ -100,6 +100,11 @@
 				</div>
 
 				<nav id="nav" class="nav">
+					<button class="burger-menu" aria-label="Ouvrir le menu" aria-expanded="false">
+						<span class="burger-bar"></span>
+						<span class="burger-bar"></span>
+						<span class="burger-bar"></span>
+					</button>
 					<ul class="nav-links">
 						<li><a href="#services" class="nav-link">Nos Services</a></li>
 						<li><a href="#fleet" class="nav-link">La Flotte</a></li>
@@ -234,150 +239,242 @@
 						<p>Véhicules d'exception sélectionnés pour votre confort et votre sécurité</p>
 					</div>
 
-					<div class="fleet-grid">
-						<div class="vehicle-card">
-							<div class="vehicle-info">
-								<h3>Mustang Rouge</h3>
-								<div class="vehicle-description">
-									<p><strong>Véhicule sportif d'exception</strong> au coloris rouge flamboyant, la Mustang incarne la puissance et l'élégance américaine. Parfaitement adaptée aux <em>événements prestigieux</em> et aux <em>célébrations mémorables</em>.</p>
-									<p>Sa <strong>ligne sportive racée</strong> peut accueillir jusqu'à 4 passagers dans un confort luxueux. L'intérieur, alliant <strong>cuir premium</strong> et <strong>finition sportive</strong>, offre un équipement haut de gamme pour une expérience de conduite unique.</p>
+					<!-- Carrousel pour la flotte -->
+					<div class="fleet-carousel">
+						<div class="carousel-container">
+							<div class="carousel-wrapper">
+							<!-- Mustang Rouge -->
+								<div class="carousel-slide">
+								<div class="vehicle-card">
+									<div class="vehicle-info">
+										<h3>Mustang Rouge</h3>
+										<div class="vehicle-description">
+											<p><strong>Véhicule sportif d'exception</strong> au coloris rouge flamboyant, la Mustang incarne la puissance et l'élégance américaine. Parfaitement adaptée aux <em>événements prestigieux</em> et aux <em>célébrations mémorables</em>.</p>
+											<p>Sa <strong>ligne sportive racée</strong> peut accueillir jusqu'à 4 passagers dans un confort luxueux. L'intérieur, alliant <strong>cuir premium</strong> et <strong>finition sportive</strong>, offre un équipement haut de gamme pour une expérience de conduite unique.</p>
+										</div>
+										<div class="vehicle-specs">
+											<div class="spec-item">
+												<i class="fas fa-users"></i>
+												<span>Jusqu'à 4 passagers</span>
+											</div>
+											<div class="spec-item">
+												<i class="fas fa-tachometer-alt"></i>
+												<span>Moteur V8 puissant</span>
+											</div>
+											<div class="spec-item">
+												<i class="fas fa-music"></i>
+												<span>Système audio premium</span>
+											</div>
+											<div class="spec-item">
+												<i class="fas fa-palette"></i>
+												<span>Teinte rouge prestige</span>
+											</div>
+										</div>
+										<div class="vehicle-actions">
+											<a href="galerie.html" class="discover-btn">
+												<i class="fas fa-search"></i>
+												En découvrir plus
+											</a>
+										</div>
+									</div>
 								</div>
-								<div class="vehicle-specs">
-									<div class="spec-item">
-										<i class="fas fa-users"></i>
-										<span>Jusqu'à 4 passagers</span>
-									</div>
-									<div class="spec-item">
-										<i class="fas fa-tachometer-alt"></i>
-										<span>Moteur V8 puissant</span>
-									</div>
-									<div class="spec-item">
-										<i class="fas fa-music"></i>
-										<span>Système audio premium</span>
-									</div>
-									<div class="spec-item">
-										<i class="fas fa-palette"></i>
-										<span>Teinte rouge prestige</span>
-									</div>
-								</div>
+							</div>
 
-								<!-- Bouton d'action Mustang Rouge -->
-								<div class="vehicle-actions">
-									<a href="galerie.html" class="discover-btn">
-										<i class="fas fa-search"></i>
-										En découvrir plus
-									</a>
+							<!-- Mustang Bleu -->
+								<div class="carousel-slide">
+								<div class="vehicle-card">
+									<div class="vehicle-info">
+										<h3>Mustang Bleu</h3>
+										<div class="vehicle-description">
+											<p>L'<strong>élégance sportive américaine</strong> se décline dans une teinte bleu profond avec notre Mustang. Véritable symbole de <em>puissance contrôlée</em> et de <em>raffinement</em>, elle représente le choix idéal pour les <strong>événements exclusifs</strong> et les <strong>déplacements prestigieux</strong>.</p>
+											<p>D'une <strong>capacité de 4 passagers</strong>, elle offre un <strong>confort sportif haut de gamme</strong> avec ses sièges baquets en cuir et son habitacle conçu pour l'excellence. Chaque détail révèle le <strong>caractère unique</strong> et l'<strong>attention portée à l'expérience de conduite</strong>.</p>
+										</div>
+										<div class="vehicle-specs">
+											<div class="spec-item">
+												<i class="fas fa-users"></i>
+												<span>Jusqu'à 4 passagers</span>
+											</div>
+											<div class="spec-item">
+												<i class="fas fa-palette"></i>
+												<span>Teinte bleu prestige</span>
+											</div>
+											<div class="spec-item">
+												<i class="fas fa-couch"></i>
+												<span>Sièges sport cuir</span>
+											</div>
+											<div class="spec-item">
+												<i class="fas fa-trophy"></i>
+												<span>Finition haut de gamme</span>
+											</div>
+										</div>
+										<div class="vehicle-actions">
+											<a href="galerie.html" class="discover-btn">
+												<i class="fas fa-search"></i>
+												En découvrir plus
+											</a>
+										</div>
+									</div>
+								</div>
+							</div>
+
+							<!-- Excalibur -->
+								<div class="carousel-slide">
+								<div class="vehicle-card">
+									<div class="vehicle-info">
+										<h3>Excalibur</h3>
+										<div class="vehicle-description">
+											<p>Le <strong>charme intemporel du rétro</strong> s'exprime magnifiquement dans notre Excalibur. Cette voiture de légende incarne l'<em>élégance classique</em> et le <em>raffinement d'antan</em> pour vos événements les plus prestigieux.</p>
+											<p>D'une <strong>capacité de 4 passagers</strong>, elle offre un <strong>espace confortable</strong> alliant <strong>design néo-rétro</strong> et <strong>équipements modernes</strong>. Parfaite pour les <strong>mariages vintage</strong> nécessitant <em>originalité</em> et <em>classe intemporelle</em>.</p>
+										</div>
+										<div class="vehicle-specs">
+											<div class="spec-item">
+												<i class="fas fa-users"></i>
+												<span>Jusqu'à 4 passagers</span>
+											</div>
+											<div class="spec-item">
+												<i class="fas fa-crown"></i>
+												<span>Design rétro unique</span>
+											</div>
+											<div class="spec-item">
+												<i class="fas fa-gem"></i>
+												<span>Finition haut de gamme</span>
+											</div>
+											<div class="spec-item">
+												<i class="fas fa-camera-retro"></i>
+												<span>Style vintage prestigieux</span>
+											</div>
+										</div>
+										<div class="vehicle-actions">
+											<a href="galerie.html" class="discover-btn">
+												<i class="fas fa-search"></i>
+												En découvrir plus
+											</a>
+										</div>
+									</div>
+								</div>
+							</div>
+
+							<!-- Mercedes Viano -->
+								<div class="carousel-slide">
+								<div class="vehicle-card">
+									<div class="vehicle-info">
+										<h3>Mercedes Viano</h3>
+										<div class="vehicle-description">
+											<p>Le <strong>confort allemand rencontre la praticité</strong> dans notre Mercedes Viano. Ce véhicule haut de gamme incarne l'<em>excellence automobile</em> et l'<em>espace généreux</em> pour vos déplacements professionnels ou familiaux.</p>
+											<p>D'une <strong>capacité de 8 passagers</strong>, il offre un <strong>volume exceptionnel</strong> alliant <strong>technologie avancée</strong> et <strong>matériaux nobles</strong>. Idéal pour les <strong>déplacements d'affaires</strong> nécessitant <em>confort</em> et <em>polyvalence</em>.</p>
+										</div>
+										<div class="vehicle-specs">
+											<div class="spec-item">
+												<i class="fas fa-users"></i>
+												<span>Jusqu'à 8 passagers</span>
+											</div>
+											<div class="spec-item">
+												<i class="fas fa-briefcase"></i>
+												<span>Idéal affaires</span>
+											</div>
+											<div class="spec-item">
+												<i class="fas fa-cog"></i>
+												<span>Technologie allemande</span>
+											</div>
+											<div class="spec-item">
+												<i class="fas fa-shield-alt"></i>
+												<span>Sécurité maximale</span>
+											</div>
+										</div>
+										<div class="vehicle-actions">
+											<a href="galerie.html" class="discover-btn">
+												<i class="fas fa-search"></i>
+												En découvrir plus
+											</a>
+										</div>
+									</div>
+								</div>
+							</div>
+
+							<!-- Hummer Limousine -->
+								<div class="carousel-slide">
+								<div class="vehicle-card">
+									<div class="vehicle-info">
+										<h3>Hummer Limousine</h3>
+										<div class="vehicle-description">
+											<p>Le <strong>géant américain du luxe</strong>, notre Hummer Limousine est le choix ultime pour ceux qui veulent se démarquer. Son allure imposante et son intérieur ultra-luxueux en font le véhicule parfait pour les <em>grandes occasions</em> et les <em>soirées festives</em>.</p>
+											<p>Avec une <strong>capacité allant jusqu'à 12 passagers</strong>, il est équipé d'un <strong>bar complet</strong>, d'un système son et lumière d'ambiance et d'un confort inégalé. C'est une véritable discothèque privée sur roues.</p>
+										</div>
+										<div class="vehicle-specs">
+											<div class="spec-item">
+												<i class="fas fa-users"></i>
+												<span>Jusqu'à 12 passagers</span>
+											</div>
+											<div class="spec-item">
+												<i class="fas fa-glass-cheers"></i>
+												<span>Bar et ambiance festive</span>
+											</div>
+											<div class="spec-item">
+												<i class="fas fa-music"></i>
+												<span>Système son et lumière</span>
+											</div>
+											<div class="spec-item">
+												<i class="fas fa-star"></i>
+												<span>Luxe ostentatoire</span>
+											</div>
+										</div>
+										<div class="vehicle-actions">
+											<a href="galerie.html" class="discover-btn">
+												<i class="fas fa-search"></i>
+												En découvrir plus
+											</a>
+										</div>
+									</div>
+								</div>
+							</div>
+
+							<!-- Lincoln Limousine -->
+								<div class="carousel-slide">
+								<div class="vehicle-card">
+									<div class="vehicle-info">
+										<h3>Lincoln Limousine</h3>
+										<div class="vehicle-description">
+											<p>L'<strong>incarnation de l'élégance classique</strong>, la Lincoln Limousine est un choix intemporel pour tout événement prestigieux. Elle allie <em>confort suprême</em>, <em>discrétion</em> et <em>raffinement</em>.</p>
+											<p>Pouvant accueillir <strong>jusqu'à 8 passagers</strong> dans un habitacle spacieux et luxueux, elle est idéale pour les <strong>mariages</strong>, les <strong>rendez-vous d'affaires</strong> ou tout simplement pour un déplacement en toute sérénité.</p>
+										</div>
+										<div class="vehicle-specs">
+											<div class="spec-item">
+												<i class="fas fa-users"></i>
+												<span>Jusqu'à 8 passagers</span>
+											</div>
+											<div class="spec-item">
+												<i class="fas fa-gem"></i>
+												<span>Élégance intemporelle</span>
+											</div>
+											<div class="spec-item">
+												<i class="fas fa-couch"></i>
+												<span>Confort présidentiel</span>
+											</div>
+											<div class="spec-item">
+												<i class="fas fa-shield-alt"></i>
+												<span>Discrétion assurée</span>
+											</div>
+										</div>
+										<div class="vehicle-actions">
+											<a href="galerie.html" class="discover-btn">
+												<i class="fas fa-search"></i>
+												En découvrir plus
+											</a>
+										</div>
+									</div>
 								</div>
 							</div>
 						</div>
-
-						<div class="vehicle-card">
-							<div class="vehicle-info">
-								<h3>Mustang Bleu</h3>
-								<div class="vehicle-description">
-									<p>L'<strong>élégance sportive américaine</strong> se décline dans une teinte bleu profond avec notre Mustang. Véritable symbole de <em>puissance contrôlée</em> et de <em>raffinement</em>, elle représente le choix idéal pour les <strong>événements exclusifs</strong> et les <strong>déplacements prestigieux</strong>.</p>
-									<p>D'une <strong>capacité de 4 passagers</strong>, elle offre un <strong>confort sportif haut de gamme</strong> avec ses sièges baquets en cuir et son habitacle conçu pour l'excellence. Chaque détail révèle le <strong>caractère unique</strong> et l'<strong>attention portée à l'expérience de conduite</strong>.</p>
-								</div>
-								<div class="vehicle-specs">
-									<div class="spec-item">
-										<i class="fas fa-users"></i>
-										<span>Jusqu'à 4 passagers</span>
-									</div>
-									<div class="spec-item">
-										<i class="fas fa-palette"></i>
-										<span>Teinte bleu prestige</span>
-									</div>
-									<div class="spec-item">
-										<i class="fas fa-couch"></i>
-										<span>Sièges sport cuir</span>
-									</div>
-									<div class="spec-item">
-										<i class="fas fa-trophy"></i>
-										<span>Finition haut de gamme</span>
-									</div>
-								</div>
-
-								<!-- Bouton d'action Mustang Bleu -->
-								<div class="vehicle-actions">
-									<a href="galerie.html" class="discover-btn">
-										<i class="fas fa-search"></i>
-										En découvrir plus
-									</a>
-								</div>
-							</div>
-						</div>
-
-						<div class="vehicle-card">
-							<div class="vehicle-info">
-								<h3>Excalibur</h3>
-								<div class="vehicle-description">
-									<p>Le <strong>charme intemporel du rétro</strong> s'exprime magnifiquement dans notre Excalibur. Cette voiture de légende incarne l'<em>élégance classique</em> et le <em>raffinement d'antan</em> pour vos événements les plus prestigieux.</p>
-									<p>D'une <strong>capacité de 4 passagers</strong>, elle offre un <strong>espace confortable</strong> alliant <strong>design néo-rétro</strong> et <strong>équipements modernes</strong>. Parfaite pour les <strong>mariages vintage</strong> nécessitant <em>originalité</em> et <em>classe intemporelle</em>.</p>
-								</div>
-								<div class="vehicle-specs">
-									<div class="spec-item">
-										<i class="fas fa-users"></i>
-										<span>Jusqu'à 4 passagers</span>
-									</div>
-									<div class="spec-item">
-										<i class="fas fa-crown"></i>
-										<span>Design rétro unique</span>
-									</div>
-									<div class="spec-item">
-										<i class="fas fa-gem"></i>
-										<span>Finition haut de gamme</span>
-									</div>
-									<div class="spec-item">
-										<i class="fas fa-camera-retro"></i>
-										<span>Style vintage prestigieux</span>
-									</div>
-								</div>
-
-								<!-- Bouton d'action Excalibur -->
-								<div class="vehicle-actions">
-									<a href="galerie.html" class="discover-btn">
-										<i class="fas fa-search"></i>
-										En découvrir plus
-									</a>
-								</div>
-							</div>
-						</div>
-
-						<div class="vehicle-card">
-							<div class="vehicle-info">
-								<h3>Mercedes Viano</h3>
-								<div class="vehicle-description">
-									<p>Le <strong>confort allemand rencontre la praticité</strong> dans notre Mercedes Viano. Ce véhicule haut de gamme incarne l'<em>excellence automobile</em> et l'<em>espace généreux</em> pour vos déplacements professionnels ou familiaux.</p>
-									<p>D'une <strong>capacité de 8 passagers</strong>, il offre un <strong>volume exceptionnel</strong> alliant <strong>technologie avancée</strong> et <strong>matériaux nobles</strong>. Idéal pour les <strong>déplacements d'affaires</strong> nécessitant <em>confort</em> et <em>polyvalence</em>.</p>
-								</div>
-								<div class="vehicle-specs">
-									<div class="spec-item">
-										<i class="fas fa-users"></i>
-										<span>Jusqu'à 8 passagers</span>
-									</div>
-									<div class="spec-item">
-										<i class="fas fa-briefcase"></i>
-										<span>Idéal affaires</span>
-									</div>
-									<div class="spec-item">
-										<i class="fas fa-cog"></i>
-										<span>Technologie allemande</span>
-									</div>
-									<div class="spec-item">
-										<i class="fas fa-shield-alt"></i>
-										<span>Sécurité maximale</span>
-									</div>
-								</div>
-
-								<!-- Bouton d'action Mercedes Viano -->
-								<div class="vehicle-actions">
-									<a href="galerie.html" class="discover-btn">
-										<i class="fas fa-search"></i>
-										En découvrir plus
-									</a>
-								</div>
-							</div>
-						</div>
+					</div>
+						<!-- Boutons de navigation -->
+						<button class="carousel-btn carousel-prev" aria-label="Véhicule précédent">
+							<i class="fas fa-chevron-left"></i>
+						</button>
+						<button class="carousel-btn carousel-next" aria-label="Véhicule suivant">
+							<i class="fas fa-chevron-right"></i>
+						</button>
+						<!-- Pagination -->
+						<div class="carousel-pagination"></div>
 					</div>
 				</div>
 			</section>
@@ -390,108 +487,91 @@
 						<p>L'expérience de nos clients témoigne de notre engagement envers l'excellence</p>
 					</div>
 
-					<div class="testimonials-slider">
-						<div class="testimonial-card active">
-							<div class="testimonial-content">
-								<div class="testimonial-text">
-									<p>"Service exceptionnel pour notre mariage. La Mustang Rouge était parfaite, le chauffeur très professionnel et ponctuel. Tout était organisé à la perfection. Je recommande vivement FRLimousine pour tous vos événements."</p>
-								</div>
-								<div class="testimonial-author">
-									<div class="author-info">
-										<h3>Sarah Martin</h3>
-										<p>Mariage à Paris - Juin 2024</p>
+					<!-- Carrousel pour les témoignages -->
+					<div class="testimonials-carousel">
+						<div class="carousel-container">
+							<div class="carousel-wrapper">
+							<!-- Témoignage 1 -->
+									<div class="carousel-slide">
+								<div class="testimonial-card">
+									<div class="testimonial-content">
+										<div class="testimonial-text">
+											<p>"Service exceptionnel pour notre mariage. La Mustang Rouge était parfaite, le chauffeur très professionnel et ponctuel. Tout était organisé à la perfection. Je recommande vivement FRLimousine pour tous vos événements."</p>
+										</div>
+										<div class="testimonial-author">
+											<div class="author-info">
+												<h3>Sarah Martin</h3>
+												<p>Mariage à Paris - Juin 2024</p>
+											</div>
+											<div class="author-rating"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
+										</div>
 									</div>
-									<div class="author-rating">
-										<i class="fas fa-star"></i>
-										<i class="fas fa-star"></i>
-										<i class="fas fa-star"></i>
-										<i class="fas fa-star"></i>
-										<i class="fas fa-star"></i>
+								</div>
+							</div>
+							<!-- Témoignage 2 -->
+									<div class="carousel-slide">
+								<div class="testimonial-card">
+									<div class="testimonial-content">
+										<div class="testimonial-text">
+											<p>"FRLimousine nous a accompagnés pour un événement corporate de 200 personnes. Leur flotte de véhicules et leur professionnalisme ont largement contribué au succès de notre séminaire. Service irréprochable."</p>
+										</div>
+										<div class="testimonial-author">
+											<div class="author-info">
+												<h3>Marie Dubois</h3>
+												<p>Directrice Marketing - LVMH</p>
+											</div>
+											<div class="author-rating"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
+										</div>
+									</div>
+								</div>
+							</div>
+							<!-- Témoignage 3 -->
+									<div class="carousel-slide">
+								<div class="testimonial-card">
+									<div class="testimonial-content">
+										<div class="testimonial-text">
+											<p>"Transfert aéroport parfait après un vol long-courrier. Chauffeur discret et véhicule d'une propreté impeccable. FRLimousine, c'est la garantie d'un service haut de gamme et d'une ponctualité exemplaire."</p>
+										</div>
+										<div class="testimonial-author">
+											<div class="author-info">
+												<h3>Pierre Leroy</h3>
+												<p>Chef d'Entreprise</p>
+											</div>
+											<div class="author-rating"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
+										</div>
+									</div>
+								</div>
+							</div>
+							<!-- Témoignage 4 -->
+									<div class="carousel-slide">
+								<div class="testimonial-card">
+									<div class="testimonial-content">
+										<div class="testimonial-text">
+											<p>"Pour l'anniversaire de notre fille, nous avons choisi la Mustang Bleu. Le résultat a dépassé nos attentes. Les enfants étaient émerveillés et nous avons créé des souvenirs inoubliables."</p>
+										</div>
+										<div class="testimonial-author">
+											<div class="author-info">
+												<h3>Isabelle Moreau</h3>
+												<p>Anniversaire familial</p>
+											</div>
+											<div class="author-rating"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
+										</div>
 									</div>
 								</div>
 							</div>
 						</div>
-
-						<div class="testimonial-card">
-							<div class="testimonial-content">
-								<div class="testimonial-text">
-									<p>"FRLimousine nous a accompagnés pour un événement corporate de 200 personnes. Leur flotte de véhicules et leur professionnalisme ont largement contribué au succès de notre séminaire. Service irréprochable."</p>
-								</div>
-								<div class="testimonial-author">
-									<div class="author-info">
-										<h3>Marie Dubois</h3>
-										<p>Directrice Marketing - LVMH</p>
-									</div>
-									<div class="author-rating">
-										<i class="fas fa-star"></i>
-										<i class="fas fa-star"></i>
-										<i class="fas fa-star"></i>
-										<i class="fas fa-star"></i>
-										<i class="fas fa-star"></i>
-									</div>
-								</div>
-							</div>
 						</div>
-
-						<div class="testimonial-card">
-							<div class="testimonial-content">
-								<div class="testimonial-text">
-									<p>"Transfert aéroport parfait après un vol long-courrier. Chauffeur discret et véhicule d'une propreté impeccable. FRLimousine, c'est la garantie d'un service haut de gamme et d'une ponctualité exemplaire."</p>
-								</div>
-								<div class="testimonial-author">
-									<div class="author-info">
-										<h3>Pierre Leroy</h3>
-										<p>Chef d'Entreprise</p>
-									</div>
-									<div class="author-rating">
-										<i class="fas fa-star"></i>
-										<i class="fas fa-star"></i>
-										<i class="fas fa-star"></i>
-										<i class="fas fa-star"></i>
-										<i class="fas fa-star"></i>
-									</div>
-								</div>
-							</div>
-						</div>
-
-						<div class="testimonial-card">
-							<div class="testimonial-content">
-								<div class="testimonial-text">
-									<p>"Pour l'anniversaire de notre fille, nous avons choisi la Mustang Bleu. Le résultat a dépassé nos attentes. Les enfants étaient émerveillés et nous avons créé des souvenirs inoubliables."</p>
-								</div>
-								<div class="testimonial-author">
-									<div class="author-info">
-										<h3>Isabelle Moreau</h3>
-										<p>Anniversaire familial</p>
-									</div>
-									<div class="author-rating">
-										<i class="fas fa-star"></i>
-										<i class="fas fa-star"></i>
-										<i class="fas fa-star"></i>
-										<i class="fas fa-star"></i>
-										<i class="fas fa-star"></i>
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>
-
-					<div class="slider-controls">
-						<button class="slider-btn prev" onclick="previousTestimonial()" aria-label="Témoignage précédent">
+						<!-- Boutons de navigation -->
+						<button class="carousel-btn carousel-prev" aria-label="Témoignage précédent">
 							<i class="fas fa-chevron-left"></i>
-							<span class="sr-only">Témoignage précédent</span>
 						</button>
-						<div class="slider-dots" role="tablist" aria-label="Navigation des témoignages">
-							<span class="dot active" onclick="goToTestimonial(0)" role="tab" aria-label="Témoignage 1" tabindex="0"></span>
-							<span class="dot" onclick="goToTestimonial(1)" role="tab" aria-label="Témoignage 2" tabindex="0"></span>
-							<span class="dot" onclick="goToTestimonial(2)" role="tab" aria-label="Témoignage 3" tabindex="0"></span>
-							<span class="dot" onclick="goToTestimonial(3)" role="tab" aria-label="Témoignage 4" tabindex="0"></span>
-						</div>
-						<button class="slider-btn next" onclick="nextTestimonial()" aria-label="Témoignage suivant">
+						<button class="carousel-btn carousel-next" aria-label="Témoignage suivant">
 							<i class="fas fa-chevron-right"></i>
-							<span class="sr-only">Témoignage suivant</span>
 						</button>
+						<!-- Pagination -->
+						<div class="carousel-pagination"></div>
 					</div>
+
 				</div>
 			</section>
 
@@ -503,92 +583,152 @@
 						<p>Tarification transparente et compétitive pour tous nos services</p>
 					</div>
 
-					<div class="pricing-grid">
-						<div class="pricing-card">
-							<div class="pricing-header">
-								<h3>Mustang Rouge</h3>
-								<div class="price">90€*<span>/heure</span></div>
+			<!-- Carrousel Tarifs -->
+			<div class="pricing-carousel">
+				<div class="carousel-container">
+					<div class="carousel-wrapper">
+						<div class="carousel-slide">
+							<div class="pricing-card">
+								<div class="pricing-header">
+									<h3>Mustang Rouge</h3>
+									<div class="price">90€*<span>/heure</span></div>
+								</div>
+								<div class="pricing-features">
+									<ul>
+										<li>Jusqu'à 4 passagers</li>
+										<li>Chauffeur professionnel</li>
+										<li>Climatisation</li>
+										<li>Bouteilles d'eau</li>
+									</ul>
+								</div>
+								<a href="#contact" class="pricing-btn">Réserver</a>
 							</div>
-							<div class="pricing-features">
-								<ul>
-									<li>Jusqu'à 4 passagers</li>
-									<li>Chauffeur professionnel</li>
-									<li>Climatisation</li>
-									<li>Bouteilles d'eau</li>
-								</ul>
-							</div>
-							<a href="#contact" class="pricing-btn">Réserver</a>
 						</div>
 
-						<div class="pricing-card featured">
-							<div class="pricing-header">
-								<h3>Mustang Bleu</h3>
-								<div class="price">95€*<span>/heure</span></div>
+						<div class="carousel-slide">
+							<div class="pricing-card featured">
+								<div class="pricing-header">
+									<h3>Mustang Bleu</h3>
+									<div class="price">95€*<span>/heure</span></div>
+								</div>
+								<div class="pricing-features">
+									<ul>
+										<li>Jusqu'à 4 passagers</li>
+										<li>Sièges sport cuir</li>
+										<li>Système audio premium</li>
+										<li>Finition haut de gamme</li>
+										<li>Teinte bleu prestige</li>
+									</ul>
+								</div>
+								<a href="#contact" class="pricing-btn">Réserver</a>
 							</div>
-							<div class="pricing-features">
-								<ul>
-									<li>Jusqu'à 4 passagers</li>
-									<li>Sièges sport cuir</li>
-									<li>Système audio premium</li>
-									<li>Finition haut de gamme</li>
-									<li>Teinte bleu prestige</li>
-								</ul>
-							</div>
-							<a href="#contact" class="pricing-btn">Réserver</a>
 						</div>
 
-						<div class="pricing-card">
-							<div class="pricing-header">
-								<h3>Excalibur</h3>
-								<div class="price">110€*<span>/heure</span></div>
+						<div class="carousel-slide">
+							<div class="pricing-card">
+								<div class="pricing-header">
+									<h3>Excalibur</h3>
+									<div class="price">110€*<span>/heure</span></div>
+								</div>
+								<div class="pricing-features">
+									<ul>
+										<li>Jusqu'à 4 passagers</li>
+										<li>Design rétro unique</li>
+										<li>Finition haut de gamme</li>
+										<li>Style vintage prestigieux</li>
+										<li>Équipements modernes</li>
+									</ul>
+								</div>
+								<a href="#contact" class="pricing-btn">Réserver</a>
 							</div>
-							<div class="pricing-features">
-								<ul>
-									<li>Jusqu'à 4 passagers</li>
-									<li>Design rétro unique</li>
-									<li>Finition haut de gamme</li>
-									<li>Style vintage prestigieux</li>
-									<li>Équipements modernes</li>
-								</ul>
-							</div>
-							<a href="#contact" class="pricing-btn">Réserver</a>
 						</div>
 
-						<div class="pricing-card">
-							<div class="pricing-header">
-								<h3>Mercedes Viano</h3>
-								<div class="price">85€*<span>/heure</span></div>
+						<div class="carousel-slide">
+							<div class="pricing-card">
+								<div class="pricing-header">
+									<h3>Lincoln Limousine</h3>
+									<div class="price">120€*<span>/heure</span></div>
+								</div>
+								<div class="pricing-features">
+									<ul>
+										<li>Jusqu'à 8 passagers</li>
+										<li>Confort et élégance</li>
+										<li>Intérieur cuir luxueux</li>
+										<li>Idéal pour mariages</li>
+									</ul>
+								</div>
+								<a href="#contact" class="pricing-btn">Réserver</a>
 							</div>
-							<div class="pricing-features">
-								<ul>
-									<li>Jusqu'à 8 passagers</li>
-									<li>Espace généreux modulable</li>
-									<li>Technologie allemande</li>
-									<li>Confort longue distance</li>
-									<li>Idéal pour les affaires</li>
-								</ul>
-							</div>
-							<a href="#contact" class="pricing-btn">Réserver</a>
 						</div>
 
-						<div class="pricing-card">
-							<div class="pricing-header">
-								<h3>Service Photo/Vidéo</h3>
-								<div class="price">100€*<span>/heure</span></div>
+						<div class="carousel-slide">
+							<div class="pricing-card featured">
+								<div class="pricing-header">
+									<h3>Hummer Limousine</h3>
+									<div class="price">150€*<span>/heure</span></div>
+								</div>
+								<div class="pricing-features">
+									<ul>
+										<li>Jusqu'à 12 passagers</li>
+										<li>Bar et ambiance festive</li>
+										<li>Système son et lumière</li>
+										<li>Idéal pour groupes</li>
+									</ul>
+								</div>
+								<a href="#contact" class="pricing-btn">Réserver</a>
 							</div>
-							<div class="pricing-features">
-								<ul>
-									<li>Photographe professionnel</li>
-									<li>Vidéaste expérimenté</li>
-									<li>Reportage complet événement</li>
-									<li>Éditing et retouches inclus</li>
-									<li>Photos HD et vidéos 4K</li>
-									<li>Livraison sous 48h</li>
-								</ul>
+						</div>
+
+						<div class="carousel-slide">
+							<div class="pricing-card">
+								<div class="pricing-header">
+									<h3>Mercedes Viano</h3>
+									<div class="price">85€*<span>/heure</span></div>
+								</div>
+								<div class="pricing-features">
+									<ul>
+										<li>Jusqu'à 8 passagers</li>
+										<li>Espace généreux modulable</li>
+										<li>Technologie allemande</li>
+										<li>Confort longue distance</li>
+										<li>Idéal pour les affaires</li>
+									</ul>
+								</div>
+								<a href="#contact" class="pricing-btn">Réserver</a>
 							</div>
-							<a href="#contact" class="pricing-btn">Réserver</a>
+						</div>
+
+						<div class="carousel-slide">
+							<div class="pricing-card">
+								<div class="pricing-header">
+									<h3>Service Photo/Vidéo</h3>
+									<div class="price">100€*<span>/heure</span></div>
+								</div>
+								<div class="pricing-features">
+									<ul>
+										<li>Photographe professionnel</li>
+										<li>Vidéaste expérimenté</li>
+										<li>Reportage complet événement</li>
+										<li>Éditing et retouches inclus</li>
+										<li>Photos HD et vidéos 4K</li>
+										<li>Livraison sous 48h</li>
+									</ul>
+								</div>
+								<a href="#contact" class="pricing-btn">Réserver</a>
+							</div>
 						</div>
 					</div>
+				</div>
+				<!-- Boutons de navigation (cachés par CSS pour tarifs) -->
+				<button class="carousel-btn carousel-prev" aria-label="Tarif précédent">
+					<i class="fas fa-chevron-left"></i>
+				</button>
+				<button class="carousel-btn carousel-next" aria-label="Tarif suivant">
+					<i class="fas fa-chevron-right"></i>
+				</button>
+				<!-- Pagination -->
+				<div class="carousel-pagination"></div>
+			</div>
 
 					<div class="pricing-note">
 						<p>* Tarifs indicatifs. Devis personnalisé sur demande. Minimum de facturation : 2 heures.</p>
@@ -629,7 +769,7 @@
 								<i class="fas fa-map-marker-alt"></i>
 								<div>
 									<h4>Zone d'intervention</h4>
-									<p>Paris & Île-de-France<br>Toute la France sur devis</p>
+									<p>Île-de-France & Beauvais<br>Toute la France sur devis</p>
 								</div>
 							</div>
 						</div>
@@ -675,6 +815,8 @@
 											<option value="mustang-rouge">Mustang Rouge (4 passagers) - 90€/h</option>
 											<option value="mustang-bleu">Mustang Bleu (4 passagers) - 95€/h</option>
 											<option value="excalibur">Excalibur (4 passagers) - 110€/h</option>
+											<option value="lincoln-limousine">Lincoln Limousine (8 passagers) - 120€/h</option>
+											<option value="hummer-limousine">Hummer Limousine (12 passagers) - 150€/h</option>
 											<option value="mercedes-viano">Mercedes Viano (8 passagers) - 85€/h</option>
 										</select>
 									</div>
@@ -732,53 +874,26 @@
 
 								<!-- Options supplémentaires -->
 								<div class="form-row">
-									<div class="form-group">
+									<div class="form-group full-width">
 										<label>Options supplémentaires</label>
 										<div class="options-supplementaires">
 											<div class="options-grid">
 												<label class="option-item">
-													<input type="checkbox" name="options[]" value="decoration-florale" id="decoration-florale">
+													<input type="checkbox" name="options[]" value="decoration-florale-sur-devis" id="decoration-florale">
 													<span class="checkmark"></span>
-													<span class="option-text">
+													<div class="option-text">
 														<span class="option-title">Décoration florale</span>
-														<span class="option-price">+50€</span>
-													</span>
-												</label>
-
-												<label class="option-item">
-													<input type="checkbox" name="options[]" value="boissons" id="boissons">
-													<span class="checkmark"></span>
-													<span class="option-text">
-														<span class="option-title">Pack boissons</span>
-														<span class="option-price">+30€</span>
-													</span>
-												</label>
-
-												<label class="option-item">
-													<input type="checkbox" name="options[]" value="musique" id="musique">
-													<span class="checkmark"></span>
-													<span class="option-text">
-														<span class="option-title">Système audio premium</span>
-														<span class="option-price">+25€</span>
-													</span>
-												</label>
-
-												<label class="option-item">
-													<input type="checkbox" name="options[]" value="chauffeur-costume" id="chauffeur-costume">
-													<span class="checkmark"></span>
-													<span class="option-text">
-														<span class="option-title">Chauffeur en costume</span>
-														<span class="option-price">+20€</span>
-													</span>
+														<span class="option-price">Sur devis</span>
+													</div>
 												</label>
 
 												<label class="option-item featured">
 													<input type="checkbox" name="options[]" value="photographie-video" id="photographie-video">
 													<span class="checkmark"></span>
-													<span class="option-text">
+													<div class="option-text">
 														<span class="option-title">Service photographie/vidéo professionnel</span>
-														<span class="option-price">+100€/heure</span>
-													</span>
+														<span class="option-price">+100€/h</span>
+													</div>
 												</label>
 											</div>
 										</div>
@@ -878,17 +993,15 @@
 
 					<div class="map-container">
 						<div class="map-placeholder">
-							<i class="fas fa-map-marker-alt"></i>
-							<h3>Paris & Île-de-France</h3>
-							<p>Service de location de limousines disponible dans tout Paris</p>
+							<i class="fas fa-map-marked-alt"></i>
+							<h3>Île-de-France & Beauvais</h3>
+							<p>Service de location de limousines disponible dans nos zones d'intervention.</p>
 							<div class="map-info">
 								<div class="map-address">
 									<h4>Zone d'intervention principale :</h4>
 									<ul>
-										<li>Paris (75)</li>
-										<li>Hauts-de-Seine (92)</li>
-										<li>Seine-Saint-Denis (93)</li>
-										<li>Val-de-Marne (94)</li>
+										<li>Île-de-France</li>
+										<li>Beauvais</li>
 									</ul>
 								</div>
 								<div class="map-contact">
@@ -912,10 +1025,10 @@
 						<h3>FRLimousine</h3>
 						<p>Entreprise de location de limousines de luxe à Paris<br>Service professionnel depuis 2001</p>
 						<div class="footer-social">
-							<a href="https://www.facebook.com/FRLIMOUSINECOM-363633419662/" class="social-link" aria-label="Suivez-nous sur Facebook (ouvre dans un nouvel onglet)" target="_blank" rel="noopener noreferrer">
-								<i class="fab fa-facebook-f"></i>
-								<span class="sr-only">Facebook FRLimousine</span>
-							</a>
+						<a href="https://www.instagram.com/frlimousine_/" class="social-link" aria-label="Suivez-nous sur Instagram (ouvre dans un nouvel onglet)" target="_blank" rel="noopener noreferrer">
+							<i class="fab fa-instagram"></i>
+							<span class="sr-only">Instagram FRLimousine</span>
+						</a>
 							<a href="mailto:contact@transvoyage.fr" class="social-link" aria-label="Nous envoyer un email">
 								<i class="fas fa-envelope"></i>
 								<span class="sr-only">Email de contact</span>
@@ -941,6 +1054,8 @@
 								<li><a href="#fleet">Mustang Bleu</a></li>
 								<li><a href="#fleet">Excalibur</a></li>
 								<li><a href="#fleet">Mercedes Viano</a></li>
+								<li><a href="#fleet">Hummer Limousine</a></li>
+								<li><a href="#fleet">Lincoln Limousine</a></li>
 								<li><a href="galerie.html">Galerie photos</a></li>
 							</ul>
 						</div>
@@ -992,7 +1107,7 @@
 	</div>
 
 	<!-- Scripts optimisés pour les performances -->
-	<script src="assets/js/frlimousine-optimized.js" defer></script>
+	<script src="assets/js/frlimousine-optimized.js?v=1.1" defer></script>
 
 </body>
 </html>

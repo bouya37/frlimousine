@@ -90,6 +90,7 @@ input, select, textarea {
 	padding: 1rem 2rem;
 	max-width: 1400px;
 	margin: 0 auto;
+	position: relative;
 }
 
 .logo h1 {
@@ -182,31 +183,137 @@ input, select, textarea {
 	background: rgba(255, 255, 255, 0.15) !important;
 }
 
+/* Burger Menu */
+.burger-menu {
+	display: none; /* Caché par défaut sur les grands écrans */
+	flex-direction: column;
+	justify-content: space-around;
+	width: 2rem;
+	height: 2rem;
+	background: transparent;
+	border: none;
+	cursor: pointer;
+	padding: 0;
+	z-index: 1001;
+	position: absolute;
+	top: 1rem;
+	right: 2rem;
+}
+
+.burger-menu:focus {
+	outline: none;
+}
+
+.burger-bar {
+	width: 2rem;
+	height: 0.25rem;
+	background: #ffffff;
+	border-radius: 10px;
+	transition: all 0.3s linear;
+	position: relative;
+	transform-origin: 1px;
+}
+
+/* Animation du burger en croix */
+.burger-menu.active .burger-bar:nth-child(1) {
+	transform: rotate(45deg);
+}
+
+.burger-menu.active .burger-bar:nth-child(2) {
+	opacity: 0;
+	transform: translateX(-20px);
+}
+
+.burger-menu.active .burger-bar:nth-child(3) {
+	transform: rotate(-45deg);
+}
+
+/* Styles pour le corps quand le menu est ouvert */
+body.menu-open {
+	overflow: hidden; /* Empêche le défilement de la page derrière le menu */
+}
+
+
+
 /* Responsive Navigation */
 @media screen and (max-width: 768px) {
-	.nav-links {
-		position: absolute;
-		top: 100%;
-		left: 0;
-		width: 100%;
-		background: #000000;
-		flex-direction: column;
-		gap: 0;
-		padding: 1rem 0;
-		box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-		display: none;
+	.nav {
+		position: static; /* Assure un contexte de positionnement correct */
+	}
+	.burger-menu {
+		display: flex;
+		/* Corrige l'alignement sur mobile: placer dans le flux et à droite */
+		position: relative;
+		top: 0;
+		right: 0;
+		margin-left: auto;
 	}
 
+	/* Assure un alignement propre entre le logo et le burger */
+	.header-container {
+		align-items: center;
+	}
+
+	.logo {
+		flex: 1 1 auto;
+	}
+
+	.nav {
+		flex: 0 0 auto;
+	}
+
+	.nav-links {
+		position: fixed;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 100vh;
+		background: rgba(0, 0, 0, 0.98);
+		backdrop-filter: blur(10px);
+		flex-direction: column;
+		gap: 0;
+		padding: 80px 2rem 2rem 2rem;
+		transform: translateY(-100%); /* Caché en haut par défaut */
+		transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+		z-index: 1000;
+		overflow-y: auto;
+		box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+	}
 	.nav-links.active {
-		display: flex;
+		transform: translateY(0);
 	}
 
 	.nav-link {
-		padding: 1rem 2rem;
+		padding: 1.5rem 2rem;
 		border-radius: 0;
 		border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 		text-align: center;
-		font-size: 1rem;
+		font-size: 1.2rem;
+		opacity: 0;
+		transform: translateY(-20px);
+		transition: opacity 0.3s ease, transform 0.3s ease;
+	}
+
+	.nav-links.active .nav-link {
+		opacity: 1;
+		transform: translateY(0);
+	}
+
+	/* Animation en cascade pour les liens */
+	.nav-links.active .nav-link:nth-child(1) {
+		transition-delay: 0.1s;
+	}
+
+	.nav-links.active .nav-link:nth-child(2) {
+		transition-delay: 0.2s;
+	}
+
+	.nav-links.active .nav-link:nth-child(3) {
+		transition-delay: 0.3s;
+	}
+
+	.nav-links.active .nav-link:nth-child(4) {
+		transition-delay: 0.4s;
 	}
 
 	.nav-link:last-child {
@@ -215,14 +322,10 @@ input, select, textarea {
 
 	.nav-link:hover {
 		background: rgba(255, 255, 255, 0.1);
-		transform: none;
-		box-shadow: none;
+		transform: translateY(-2px);
+		box-shadow: 0 5px 15px rgba(255, 255, 255, 0.1);
 	}
 }
-
-/* Burger Menu - Supprimé */
-
-/* Menu Mobile - Supprimé */
 
 /* Hero Section */
 
@@ -472,12 +575,302 @@ input, select, textarea {
 	background: #2c2c2c;
 	color: white;
 }
+/* Styles pour le carrousel de la flotte */
+.fleet-carousel {
+	position: relative;
+	width: 100%;
+	padding: 0 50px; /* Espace pour les boutons de navigation */
+}
 
-.fleet-grid {
-	display: grid;
-	grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-	gap: 2rem;
-	align-items: stretch;
+.carousel-container {
+	overflow: hidden;
+	width: 100%;
+	position: relative;
+}
+
+.carousel-wrapper {
+	display: flex;
+	align-items: center;
+	width: 100%;
+	position: relative;
+}
+
+.carousel-slide {
+	flex: 0 0 100% !important;
+	min-width: 100% !important;
+	max-width: 100% !important;
+	width: 100% !important;
+	display: none;
+	padding: 0;
+	box-sizing: border-box;
+}
+
+/* Le slide actif sera affiché par JavaScript */
+.carousel-slide[style*="display: flex"] {
+	display: flex !important;
+}
+
+/* Afficher seulement le slide actif */
+.carousel-wrapper > .carousel-slide:first-child {
+	opacity: 1;
+}
+
+/* Boutons de navigation */
+.carousel-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(0, 0, 0, 0.55);
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    border-radius: 12px;
+    width: 44px;
+    height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #ffffff;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    z-index: 10;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.25);
+}
+
+.carousel-btn:hover {
+    background: rgba(0, 0, 0, 0.7);
+    transform: translateY(-50%) scale(1.04);
+}
+
+.carousel-btn:active {
+	transform: translateY(-50%) scale(0.95);
+}
+
+.carousel-prev { left: 12px; }
+.carousel-next { right: 12px; }
+
+.carousel-btn i { font-size: 1.1rem; }
+
+/* Pagination */
+.carousel-pagination {
+	display: flex;
+	justify-content: center;
+	gap: 10px;
+	margin-top: 2rem;
+}
+
+.carousel-pagination-dot {
+	width: 12px;
+	height: 12px;
+	border-radius: 50%;
+	background: rgba(255, 255, 255, 0.3);
+	cursor: pointer;
+	transition: all 0.3s ease;
+}
+
+.carousel-pagination-dot.active {
+	background: #ffffff;
+	width: 30px;
+	border-radius: 6px;
+}
+
+.carousel-pagination-dot:hover {
+	background: rgba(255, 255, 255, 0.5);
+}
+
+/* Carrousel des témoignages - mêmes styles que la flotte */
+.testimonials-carousel {
+	position: relative;
+	width: 100%;
+	padding: 0 50px;
+}
+
+.testimonials-carousel .carousel-container {
+	overflow: hidden;
+	width: 100%;
+}
+
+.testimonials-carousel .carousel-wrapper {
+	display: flex;
+	transition: transform 0.5s ease;
+	will-change: transform;
+}
+
+.testimonials-carousel .carousel-slide {
+	flex: 0 0 100%;
+	min-width: 0;
+	display: flex;
+	padding: 0 10px;
+	height: 100%;
+}
+
+.testimonials-carousel .testimonial-card {
+	width: 100%;
+	display: flex;
+	flex-direction: column;
+}
+
+/* Afficher les boutons de navigation pour les tarifs */
+.pricing-carousel .carousel-btn {
+	display: flex;
+}
+
+/* Afficher les boutons pour les témoignages */
+.testimonials-carousel .carousel-btn {
+	display: flex;
+	/* Fond sombre pour visibilité sur fond clair */
+	background: rgba(0, 0, 0, 0.6);
+	border: 2px solid rgba(0, 0, 0, 0.7);
+	color: #ffffff;
+	box-shadow: 0 2px 10px rgba(0, 0, 0, 0.4);
+}
+
+.testimonials-carousel .carousel-btn:hover {
+	background: rgba(0, 0, 0, 0.8);
+	border-color: rgba(0, 0, 0, 0.9);
+	box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+}
+
+.testimonials-carousel .carousel-btn i {
+	color: #ffffff;
+	text-shadow: 0 2px 5px rgba(0, 0, 0, 0.8);
+}
+
+/* Carrousel Tarifs sur fond blanc: flèches sombres et lisibles */
+.pricing-carousel .carousel-btn {
+    display: flex;
+    background: rgba(0, 0, 0, 0.6);
+    border: 2px solid rgba(0, 0, 0, 0.7);
+    color: #ffffff;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.4);
+}
+
+.pricing-carousel .carousel-btn:hover {
+    background: rgba(0, 0, 0, 0.8);
+    border-color: rgba(0, 0, 0, 0.9);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+}
+
+.pricing-carousel .carousel-btn i {
+    color: #ffffff;
+    text-shadow: 0 2px 5px rgba(0, 0, 0, 0.8);
+}
+
+/* Animations de transition pro pour les slides */
+.carousel-slide {
+    opacity: 0;
+    transform: translateX(20px);
+    transition: opacity 0.5s ease, transform 0.5s ease;
+}
+
+.carousel-slide.is-active {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+/* Carrousel des tarifs - même style que les témoignages */
+.pricing-carousel {
+	position: relative;
+	width: 100%;
+	padding: 0 50px;
+}
+
+.pricing-carousel .carousel-container {
+	overflow: hidden;
+	width: 100%;
+}
+
+/* Indications de débordement aux bords */
+.carousel-container::before,
+.carousel-container::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    width: 48px;
+    height: 100%;
+    z-index: 5;
+    pointer-events: none;
+}
+.carousel-container::before {
+    left: 0;
+    background: linear-gradient(90deg, rgba(0,0,0,0.12), rgba(0,0,0,0));
+}
+.carousel-container::after {
+    right: 0;
+    background: linear-gradient(270deg, rgba(0,0,0,0.12), rgba(0,0,0,0));
+}
+
+.pricing-carousel .carousel-wrapper {
+	display: flex;
+	transition: transform 0.5s ease;
+	will-change: transform;
+}
+
+.pricing-carousel .carousel-slide {
+	flex: 0 0 100%;
+	min-width: 0;
+	display: flex;
+	padding: 0 10px;
+	height: 100%;
+}
+
+.pricing-carousel .pricing-card {
+	width: 100%;
+	height: 100%;
+}
+
+/* Responsive */
+@media screen and (max-width: 768px) {
+	.fleet-carousel,
+	.pricing-carousel {
+		padding: 0 20px;
+	}
+	
+	.testimonials-carousel {
+		padding: 0 20px;
+	}
+	
+    /* Masquer les flèches sur mobile pour éviter tout débordement */
+    .carousel-btn { display: none !important; }
+	
+	/* Forcer une seule slide visible sur mobile */
+	.carousel-slide {
+		flex: 0 0 100% !important;
+		min-width: 100% !important;
+		max-width: 100% !important;
+		width: 100% !important;
+		margin-left: 0 !important;
+	}
+	
+	.carousel-wrapper {
+		display: flex !important;
+		width: 100% !important;
+	}
+	
+	/* Réduire les transitions pour mobile */
+	.carousel-wrapper {
+		transition: transform 0.4s ease;
+	}
+	
+	/* Ajuster les containers pour mobile */
+	.carousel-container {
+		overflow: hidden;
+	}
+}
+
+/* Un seul slide visible sur toutes les résolutions */
+@media screen and (min-width: 769px) {
+	.carousel-slide {
+		flex: 0 0 100%;
+		min-width: 100%;
+		max-width: 100%;
+	}
+}
+
+@media screen and (min-width: 1024px) {
+	.carousel-slide {
+		flex: 0 0 100%;
+		min-width: 100%;
+		max-width: 100%;
+	}
 }
 
 .vehicle-card {
@@ -488,7 +881,7 @@ input, select, textarea {
 	transition: all 0.3s ease;
 	display: flex;
 	flex-direction: column;
-	height: 100%;
+	width: 100%; /* S'assure que la carte prend toute la largeur du slide */
 }
 
 .vehicle-card:hover {
@@ -603,24 +996,38 @@ input, select, textarea {
 	background: #f8f8f8;
 }
 
-.testimonials-slider {
-	position: relative;
-	max-width: 800px;
+.testimonials-swiper {
+	width: 100%;
+	max-width: 800px; /* Conserve la largeur max sur desktop */
 	margin: 0 auto;
+	padding-bottom: 3rem;
 }
 
+.testimonials-swiper .swiper-slide {
+	height: auto;
+}
+
+.testimonials-swiper .swiper-pagination-bullet {
+	background: rgba(44, 44, 44, 0.5);
+}
+
+.testimonials-swiper .swiper-pagination-bullet-active {
+	background: #2c2c2c;
+}
+
+.testimonials-slider {
+	display: none !important;
+	visibility: hidden !important;
+}
 .testimonial-card {
 	background: white;
 	padding: 2.5rem;
 	border-radius: 15px;
 	box-shadow: 0 5px 25px rgba(0, 0, 0, 0.05);
 	text-align: left;
-	display: none;
-	animation: fadeIn 0.5s ease;
-}
-
-.testimonial-card.active {
-	display: block;
+	display: flex;
+	flex-direction: column;
+	height: 100%;
 }
 
 .testimonial-content {
@@ -665,53 +1072,6 @@ input, select, textarea {
 .author-rating i {
 	color: #ffc107;
 	font-size: 1.1rem;
-}
-
-.slider-controls {
-	display: flex;
-	justify-content: center;
-	align-items: center;
-	gap: 2rem;
-	margin-top: 2rem;
-}
-
-.slider-btn {
-	background: none;
-	border: 2px solid #2c2c2c;
-	color: #2c2c2c;
-	width: 50px;
-	height: 50px;
-	border-radius: 50%;
-	cursor: pointer;
-	transition: all 0.3s ease;
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	font-size: 1.2rem;
-}
-
-.slider-btn:hover {
-	background: #2c2c2c;
-	color: white;
-	transform: scale(1.1);
-}
-
-.slider-dots {
-	display: flex;
-	gap: 0.5rem;
-}
-
-.dot {
-	width: 12px;
-	height: 12px;
-	border-radius: 50%;
-	background: rgba(44, 44, 44, 0.3);
-	cursor: pointer;
-	transition: background 0.3s ease;
-}
-
-.dot.active {
-	background: #2c2c2c;
 }
 
 /* ============================================
@@ -810,6 +1170,7 @@ input, select, textarea {
 	margin-left: auto;
 	margin-right: auto;
 }
+
 
 /* ============================================
    CONTACT SECTION - Sobre & Professionnel
@@ -1318,7 +1679,7 @@ input, select, textarea {
 	grid-template-columns: 1fr 3fr;
 	gap: 4rem;
 	margin-bottom: 3rem;
-	align-items: start; /* Aligner en haut */
+	align-items: stretch; /* Colonnes étirées pour même hauteur */
 }
 
 .footer-brand h3 {
@@ -1326,6 +1687,17 @@ input, select, textarea {
 	font-weight: 800;
 	color: #ffffff;
 	margin-bottom: 1rem;
+}
+
+/* Aligner les icônes sociaux en bas de la colonne marque */
+.footer-brand {
+	display: flex;
+	flex-direction: column;
+	height: 100%;
+}
+
+.footer-social {
+	margin-top: auto; /* pousse les icônes en bas de la colonne */
 }
 
 .footer-brand p {
@@ -1374,6 +1746,7 @@ input, select, textarea {
 	display: flex;
 	flex-direction: column;
 	height: 100%; /* Prendre toute la hauteur disponible */
+	justify-content: space-between; /* titre en haut, liens en bas */
 }
 
 .footer-column h4 {
@@ -1640,234 +2013,6 @@ input, select, textarea {
 	-ms-transform: translateY(0);
 }
 
-/* ============================================
-   COMPATIBILITÉ TOUS NAVIGATEURS & OS
-   ============================================ */
-
-/* Support pour Internet Explorer 10+ */
-@media screen and (-ms-high-contrast: active), (-ms-high-contrast: none) {
-	.header {
-		background: #000000;
-	}
-
-	.hero {
-		background: #000000;
-	}
-
-	.fleet {
-		background: #000000;
-	}
-
-	.footer {
-		background: #000000;
-	}
-
-	/* Corrections */
-	.header-container,
-	.services-grid,
-	.fleet-grid,
-	.pricing-grid,
-	.contact-content,
-	.footer-content {
-		-ms-flex-pack: justify;
-		-ms-flex-align: center;
-	}
-}
-
-/* Support pour Safari iOS */
-@supports (-webkit-appearance: none) {
-	.hero::before {
-		-webkit-transform: translateZ(0);
-		transform: translateZ(0);
-	}
-
-	.header {
-		-webkit-backdrop-filter: blur(20px);
-		backdrop-filter: blur(20px);
-	}
-
-	/* Animations */
-	.animate-on-scroll {
-		-webkit-transform: translateY(20px);
-		transform: translateY(20px);
-	}
-
-	.animate-on-scroll.in-view {
-		-webkit-transform: translateY(0);
-		transform: translateY(0);
-	}
-
-	/* Optimisations spécifiques iOS */
-	.service-card,
-	.vehicle-card,
-	.pricing-card,
-	.submit-btn,
-	.slider-btn {
-		-webkit-user-select: none;
-		-webkit-touch-callout: none;
-		-webkit-tap-highlight-color: rgba(0, 0, 0, 0.1);
-	}
-
-	/* Corrections */
-	.form-group input,
-	.form-group select,
-	.form-group textarea {
-		font-size: 16px; /* Évite le zoom automatique sur iOS */
-		-webkit-appearance: none;
-		border-radius: 8px;
-	}
-}
-
-/* Support pour Firefox */
-@-moz-document url-prefix() {
-	.hero::before {
-		transform: translateZ(0);
-	}
-
-	.header {
-		background: rgba(0, 0, 0, 0.98);
-	}
-
-	/* Animations */
-	.animate-on-scroll {
-		-moz-transform: translateY(20px);
-		transform: translateY(20px);
-	}
-
-	.animate-on-scroll.in-view {
-		-moz-transform: translateY(0);
-		transform: translateY(0);
-	}
-}
-
-/* Support pour Edge/IE 11 */
-@supports (-ms-ime-align: auto) {
-	.header {
-		background: #000000;
-	}
-
-	.hero {
-		background: #000000;
-	}
-
-	.fleet {
-		background: #000000;
-	}
-
-	.footer {
-		background: #000000;
-	}
-}
-
-/* Support pour Android Chrome */
-@media screen and (max-width: 768px) and (-webkit-min-device-pixel-ratio: 0) {
-	.hero {
-		-webkit-transform: translateZ(0);
-		transform: translateZ(0);
-	}
-
-	/* Corrections */
-	.hero {
-		min-height: calc(var(--vh, 1vh) * 100);
-	}
-}
-
-/* Support pour Windows Phone */
-@media screen and (max-width: 768px) and (-ms-high-contrast: active) {
-	.header {
-		background: #000000;
-	}
-
-	.hero {
-		background: #000000;
-	}
-
-	.fleet {
-		background: #000000;
-	}
-
-	.footer {
-		background: #000000;
-	}
-}
-
-/* Support pour Opera */
-@media screen and (max-width: 768px) and (-o-min-device-pixel-ratio: 0) {
-	.hero {
-		-o-transform: translateZ(0);
-		transform: translateZ(0);
-	}
-}
-
-/* Support pour les très anciens navigateurs */
-@media screen and (max-width: 768px) {
-	/* Corrections */
-	html, body {
-		overflow-x: hidden;
-		width: 100%;
-		max-width: 100%;
-	}
-
-	/* Optimisations tactiles */
-	.service-card,
-	.vehicle-card,
-	.pricing-card,
-	.submit-btn,
-	.slider-btn,
-	.contact-method {
-		-webkit-tap-highlight-color: rgba(0, 0, 0, 0.1);
-		touch-action: manipulation;
-	}
-
-	/* Corrections */
-
-	/* Fallback navigateurs */
-	.services-grid,
-	.fleet-grid,
-	.pricing-grid {
-		display: -webkit-box;
-		display: -ms-flexbox;
-		display: flex;
-		-webkit-box-orient: vertical;
-		-webkit-box-direction: normal;
-		-ms-flex-direction: column;
-		flex-direction: column;
-	}
-
-	/* Fallback navigateurs */
-	.header-container,
-	.contact-content,
-	.footer-content {
-		display: -webkit-box;
-		display: -ms-flexbox;
-		display: flex;
-		-webkit-box-orient: vertical;
-		-webkit-box-direction: normal;
-		-ms-flex-direction: column;
-		flex-direction: column;
-	}
-}
-
-/* Corrections */
-@media screen and (min-width: 1200px) and (-webkit-min-device-pixel-ratio: 2) {
-	/* Optimisations pour les écrans Retina */
-	.hero::before {
-		-webkit-transform: translateZ(0);
-		transform: translateZ(0);
-	}
-}
-
-/* Support pour les navigateurs texte-only */
-@media screen and (max-width: 768px) {
-	/* Simplifications */
-	.animate-on-scroll {
-		opacity: 1;
-		transform: none;
-		-webkit-transform: none;
-		-moz-transform: none;
-		-ms-transform: none;
-	}
-}
 
 /* ============================================
    CORRECTIONS COMPATIBILITÉ NAVIGATEURS
@@ -2002,8 +2147,33 @@ input, select, textarea {
 
 	/* Corrections */
 
-	/* Optimisations iOS */
+	/* Optimisations iOS - accélération GPU */
 	@supports (-webkit-touch-callout: none) {
+		/* Accélération matérielle pour les carrousels */
+		.carousel-wrapper {
+			-webkit-transform: translateZ(0);
+			transform: translateZ(0);
+			-webkit-backface-visibility: hidden;
+			backface-visibility: hidden;
+			-webkit-perspective: 1000px;
+			perspective: 1000px;
+		}
+		
+		.carousel-slide {
+			-webkit-transform: translateZ(0);
+			transform: translateZ(0);
+			-webkit-backface-visibility: hidden;
+			backface-visibility: hidden;
+		}
+		
+		/* Simplifier au maximum sur iOS */
+		@media screen and (max-width: 896px) {
+			.fleet-carousel,
+			.testimonials-carousel,
+			.pricing-carousel {
+				padding: 0 10px;
+			}
+		}
 		/* Éviter le zoom automatique sur les inputs iOS */
 		.form-group input,
 		.form-group select,
@@ -2484,313 +2654,7 @@ input, select, textarea {
 	}
 }
 
-/* ============================================
-   CORRECTIONS COMPATIBILITÉ NAVIGATEURS
-   ============================================ */
 
-/* Support pour Internet Explorer 10+ */
-@media screen and (-ms-high-contrast: active), (-ms-high-contrast: none) {
-	/* Corrections */
-	.header-container,
-	.services-grid,
-	.fleet-grid,
-	.pricing-grid,
-	.contact-content,
-	.footer-content {
-		display: -ms-flexbox;
-		display: flex;
-		-ms-flex-pack: justify;
-		justify-content: space-between;
-		-ms-flex-align: center;
-		align-items: center;
-	}
-
-	/* Corrections */
-	.header {
-		background: #000000;
-	}
-
-	.hero {
-		background: #000000;
-	}
-
-	.fleet {
-		background: #000000;
-	}
-
-	.footer {
-		background: #000000;
-	}
-
-	/* Corrections */
-	.animate-on-scroll {
-		opacity: 1;
-		-ms-transform: none;
-		transform: none;
-	}
-}
-
-/* Support pour Safari iOS */
-@supports (-webkit-appearance: none) {
-	/* Animations */
-	.animate-on-scroll {
-		-webkit-transform: translateY(20px);
-		transform: translateY(20px);
-	}
-
-	.animate-on-scroll.in-view {
-		-webkit-transform: translateY(0);
-		transform: translateY(0);
-	}
-
-	/* Corrections */
-	.header {
-		-webkit-backdrop-filter: blur(20px);
-		backdrop-filter: blur(20px);
-	}
-
-	/* Corrections */
-	.hero::before {
-		-webkit-transform: translateZ(0);
-		transform: translateZ(0);
-	}
-}
-
-/* Support pour Firefox */
-@-moz-document url-prefix() {
-	/* Animations */
-	.animate-on-scroll {
-		-moz-transform: translateY(20px);
-		transform: translateY(20px);
-	}
-
-	.animate-on-scroll.in-view {
-		-moz-transform: translateY(0);
-		transform: translateY(0);
-	}
-
-	/* Corrections */
-	.hero::before {
-		transform: translateZ(0);
-	}
-
-	.header {
-		background: rgba(0, 0, 0, 0.98);
-	}
-}
-
-/* Support pour Edge/IE 11 */
-@supports (-ms-ime-align: auto) {
-	/* Corrections */
-	.header {
-		background: #000000;
-	}
-
-	.hero {
-		background: #000000;
-	}
-
-	.fleet {
-		background: #000000;
-	}
-
-	.footer {
-		background: #000000;
-	}
-}
-
-/* Support pour Android Chrome */
-@media screen and (max-width: 768px) and (-webkit-min-device-pixel-ratio: 0) {
-	/* Corrections */
-	.hero {
-		min-height: calc(var(--vh, 1vh) * 100);
-		-webkit-transform: translateZ(0);
-		transform: translateZ(0);
-	}
-}
-
-/* Support pour les très anciens navigateurs */
-@media screen and (max-width: 768px) {
-	/* Fallback navigateurs */
-	.services-grid,
-	.fleet-grid,
-	.pricing-grid {
-		display: -webkit-box;
-		display: -ms-flexbox;
-		display: flex;
-		-webkit-box-orient: vertical;
-		-webkit-box-direction: normal;
-		-ms-flex-direction: column;
-		flex-direction: column;
-	}
-
-	/* Fallback navigateurs */
-	.header-container,
-	.contact-content,
-	.footer-content {
-		display: -webkit-box;
-		display: -ms-flexbox;
-		display: flex;
-		-webkit-box-orient: vertical;
-		-webkit-box-direction: normal;
-		-ms-flex-direction: column;
-		flex-direction: column;
-	}
-}
-
-/* ============================================
-   CORRECTIONS COMPATIBILITÉ NAVIGATEURS
-   ============================================ */
-
-/* Support pour Internet Explorer 10+ */
-@media screen and (-ms-high-contrast: active), (-ms-high-contrast: none) {
-	/* Corrections */
-	.header {
-		background: #000000;
-	}
-
-	.hero {
-		background: #000000;
-	}
-
-	.fleet {
-		background: #000000;
-	}
-
-	.footer {
-		background: #000000;
-	}
-
-	/* Corrections */
-	.header-container,
-	.services-grid,
-	.fleet-grid,
-	.pricing-grid,
-	.contact-content,
-	.footer-content {
-		display: -ms-flexbox;
-		display: flex;
-		-ms-flex-pack: justify;
-		justify-content: space-between;
-		-ms-flex-align: center;
-		align-items: center;
-	}
-
-	/* Corrections */
-	.animate-on-scroll {
-		opacity: 1;
-		-ms-transform: none;
-		transform: none;
-	}
-}
-
-/* Support pour Safari iOS */
-@supports (-webkit-appearance: none) {
-	/* Animations */
-	.animate-on-scroll {
-		-webkit-transform: translateY(20px);
-		transform: translateY(20px);
-	}
-
-	.animate-on-scroll.in-view {
-		-webkit-transform: translateY(0);
-		transform: translateY(0);
-	}
-
-	/* Corrections */
-	.header {
-		-webkit-backdrop-filter: blur(20px);
-		backdrop-filter: blur(20px);
-	}
-
-	/* Corrections */
-	.hero::before {
-		-webkit-transform: translateZ(0);
-		transform: translateZ(0);
-	}
-}
-
-/* Support pour Firefox */
-@-moz-document url-prefix() {
-	/* Animations */
-	.animate-on-scroll {
-		-moz-transform: translateY(20px);
-		transform: translateY(20px);
-	}
-
-	.animate-on-scroll.in-view {
-		-moz-transform: translateY(0);
-		transform: translateY(0);
-	}
-
-	/* Corrections */
-	.hero::before {
-		transform: translateZ(0);
-	}
-
-	.header {
-		background: rgba(0, 0, 0, 0.98);
-	}
-}
-
-/* Support pour Edge/IE 11 */
-@supports (-ms-ime-align: auto) {
-	/* Corrections */
-	.header {
-		background: #000000;
-	}
-
-	.hero {
-		background: #000000;
-	}
-
-	.fleet {
-		background: #000000;
-	}
-
-	.footer {
-		background: #000000;
-	}
-}
-
-/* Support pour Android Chrome */
-@media screen and (max-width: 768px) and (-webkit-min-device-pixel-ratio: 0) {
-	/* Corrections */
-	.hero {
-		min-height: calc(var(--vh, 1vh) * 100);
-		-webkit-transform: translateZ(0);
-		transform: translateZ(0);
-	}
-}
-
-/* Support pour les très anciens navigateurs */
-@media screen and (max-width: 768px) {
-	/* Fallback navigateurs */
-	.services-grid,
-	.fleet-grid,
-	.pricing-grid {
-		display: -webkit-box;
-		display: -ms-flexbox;
-		display: flex;
-		-webkit-box-orient: vertical;
-		-webkit-box-direction: normal;
-		-ms-flex-direction: column;
-		flex-direction: column;
-	}
-
-	/* Fallback navigateurs */
-	.header-container,
-	.contact-content,
-	.footer-content {
-		display: -webkit-box;
-		display: -ms-flexbox;
-		display: flex;
-		-webkit-box-orient: vertical;
-		-webkit-box-direction: normal;
-		-ms-flex-direction: column;
-		flex-direction: column;
-	}
-}
 
 /* ============================================
     RESPONSIVE DESIGN - Mobile First
@@ -3002,6 +2866,8 @@ input, select, textarea {
 		gap: 1.5rem;
 	}
 
+
+
 	.contact {
 		padding: 4rem 0;
 	}
@@ -3031,6 +2897,7 @@ input, select, textarea {
 	.footer-content {
 		grid-template-columns: 1fr;
 		gap: 2rem;
+		align-items: stretch; /* étire les colonnes en hauteur */
 	}
 
 	.footer-links {
@@ -3043,9 +2910,37 @@ input, select, textarea {
 		text-align: center;
 		gap: 1.5rem;
 	}
+
+	/* Aligner en bas sur mobile aussi */
+	.footer-brand,
+	.footer-column {
+		display: flex;
+		flex-direction: column;
+		height: 100%;
+		justify-content: space-between; /* titre en haut, contenu en bas */
+	}
+
+	.footer-social {
+		margin-top: auto;
+	}
+}
+
+/* Pour les écrans plus grands que mobile (tablettes et desktops) */
+@media screen and (min-width: 769px) {
+	/* On cache les carrousels */
+	.pricing-swiper {
+		display: none;
+	}
+	/* Et on affiche les grilles bien organisées */
+	.pricing-grid {
+		display: grid;
+	}
 }
 
 @media screen and (max-width: 480px) {
+	html {
+		font-size: 15px; /* Réduction globale des tailles (titres, textes, espacements) */
+	}
 	.hero-title {
 		font-size: 1.8rem;
 	}
@@ -3072,9 +2967,27 @@ input, select, textarea {
 		align-items: center;
 		justify-content: center;
 	}
+
+	/* Ajustements bouton burger pour petits écrans (zone tactile 44px) */
+	.burger-menu {
+		width: 44px;
+		height: 44px;
+		padding: 10px; /* agrandit la zone tactile sans grossir les barres */
+		margin-left: auto;
+	}
+
+	.burger-bar {
+		width: 22px;
+		height: 3px;
+	}
+
+	/* Réduire légèrement le padding du header pour gagner de l'espace */
+	.header-container {
+		padding: 0.8rem 0.9rem;
+	}
 }
 
-/* iPhone XR (896×414) */
+/* iPhone XR (896×414) - Optimisations spécifiques */
 @media screen and (max-width: 896px) and (min-width: 815px) {
 	.container {
 		padding: 0 1.2rem;
@@ -3120,7 +3033,37 @@ input, select, textarea {
 	}
 }
 
-/* iPhone SE et petits téléphones (667×375) */
+/* Petits téléphones et iPhone SE (667×375 et moins) */
+@media screen and (max-width: 896px) {
+	/* Optimisations majeures pour la performance mobile */
+	
+	.carousel-slide {
+		margin-left: 0 !important;
+	}
+	
+	/* Simplifier les containers */
+	.carousel-wrapper {
+		transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+	}
+	
+	/* Réduire les espacements */
+	.hero {
+		padding: 2rem 1rem;
+	}
+	
+	.hero-title {
+		font-size: 2rem;
+	}
+	
+	.hero-subtitle {
+		font-size: 1.2rem;
+	}
+	
+	.section-header h2 {
+		font-size: 1.8rem;
+	}
+}
+
 @media screen and (max-width: 667px) and (min-width: 361px) {
 	.container {
 		padding: 0 1rem;
@@ -3215,6 +3158,9 @@ input, select, textarea {
 
 /* Très petits écrans */
 @media screen and (max-width: 360px) {
+	html {
+		font-size: 14px; /* Encore plus compact sur très petits téléphones */
+	}
 	.container {
 		padding: 0 0.8rem;
 	}
@@ -3250,4 +3196,51 @@ input, select, textarea {
 	.logo h1 {
 		font-size: 1.5rem;
 	}
+
+	/* Ultra petits écrans: burger compact mais zone tactile conservée */
+	.burger-menu {
+		width: 42px;
+		height: 42px;
+		padding: 9px;
+	}
+
+	.burger-bar {
+		width: 20px;
+		height: 2.5px;
+	}
+}
+
+/* Compaction mobile supplémentaire (overrides) */
+@media screen and (max-width: 768px) {
+	.header-container { padding: 0.7rem 0.9rem; }
+	.logo h1 { font-size: 1.5rem; }
+	.about, .services, .fleet, .testimonials, .pricing, .contact, .map-section { padding: 3rem 0; }
+	.services-grid, .pricing-grid, .footer-links { gap: 1.1rem; }
+	.service-card, .vehicle-card, .pricing-card { padding: 1.4rem 1.1rem; }
+	.contact-form { padding: 1.6rem 1.2rem; }
+	.form-row { gap: 0.6rem; margin-bottom: 1rem; }
+	.form-group { min-height: 68px; }
+	.form-group input, .form-group select, .form-group textarea { height: 46px; padding: 0.8rem; }
+	.submit-btn, .btn-secondary { padding: 0.9rem 1.2rem; font-size: 0.95rem; }
+}
+
+@media screen and (max-width: 480px) {
+	.header-container { padding: 0.6rem 0.8rem; }
+	.logo h1 { font-size: 1.4rem; }
+	.about, .services, .fleet, .testimonials, .pricing, .contact, .map-section { padding: 2.5rem 0; }
+	.service-card, .vehicle-card, .pricing-card { padding: 1.2rem 1rem; }
+	.contact-form { padding: 1.3rem 1rem; }
+	.form-row { gap: 0.5rem; }
+	.form-group { min-height: 64px; }
+	.form-group input, .form-group select, .form-group textarea { height: 44px; padding: 0.7rem; }
+	.submit-btn, .btn-secondary { padding: 0.85rem 1.1rem; font-size: 0.9rem; }
+}
+
+@media screen and (max-width: 360px) {
+	.about, .services, .fleet, .testimonials, .pricing, .contact, .map-section { padding: 2rem 0; }
+	.service-card, .vehicle-card, .pricing-card { padding: 1rem 0.9rem; }
+	.contact-form { padding: 1.1rem 0.9rem; }
+	.form-group { min-height: 60px; }
+	.form-group input, .form-group select, .form-group textarea { height: 42px; padding: 0.6rem; }
+	.submit-btn, .btn-secondary { padding: 0.8rem 1rem; font-size: 0.88rem; }
 }
