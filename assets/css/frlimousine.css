@@ -815,10 +815,59 @@ body.menu-open {
 	.testimonials-carousel {
 		padding: 0 30px;
 	}
-	
-    /* Masquer les flèches sur mobile pour éviter tout débordement */
-    .carousel-btn { display: none !important; }
-	
+
+	/* Afficher les flèches en bas sur mobile */
+	.carousel-btn {
+		display: flex !important;
+		position: static !important;
+		margin: 0 10px;
+		transform: none !important;
+	}
+
+	/* Conteneur pour les flèches en bas */
+	.carousel-navigation {
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		margin-top: 2rem;
+		gap: 15px;
+		padding: 0 1rem;
+	}
+
+	/* Style des flèches pour mobile - discret et compact */
+	.carousel-navigation .carousel-btn {
+		background: rgba(0, 0, 0, 0.6);
+		border: 1px solid rgba(255, 255, 255, 0.15);
+		border-radius: 8px;
+		width: 40px;
+		height: 40px;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		color: #ffffff;
+		cursor: pointer;
+		transition: all 0.2s ease;
+		box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+		font-size: 0.9rem;
+		opacity: 0.8;
+	}
+
+	.carousel-navigation .carousel-btn:hover {
+		background: rgba(0, 0, 0, 0.8);
+		border-color: rgba(255, 255, 255, 0.25);
+		transform: translateY(-1px);
+		box-shadow: 0 3px 12px rgba(0, 0, 0, 0.2);
+		opacity: 1;
+	}
+
+	.carousel-navigation .carousel-btn:active {
+		transform: translateY(0) scale(0.95);
+	}
+
+	.carousel-navigation .carousel-btn i {
+		font-size: 1rem;
+	}
+
 	/* Forcer une seule slide visible sur mobile */
 	.carousel-slide {
 		flex: 0 0 100% !important;
@@ -827,17 +876,17 @@ body.menu-open {
 		width: 100% !important;
 		margin-left: 0 !important;
 	}
-	
+
 	.carousel-wrapper {
 		display: flex !important;
 		width: 100% !important;
 	}
-	
+
 	/* Réduire les transitions pour mobile */
 	.carousel-wrapper {
 		transition: transform 0.4s ease;
 	}
-	
+
 	/* Ajuster les containers pour mobile */
 	.carousel-container {
 		overflow: hidden;
