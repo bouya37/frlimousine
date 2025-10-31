@@ -264,16 +264,16 @@ Cordialement,
 Système automatique FRLimousine";
 
 $headers = 'From: ' . $config['email']['from'] . "\r\n" .
-           'Reply-To: ' . $clientDetails['email'] . "\r\n" .
+           'Reply-To: ' . $client['email'] . "\r\n" .
            'X-Mailer: PHP/' . phpversion() . "\r\n" .
            'Content-Type: text/plain; charset=UTF-8' . "\r\n" .
            'Return-Path: ' . $config['email']['from'];
 
 // Envoyer l'email de notification
 if (mail($emailNotification, $subject, $message, $headers)) {
-    $security->logSecurityEvent("EMAIL_SENT", $ip, "Email de notification envoyé pour: " . $clientDetails['nom']);
+    $security->log("EMAIL_SENT: Email de notification envoyé pour: " . $client['nom']);
 } else {
-    $security->logSecurityEvent("EMAIL_ERROR", $ip, "Impossible d'envoyer l'email de notification pour " . $clientDetails['nom']);
+    $security->log("EMAIL_ERROR: Impossible d'envoyer l'email de notification pour " . $client['nom']);
 }
 
 // Réponse de succès
@@ -286,5 +286,5 @@ echo json_encode([
     'timestamp' => date('Y-m-d H:i:s')
 ]);
 
-$security->logSecurityEvent("SUCCESS", $ip, "Devis traité avec succès pour: " . $clientDetails['nom']);
+$security->log("SUCCESS: Devis traité avec succès pour: " . $client['nom']);
 ?>

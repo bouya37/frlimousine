@@ -1,122 +1,40 @@
-# 🚗 FICHIER .HTACCESS DE SÉCURITÉ FRLimousine
-# Protection maximale contre DDoS, injections et attaques
+# Force HTTPS
+RewriteEngine On
+RewriteCond %{HTTPS} off
+RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
 
-# 1. PROTECTION DE BASE
-<Files "*">
-    Order Deny,Allow
-    Deny from all
-</Files>
-
-# Autoriser l'accès aux fichiers nécessaires
-<Files "*.html">
-    Allow from all
-</Files>
-
-<Files "*.css">
-    Allow from all
-</Files>
-
-<Files "*.js">
-    Allow from all
-</Files>
-
-<Files "*.php">
-    Allow from all
-</Files>
-
-# 2. PROTECTION CONTRE LES ATTAQUES DDoS
-# Rate limiting de base
-<Location "*">
-    # Limiter les connexions par IP (mod_security si disponible)
-    # Bloquer les bots malveillants connus
-    SetEnvIf user-agent "libwww-perl" bad_bot
-    SetEnvIf user-agent "BBBike" bad_bot
-    SetEnvIf user-agent "wget" bad_bot
-    Deny from env=bad_bot
-</Location>
-
-# 3. PROTECTION CONTRE LES INJECTIONS SQL/XSS
-<IfModule mod_rewrite.c>
-    RewriteEngine On
-
-    # Bloquer les requêtes suspectes
-    RewriteCond %{QUERY_STRING} (\<|%3C).*script.*(\>|%3E) [NC,OR]
-    RewriteCond %{QUERY_STRING} GLOBALS(=|\[|\%[0-9A-Z]{0,2}) [OR]
-    RewriteCond %{QUERY_STRING} _REQUEST(=|\[|\%[0-9A-Z]{0,2})
-    RewriteRule .* - [F,L]
-
-    # Protéger contre les injections SQL
-    RewriteCond %{QUERY_STRING} union.*select.*\(.*/union/select.* [NC]
-    RewriteRule .* - [F,L]
-
-    # Bloquer les accès aux fichiers sensibles
-    RewriteRule ^\.htaccess$ - [F,L]
-    RewriteRule ^\.env$ - [F,L]
-    RewriteRule ^config\.php$ - [F,L]
-    RewriteRule ^backup.*$ - [F,L]
-
-    # Rediriger les erreurs 404 vers une page personnalisée
-    ErrorDocument 404 /404.html
-    ErrorDocument 403 /403.html
-</IfModule>
-
-# 4. HEADERS DE SÉCURITÉ
+# Sécurité - Headers de sécurité
 <IfModule mod_headers.c>
+    # HSTS (HTTP Strict Transport Security)
+    Header always set Strict-Transport-Security "max-age=31536000; includeSubDomains; preload"
+
+    # Content Security Policy renforcée
+    Header always set Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-inline' https://www.google-analytics.com https://www.googletagmanager.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdn.jsdelivr.net; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https: blob:; connect-src 'self' https://frlimousine.ovh https://www.google-analytics.com https://www.googletagmanager.com; frame-src 'none'; object-src 'none'; base-uri 'self'; form-action 'self' https://frlimousine.ovh;"
+
     # Protection XSS
-    Header always set X-Content-Type-Options nosniff
-    Header always set X-Frame-Options DENY
+    Header always set X-Content-Type-Options "nosniff"
+    Header always set X-Frame-Options "DENY"
     Header always set X-XSS-Protection "1; mode=block"
 
-    # Protection contre le clickjacking
-    Header always set X-Frame-Options SAMEORIGIN
-
-    # Forcer HTTPS (à activer après configuration SSL)
-    # Header always set Strict-Transport-Security "max-age=63072000; includeSubDomains; preload"
-
-    # Protection contre le mime sniffing
-    Header always set X-Content-Type-Options nosniff
-
-    # Référer policy
+    # Referrer Policy
     Header always set Referrer-Policy "strict-origin-when-cross-origin"
 
-    # Content Security Policy de base
-    Header always set Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self' https://fonts.gstatic.com; connect-src 'self'"
-
     # Permissions Policy (anciennement Feature Policy)
-    Header always set Permissions-Policy "camera=(), microphone=(), geolocation=()"
+    Header always set Permissions-Policy "geolocation=(), microphone=(), camera=()"
+
+    # Cache optimisé pour les assets statiques
+    <FilesMatch "\.(css|js|png|jpg|jpeg|gif|ico|svg|woff|woff2|ttf|eot)$">
+        Header set Cache-Control "public, max-age=31536000, immutable"
+        Header set Expires "Wed, 21 Oct 2030 07:28:00 GMT"
+    </FilesMatch>
+
+    # Cache court pour les pages HTML
+    <FilesMatch "\.(html|htm)$">
+        Header set Cache-Control "public, max-age=3600"
+    </FilesMatch>
 </IfModule>
 
-# 5. PROTECTION CONTRE LES ATTAQUES PAR USER-AGENT
-<IfModule mod_setenvif.c>
-    # Bloquer les scanners et bots malveillants
-    SetEnvIf user-agent "sqlmap" bad_bot
-    SetEnvIf user-agent "nmap" bad_bot
-    SetEnvIf user-agent "nikto" bad_bot
-    SetEnvIf user-agent "w3af" bad_bot
-    SetEnvIf user-agent "skipfish" bad_bot
-    SetEnvIf user-agent "nessus" bad_bot
-    SetEnvIf user-agent "openvas" bad_bot
-    SetEnvIf user-agent "qualys" bad_bot
-    SetEnvIf user-agent "acunetix" bad_bot
-    SetEnvIf user-agent "havij" bad_bot
-    SetEnvIf user-agent "bsqlbf" bad_bot
-
-    Deny from env=bad_bot
-
-    # Bloquer les requêtes sans user-agent
-    SetEnvIf user-agent "^$" bad_bot
-    Deny from env=bad_bot
-</IfModule>
-
-# 6. PROTECTION CONTRE LES HOTLINKS (images)
-<IfModule mod_rewrite.c>
-    RewriteCond %{HTTP_REFERER} !^$
-    RewriteCond %{HTTP_REFERER} !^https?://(www\.)?frlimousine\.fr [NC]
-    RewriteCond %{REQUEST_FILENAME} \.(gif|jpg|jpeg|png|svg|webp)$ [NC]
-    RewriteRule . - [F,L]
-</IfModule>
-
-# 7. COMPRESSION ET CACHE (optimisation sécurité)
+# Compression GZIP
 <IfModule mod_deflate.c>
     AddOutputFilterByType DEFLATE text/plain
     AddOutputFilterByType DEFLATE text/html
@@ -127,66 +45,46 @@
     AddOutputFilterByType DEFLATE application/rss+xml
     AddOutputFilterByType DEFLATE application/javascript
     AddOutputFilterByType DEFLATE application/x-javascript
+    AddOutputFilterByType DEFLATE application/json
 </IfModule>
 
-# 8. PROTECTION CONTRE LES SPAMMERS
-<RequireAll>
-    Require all granted
-    Require not expr "%{HTTP_USER_AGENT} =~ /libwww-perl/"
-    Require not expr "%{HTTP_USER_AGENT} =~ /BBBike/"
-    Require not expr "%{REQUEST_URI} =~ /\.env/"
-    Require not expr "%{REQUEST_URI} =~ /config\.php/"
-    Require not expr "%{REQUEST_URI} =~ /backup/"
-</RequireAll>
+# Protection contre les hotlinks
+RewriteCond %{HTTP_REFERER} !^$
+RewriteCond %{HTTP_REFERER} !^https?://(www\.)?frlimousine\.com [NC]
+RewriteCond %{REQUEST_FILENAME} \.(png|jpg|jpeg|gif|svg|ico|css|js)$ [NC]
+RewriteRule . - [F,L]
 
-# 9. LOGGING DE SÉCURITÉ
-LogFormat "%h %l %u %t \"%r\" %>s %b \"%{Referer}i\" \"%{User-Agent}i\"" combined-security
-CustomLog logs/access-security.log combined-security
-
-# 10. PROTECTION PHP ADDITIONNELLE
-<IfModule mod_php.c>
-    php_flag display_errors off
-    php_flag log_errors on
-    php_value error_log logs/php-errors.log
-    php_flag expose_php off
-    php_flag register_globals off
-    php_flag magic_quotes_gpc off
-    php_value max_input_time 30
-    php_value max_execution_time 30
-    php_value memory_limit 32M
-    php_value post_max_size 8M
-    php_value upload_max_filesize 2M
-    php_value max_file_uploads 1
-</IfModule>
-
-# 11. PROTECTION CONTRE LES ATTAQUES PAR CHEMIN
-<IfModule mod_rewrite.c>
-    # Bloquer les traversées de répertoire
-    RewriteCond %{REQUEST_URI} \.\./ [OR]
-    RewriteCond %{REQUEST_URI} \.\.\\ [OR]
-    RewriteCond %{REQUEST_URI} \.\./ [NC]
-    RewriteRule .* - [F,L]
-
-    # Bloquer les tentatives d'accès aux fichiers système
-    RewriteRule ^(wp-admin|wp-content|wp-includes|administrator|admin) - [F,L]
-</IfModule>
-
-# 12. PROTECTION ANTI-DDoS AVANCÉE (si mod_evasive disponible)
+# Rate limiting basique (nécessite mod_evasive ou similaire)
 <IfModule mod_evasive24.c>
-    DOSHashTableSize    3097
-    DOSPageCount        2
-    DOSPageInterval     1
-    DOSSiteCount        50
-    DOSSiteInterval     1
-    DOSBlockingPeriod   600
-    DOSEmailNotify      contact@votre-domaine.ovh
-    DOSLogDir           "/var/log/httpd/"
+    DOSHashTableSize 100
+    DOSPageCount 5
+    DOSPageInterval 1
+    DOSSiteCount 50
+    DOSSiteInterval 1
+    DOSBlockingPeriod 600
 </IfModule>
 
-# 13. PROTECTION CONTRE LES ATTAQUES SLOWLORIS
-<IfModule mod_reqtimeout.c>
-    RequestReadTimeout header=20-40,MinRate=500 body=20-40,MinRate=500
+# Optimisations PHP (si applicable)
+<IfModule mod_php.c>
+    php_value upload_max_filesize 10M
+    php_value post_max_size 10M
+    php_value max_execution_time 300
+    php_value memory_limit 256M
 </IfModule>
 
-# 14. FIN DU FICHIER .HTACCESS
-# Dernière modification : Sécurisation maximale FRLimousine
+# Redirections pour SEO
+Redirect 301 /ancienne-page /nouvelle-page
+
+# Protection des fichiers sensibles
+<Files "config.php">
+    Order Allow,Deny
+    Deny from all
+</Files>
+
+<Files "*.log">
+    Order Allow,Deny
+    Deny from all
+</Files>
+
+# Optimisation des requêtes de base de données (si applicable)
+# Les optimisations spécifiques dépendront de votre système de base de données

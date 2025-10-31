@@ -47,7 +47,20 @@ body {
 
 /* Correction conflit couleurs de texte - Règles spécifiques par section */
 
-p {
+/* Texte blanc pour sections sur fond sombre */
+.hero p,
+.fleet p,
+.footer p {
+	color: #ffffff;
+}
+
+/* Texte noir/gris pour sections sur fond clair */
+.about p,
+.services p,
+.testimonials p,
+.pricing p,
+.contact p,
+.map-section p {
 	color: #2c2c2c;
 }
 
@@ -619,6 +632,7 @@ body.menu-open {
 	display: none;
 	padding: 0;
 	box-sizing: border-box;
+	min-height: 400px; /* Hauteur minimale fixe pour éviter les sauts */
 }
 
 /* Le slide actif sera affiché par JavaScript */
@@ -796,13 +810,13 @@ body.menu-open {
 	background: rgba(0, 0, 0, 0.4);
 }
 
-/* Animations de transition pro pour les slides */
+/* Animations de transition pro pour les slides - SANS SAUTS */
 .carousel-slide {
     opacity: 0;
-    transform: translateX(50px) scale(0.95) rotateY(15deg);
-    filter: blur(2px);
-    transition: all 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-    will-change: opacity, transform, filter;
+    transform: translateX(20px);
+    transition: opacity 0.5s ease, transform 0.5s ease;
+    /* Préserver l'espace pour éviter les sauts */
+    visibility: hidden;
     /* Amélioration pour les navigateurs modernes */
     backface-visibility: hidden;
     perspective: 1000px;
@@ -810,8 +824,21 @@ body.menu-open {
 
 .carousel-slide.is-active {
     opacity: 1;
-    transform: translateX(0) scale(1) rotateY(0deg);
-    filter: blur(0px);
+    transform: translateX(0);
+    visibility: visible;
+}
+
+/* États d'animation pour éviter les sauts */
+.carousel-slide.entering {
+    opacity: 0;
+    transform: translateX(20px);
+    visibility: visible;
+}
+
+.carousel-slide.leaving {
+    opacity: 0;
+    transform: translateX(-20px);
+    visibility: visible;
 }
 
 /* Animation d'entrée élégante pour les nouveaux slides */
@@ -922,8 +949,8 @@ body.menu-open {
 		background: rgba(0, 0, 0, 0.5);
 		border: 1px solid rgba(255, 255, 255, 0.1);
 		border-radius: 6px;
-		width: 32px;
-		height: 32px;
+		width: 44px;
+		height: 44px;
 		display: flex;
 		align-items: center;
 		justify-content: center;
@@ -931,8 +958,11 @@ body.menu-open {
 		cursor: pointer;
 		transition: all 0.2s ease;
 		box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
-		font-size: 0.8rem;
+		font-size: 0.9rem;
 		opacity: 0.7;
+		min-width: 44px;
+		min-height: 44px;
+		touch-action: manipulation;
 	}
 
 	.carousel-navigation .carousel-btn:hover {
@@ -1002,6 +1032,8 @@ body.menu-open {
 	display: flex;
 	flex-direction: column;
 	width: 100%; /* S'assure que la carte prend toute la largeur du slide */
+	min-height: 500px; /* Hauteur minimale fixe pour éviter les sauts */
+	height: 500px; /* Hauteur fixe pour uniformité */
 }
 
 .vehicle-card:hover {
@@ -1148,6 +1180,7 @@ body.menu-open {
 	display: flex;
 	flex-direction: column;
 	height: 100%;
+	min-height: 350px; /* Hauteur minimale fixe pour éviter les sauts */
 }
 
 .testimonial-content {
@@ -1216,6 +1249,11 @@ body.menu-open {
 	padding: 2.5rem;
 	text-align: center;
 	transition: all 0.3s ease;
+	min-height: 400px; /* Hauteur minimale fixe pour éviter les sauts */
+	height: 400px; /* Hauteur fixe pour uniformité */
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
 }
 
 .pricing-card:hover {
@@ -2775,6 +2813,66 @@ body.menu-open {
 	}
 }
 
+
+
+/* ============================================
+    LAZY LOADING STYLES
+    ============================================ */
+
+img.lazy {
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+img.lazy.loaded {
+    opacity: 1;
+}
+
+/* ============================================
+    ACCESSIBILITY - FOCUS MANAGEMENT
+    ============================================ */
+
+.carousel-slide {
+    outline: none;
+}
+
+.carousel-slide:focus-visible {
+    outline: 3px solid #007acc;
+    outline-offset: 2px;
+    border-radius: 10px;
+}
+
+/* Améliorer la visibilité du focus sur les boutons */
+.carousel-btn:focus-visible,
+.nav-link:focus-visible,
+.contact-button:focus-visible,
+.pricing-btn:focus-visible,
+.submit-btn:focus-visible {
+    outline: 3px solid #007acc;
+    outline-offset: 2px;
+    box-shadow: 0 0 0 6px rgba(0, 122, 204, 0.25);
+}
+
+/* Améliorer le contraste des textes */
+.section-header h2 {
+    color: #1a1a1a; /* Plus sombre pour meilleur contraste */
+}
+
+.about-text,
+.testimonial-text p,
+.pricing-features li,
+.service-content p {
+    color: #2c2c2c; /* Assurer un contraste minimum de 4.5:1 */
+}
+
+/* Améliorer le contraste des liens */
+.footer-column a {
+    color: rgba(255, 255, 255, 0.9); /* Plus visible */
+}
+
+.footer-column a:hover {
+    color: #ffffff; /* Blanc pur au survol */
+}
 
 
 /* ============================================

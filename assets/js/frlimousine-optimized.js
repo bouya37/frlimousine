@@ -149,8 +149,52 @@ function calculatePrice() {
 // VALIDATION ET ENVOI DU FORMULAIRE
 // ============================================
 
+// ============================================
+// RATE LIMITING POUR FORMULAIRES
+// ============================================
+
+const RATE_LIMIT_STORAGE_KEY = 'frlimousine_form_submissions';
+const MAX_SUBMISSIONS_PER_HOUR = 5;
+const MAX_SUBMISSIONS_PER_DAY = 20;
+
+function checkRateLimit() {
+    const now = Date.now();
+    const oneHour = 60 * 60 * 1000;
+    const oneDay = 24 * oneHour;
+
+    let submissions = JSON.parse(localStorage.getItem(RATE_LIMIT_STORAGE_KEY) || '[]');
+
+    // Nettoyer les anciennes soumissions
+    submissions = submissions.filter(sub => now - sub.timestamp < oneDay);
+
+    // Compter les soumissions récentes
+    const recentSubmissions = submissions.filter(sub => now - sub.timestamp < oneHour).length;
+    const dailySubmissions = submissions.length;
+
+    if (recentSubmissions >= MAX_SUBMISSIONS_PER_HOUR) {
+        alert(`Trop de soumissions récentes. Veuillez attendre ${Math.ceil((oneHour - (now - submissions[submissions.length - 1].timestamp)) / 60000)} minutes.`);
+        return false;
+    }
+
+    if (dailySubmissions >= MAX_SUBMISSIONS_PER_DAY) {
+        alert('Limite de soumissions journalières atteinte. Veuillez réessayer demain.');
+        return false;
+    }
+
+    // Ajouter la nouvelle soumission
+    submissions.push({ timestamp: now });
+    localStorage.setItem(RATE_LIMIT_STORAGE_KEY, JSON.stringify(submissions));
+
+    return true;
+}
+
 function validateReservation(event) {
     event.preventDefault();
+
+    // Vérifier le rate limiting
+    if (!checkRateLimit()) {
+        return false;
+    }
 
     const form = event.target;
     const formData = new FormData(form);
@@ -495,15 +539,39 @@ function initCarousel(selector, options = {}) {
         updateCarousel();
     }
 
+    // Navigation au clavier
+    function handleKeyNavigation(event) {
+        if (event.key === 'ArrowLeft') {
+            event.preventDefault();
+            currentIndex = (currentIndex > 0) ? currentIndex - 1 : slides.length - 1;
+            updateCarousel(true);
+            // Haptic feedback
+            if (navigator.vibrate) navigator.vibrate(30);
+        } else if (event.key === 'ArrowRight') {
+            event.preventDefault();
+            currentIndex = (currentIndex < slides.length - 1) ? currentIndex + 1 : 0;
+            updateCarousel(true);
+            // Haptic feedback
+            if (navigator.vibrate) navigator.vibrate(30);
+        }
+    }
+
+    // Ajouter la navigation au clavier
+    carouselElement.addEventListener('keydown', handleKeyNavigation);
+
     // Événements des boutons
     if (nextBtn && prevBtn) {
         nextBtn.addEventListener('click', () => {
             currentIndex = (currentIndex < slides.length - 1) ? currentIndex + 1 : 0;
             updateCarousel(true);
+            // Haptic feedback
+            if (navigator.vibrate) navigator.vibrate(30);
         });
         prevBtn.addEventListener('click', () => {
             currentIndex = (currentIndex > 0) ? currentIndex - 1 : slides.length - 1;
             updateCarousel(true);
+            // Haptic feedback
+            if (navigator.vibrate) navigator.vibrate(30);
         });
     }
 
@@ -640,6 +708,125 @@ function initBackToTop() {
 }
 
 // ============================================
+// LAZY LOADING POUR LES IMAGES
+// ============================================
+
+function initLazyLoading() {
+    const images = document.querySelectorAll('img[data-src]');
+    const imageObserver = new IntersectionObserver((entries, observer) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                const img = entry.target;
+                img.src = img.dataset.src;
+                img.classList.remove('lazy');
+                img.classList.add('loaded');
+                observer.unobserve(img);
+            }
+        });
+    }, {
+        rootMargin: '50px 0px', // Charger 50px avant que l'image soit visible
+        threshold: 0.01
+    });
+
+    images.forEach(img => imageObserver.observe(img));
+}
+
+// ============================================
+// HAPTIC FEEDBACK ONLY
+// ============================================
+
+function initHapticFeedback() {
+    // Feedback tactile pour les interactions carrousel
+    const carousels = document.querySelectorAll('.fleet-carousel, .testimonials-carousel, .pricing-carousel');
+
+    carousels.forEach(carousel => {
+        // Feedback au swipe
+        carousel.addEventListener('touchend', () => {
+            if (navigator.vibrate) {
+                navigator.vibrate(50);
+            }
+        });
+
+        // Feedback aux clics boutons
+        const buttons = carousel.querySelectorAll('.carousel-btn');
+        buttons.forEach(button => {
+            button.addEventListener('click', () => {
+                if (navigator.vibrate) {
+                    navigator.vibrate(30);
+                }
+            });
+        });
+    });
+
+    // Feedback pour les CTA principaux
+    const ctaButtons = document.querySelectorAll('.contact-button, .pricing-btn');
+    ctaButtons.forEach(button => {
+        button.addEventListener('click', () => {
+            if (navigator.vibrate) {
+                navigator.vibrate(40);
+            }
+        });
+    });
+}
+
+// ============================================
+// PWA - SERVICE WORKER REGISTRATION
+// ============================================
+
+function registerServiceWorker() {
+    if ('serviceWorker' in navigator) {
+        window.addEventListener('load', function() {
+            navigator.serviceWorker.register('/sw.js')
+                .then(function(registration) {
+                    console.log('✅ Service Worker registered successfully:', registration.scope);
+
+                    // Gestion des mises à jour
+                    registration.addEventListener('updatefound', function() {
+                        const newWorker = registration.installing;
+                        if (newWorker) {
+                            newWorker.addEventListener('statechange', function() {
+                                if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                                    // Nouvelle version disponible
+                                    showUpdateNotification();
+                                }
+                            });
+                        }
+                    });
+                })
+                .catch(function(error) {
+                    console.log('❌ Service Worker registration failed:', error);
+                });
+        });
+    }
+}
+
+function showUpdateNotification() {
+    // Créer une notification de mise à jour
+    const updateDiv = document.createElement('div');
+    updateDiv.className = 'pwa-update-notification';
+    updateDiv.innerHTML = `
+        <div class="update-content">
+            <p>🚀 Nouvelle version disponible !</p>
+            <button onclick="location.reload()">Mettre à jour</button>
+            <button onclick="this.parentElement.parentElement.remove()">Plus tard</button>
+        </div>
+    `;
+    updateDiv.style.cssText = `
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        background: #2c2c2c;
+        color: white;
+        padding: 15px;
+        border-radius: 8px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+        z-index: 10000;
+        font-family: Arial, sans-serif;
+    `;
+    document.body.appendChild(updateDiv);
+}
+
+// ============================================
 // INITIALISATION - CODE RÉDUIT
 // ============================================
 
@@ -649,6 +836,9 @@ document.addEventListener('DOMContentLoaded', function() {
         initSmoothScrolling();
         initBurgerMenu();
         initBackToTop();
+        initLazyLoading();
+        initHapticFeedback();
+        registerServiceWorker();
 
         // Initialisation des carrousels avec la fonction générique (sans autoplay)
         initCarousel('.fleet-carousel', { autoplay: false, loop: true });
