@@ -568,23 +568,6 @@ function initCarousel(selector, options = {}) {
         }
     });
 
-    // Zones de tap (mobile): cliquer moitié gauche/droite pour naviguer
-    function attachTapZones() {
-        if (window.innerWidth <= 768) {
-            carouselElement.addEventListener('click', (e) => {
-                // ignorer clics sur liens/boutons internes
-                if (e.target.closest('a, button')) return;
-                const rect = carouselElement.getBoundingClientRect();
-                const x = e.clientX - rect.left;
-                if (x < rect.width / 2) { prevSlide(); } else { nextSlide(); }
-                if (options.autoplay) {
-                    resetAutoPlay();
-                }
-            });
-        }
-    }
-    attachTapZones();
-
     // Réinitialiser au redimensionnement
     let resizeTimer;
     window.addEventListener('resize', () => {
@@ -598,7 +581,6 @@ function initCarousel(selector, options = {}) {
             if (options.autoplay) {
                 resetAutoPlay();
             }
-            attachTapZones();
         }, 250);
     });
 
