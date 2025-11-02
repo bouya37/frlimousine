@@ -1,12 +1,33 @@
-/**
- * FRLimousine - JavaScript Optimisé & Performant
- * ================================================
- * Version allégée pour de meilleures performances
- */
+const VEHICULE_PRICES = {
+    'mustang-rouge': 250,
+    'mustang-bleu': 250,
+    'excalibur': 250,
+    'lincoln-limousine': 120,
+    'hummer-limousine': 280,
+    'mercedes-viano': 50,
+};
 
-// ============================================
-// MENU BURGER - INTERACTIVITÉ
-// ============================================
+const OPTIONS_PRICES = {
+    'decoration-florale-sur-devis': 0,
+    'photographie-video': 100,
+};
+
+const VEHICULE_NAMES = {
+    'mustang-rouge': 'Mustang Rouge',
+    'mustang-bleu': 'Mustang Bleu',
+    'excalibur': 'Excalibur',
+    'hummer-limousine': 'Hummer Limousine',
+    'mercedes-viano': 'Mercedes Viano',
+};
+
+const MAX_PASSAGERS = {
+    'mustang-rouge': 3,
+    'mustang-bleu': 3,
+    'excalibur': 2,
+    'mercedes-viano': 7,
+    'lincoln-limousine': 8,
+    'hummer-limousine': 8,
+};
 
 function initBurgerMenu() {
     const burgerMenu = document.querySelector('.burger-menu');
@@ -36,44 +57,7 @@ function initBurgerMenu() {
     }
 }
 
-// ============================================
-// CONFIGURATION CENTRALISÉE
-// ============================================
 
-const VEHICULE_PRICES = {
-    'mustang-rouge': 250,
-    'mustang-bleu': 250,
-    'excalibur': 250,
-    'lincoln-limousine': 120,
-    'hummer-limousine': 280,
-    'mercedes-viano': 50,
-};
-
-const OPTIONS_PRICES = {
-    'decoration-florale-sur-devis': 0, // Le prix est sur devis, donc 0 dans le calcul auto
-    'photographie-video': 100,
-};
-
-const VEHICULE_NAMES = {
-    'mustang-rouge': 'Mustang Rouge',
-    'mustang-bleu': 'Mustang Bleu',
-    'excalibur': 'Excalibur',
-    'hummer-limousine': 'Hummer Limousine',
-    'mercedes-viano': 'Mercedes Viano',
-};
-
-const MAX_PASSAGERS = {
-    'mustang-rouge': 3,
-    'mustang-bleu': 3,
-    'excalibur': 2,
-    'mercedes-viano': 7,
-    'lincoln-limousine': 8,
-    'hummer-limousine': 8,
-};
-
-// ============================================
-// FONCTIONS UTILITAIRES OPTIMISÉES
-// ============================================
 
 function getServiceName(code) {
     const services = {
@@ -104,9 +88,6 @@ function formatDate(dateString) {
     });
 }
 
-// ============================================
-// SYSTÈME DE CALCUL DES PRIX - OPTIMISÉ
-// ============================================
 
 function calculatePrice() {
     const vehicule = document.getElementById('vehicule-select')?.value;
@@ -144,13 +125,7 @@ function calculatePrice() {
     }
 }
 
-// ============================================
-// VALIDATION ET ENVOI DU FORMULAIRE
-// ============================================
 
-// ============================================
-// RATE LIMITING POUR FORMULAIRES
-// ============================================
 
 const RATE_LIMIT_STORAGE_KEY = 'frlimousine_form_submissions';
 const MAX_SUBMISSIONS_PER_HOUR = 5;
@@ -315,10 +290,6 @@ function sendReservationEmail(data, form) { // Accepter 'form' comme argument
     showConfirmationMessage();
 }
 
-// ============================================
-// GÉNÉRATION DE PDF OPTIMISÉE
-// ============================================
-// NOTE: Cette fonction n'est plus utilisée pour l'envoi serveur, mais peut être conservée pour un bouton "Générer PDF" côté client.
 
 function generatePDF(data) {
     const prixVehicule = VEHICULE_PRICES[data.vehicule] * parseInt(data.duree);
@@ -378,9 +349,6 @@ function generatePDF(data) {
 </html>`;
 }
 
-// ============================================
-// FONCTIONS D'INTERFACE UTILISATEUR
-// ============================================
 
 function calculateEndTime() {
     const startTimeInput = document.getElementById('heure-debut-input');
@@ -424,15 +392,6 @@ function showConfirmationMessage() {
     }
 }
 
-// ============================================
-// CARROUSEL NATIF - FONCTIONNEL
-// ============================================
-
-/**
- * Fonction générique pour initialiser un carrousel.
- * @param {string} selector - Le sélecteur CSS de l'élément du carrousel.
- * @param {object} options - Options de configuration { autoplay: boolean }.
- */
 function initCarousel(selector, options = {}) {
     const carouselElement = document.querySelector(selector);
     if (!carouselElement) return;
@@ -664,9 +623,6 @@ function initCarousel(selector, options = {}) {
     }
 }
 
-// ============================================
-// SMOOTH SCROLLING - OPTIMISÉ
-// ============================================
 
 function initSmoothScrolling() {
     document.addEventListener('click', function(e) {
@@ -686,9 +642,6 @@ function initSmoothScrolling() {
     });
 }
 
-// ============================================
-// BACK TO TOP BUTTON
-// ============================================
 
 function initBackToTop() {
     const backToTopBtn = document.getElementById('back-to-top');
@@ -718,9 +671,6 @@ function initBackToTop() {
     });
 }
 
-// ============================================
-// LAZY LOADING POUR LES IMAGES
-// ============================================
 
 function initLazyLoading() {
     const images = document.querySelectorAll('img[data-src]');
@@ -742,9 +692,6 @@ function initLazyLoading() {
     images.forEach(img => imageObserver.observe(img));
 }
 
-// ============================================
-// HAPTIC FEEDBACK ONLY
-// ============================================
 
 function initHapticFeedback() {
     // Feedback tactile pour les interactions carrousel
@@ -780,9 +727,6 @@ function initHapticFeedback() {
     });
 }
 
-// ============================================
-// PWA - SERVICE WORKER REGISTRATION
-// ============================================
 
 function registerServiceWorker() {
     if ('serviceWorker' in navigator) {
@@ -837,9 +781,6 @@ function showUpdateNotification() {
     document.body.appendChild(updateDiv);
 }
 
-// ============================================
-// INITIALISATION - CODE RÉDUIT
-// ============================================
 
 document.addEventListener('DOMContentLoaded', function() {
     try {
@@ -851,10 +792,10 @@ document.addEventListener('DOMContentLoaded', function() {
         initHapticFeedback();
         registerServiceWorker();
 
-        // Initialisation des carrousels avec la fonction générique (avec autoplay)
-        initCarousel('.fleet-carousel', { autoplay: true, loop: true });
-        initCarousel('.testimonials-carousel', { autoplay: true, loop: true });
-        initCarousel('.pricing-carousel', { autoplay: true, loop: true });
+        // Initialisation des carrousels avec la fonction générique (sans autoplay)
+        initCarousel('.fleet-carousel', { autoplay: false, loop: true });
+        initCarousel('.testimonials-carousel', { autoplay: false, loop: true });
+        initCarousel('.pricing-carousel', { autoplay: false, loop: true });
 
         // Écouteurs d'événements pour le formulaire
         const vehiculeSelect = document.getElementById('vehicule-select');

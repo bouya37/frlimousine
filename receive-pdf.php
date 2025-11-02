@@ -1,29 +1,18 @@
 <?php
-/**
- * receive-pdf.php - Script automatique pour recevoir les devis PDF FRLimousine
- * Version autonome et sécurisée.
- */
 
-// ===================================================================
-// SECTION 1 : CONFIGURATION ET SÉCURITÉ INTÉGRÉE
-// (Remplace security.php et performance-config.php)
-// ===================================================================
 
-// --- Configuration de performance ---
 ini_set('memory_limit', '128M');
 ini_set('max_execution_time', '30');
 ini_set('display_errors', '0'); // Ne jamais afficher les erreurs en production
 ini_set('log_errors', '1');
 date_default_timezone_set('Europe/Paris');
 
-// --- Headers de sécurité HTTP ---
 header('X-Content-Type-Options: nosniff');
 header('X-Frame-Options: DENY');
 header('X-XSS-Protection: 1; mode=block');
 header('Referrer-Policy: strict-origin-when-cross-origin');
 header('Content-Type: application/json; charset=UTF-8');
 
-// Classe de sécurité autonome
 class SecurityHelper {
     private $logFile = 'pdfs/security.log';
     private $rateLimitFileDir = 'pdfs/ratelimit/';
@@ -125,11 +114,7 @@ class SecurityHelper {
 
 $security = new SecurityHelper($config);
 
-// ===================================================================
-// SECTION 2 : LOGIQUE PRINCIPALE DU SCRIPT
-// ===================================================================
 
-// --- Vérifications initiales ---
 $ip = $_SERVER['REMOTE_ADDR'];
 if (!$security->checkRateLimit($ip)) {
     exit; // Le message d'erreur a déjà été envoyé par checkRateLimit
@@ -140,14 +125,12 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     echo json_encode(['error' => 'Méthode non autorisée.']);
     exit;
 }
-// Configuration sécurisée - Chargement depuis fichier externe
 $config = require_once 'config.php';
 $uploadDir = $config['upload']['directory'];
 $emailNotification = $config['email']['notification'];
 $logFile = 'pdfs/reception.log';
 $domainName = $config['domain']['name'];
 
-// Créer le répertoire s'il n'existe pas avec gestion d'erreurs OVH
 if (!file_exists($uploadDir)) {
     if (!@mkdir($uploadDir, 0755, true)) {
         $security->log("ERREUR: Impossible de créer le répertoire $uploadDir");
@@ -158,7 +141,6 @@ if (!file_exists($uploadDir)) {
     $security->log("Répertoire $uploadDir créé avec succès");
 }
 
-// Récupérer les données JSON envoyées avec validation de taille
 $input = file_get_contents('php://input');
 if (strlen($input) > $config['upload']['max_size']) {
     $security->log("BLOCAGE: Payload trop volumineux de $ip");
@@ -169,7 +151,6 @@ if (strlen($input) > $config['upload']['max_size']) {
 
 $data = json_decode($input, true);
 
-// Validation stricte des données
 if (json_last_error() !== JSON_ERROR_NONE || !isset($data['client']) || !is_array($data['client'])) {
     $security->log("ERREUR: Structure JSON invalide reçue de $ip");
     http_response_code(400);
@@ -177,7 +158,6 @@ if (json_last_error() !== JSON_ERROR_NONE || !isset($data['client']) || !is_arra
     exit;
 }
 
-// Validation des champs obligatoires avec sécurité renforcée
 $requiredFields = ['nom', 'email', 'telephone', 'service', 'vehicule', 'passagers', 'date', 'duree', 'prix'];
 foreach ($requiredFields as $field) {
     if (empty($data['client'][$field])) {
@@ -188,7 +168,6 @@ foreach ($requiredFields as $field) {
     }
 }
 
-// Validation et nettoyage des données avec fonctions de sécurité
 $client = [];
 foreach ($data['client'] as $key => $value) {
     if ($security->detectAttack($value)) {
@@ -200,7 +179,6 @@ foreach ($data['client'] as $key => $value) {
     $client[$key] = $security->sanitize($value);
 }
 
-// Validation email avancée
 if (!$security->validateEmail($client['email'])) {
     $security->log("ERREUR: Format email invalide: " . $client['email'] . " pour IP $ip");
     http_response_code(400);
@@ -208,7 +186,6 @@ if (!$security->validateEmail($client['email'])) {
     exit;
 }
 
-// Validation du numéro de téléphone (format international)
 if (!$security->validatePhone($client['telephone'])) {
     $security->log("ERREUR: Format téléphone invalide: " . $client['telephone'] . " pour IP $ip");
     http_response_code(400);
@@ -216,14 +193,11 @@ if (!$security->validatePhone($client['telephone'])) {
     exit;
 }
 
-// Formater le numéro pour l'affichage
 $formattedPhone = $security->formatPhone($client['telephone']);
 
-// Nettoyer le nom de fichier
 $filename = preg_replace('/[^a-zA-Z0-9\-_\.]/', '_', $data['filename']);
 $filepath = $uploadDir . $filename;
 
-// Sauvegarder le contenu PDF
 if (!file_put_contents($filepath, $data['content'])) {
     $security->log("ERREUR: Impossible de sauvegarder le PDF: $filename");
     http_response_code(500);
@@ -231,11 +205,9 @@ if (!file_put_contents($filepath, $data['content'])) {
     exit;
 }
 
-// Sauvegarder les informations client
 $infoFile = $uploadDir . str_replace('.html', '_info.json', $filename);
 file_put_contents($infoFile, json_encode($client, JSON_PRETTY_PRINT));
 
-// Préparer l'email de notification
 $subject = '🚗 Nouveau devis PDF - ' . $client['nom'];
 $message = "Bonjour FRLimousine,
 
@@ -269,14 +241,12 @@ $headers = 'From: ' . $config['email']['from'] . "\r\n" .
            'Content-Type: text/plain; charset=UTF-8' . "\r\n" .
            'Return-Path: ' . $config['email']['from'];
 
-// Envoyer l'email de notification
 if (mail($emailNotification, $subject, $message, $headers)) {
     $security->log("EMAIL_SENT: Email de notification envoyé pour: " . $client['nom']);
 } else {
     $security->log("EMAIL_ERROR: Impossible d'envoyer l'email de notification pour " . $client['nom']);
 }
 
-// Réponse de succès
 echo json_encode([
     'success' => true,
     'message' => 'Devis reçu avec succès',

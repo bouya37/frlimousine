@@ -1,10 +1,4 @@
 <?php
-/**
- * monitor.php - Système de monitoring de sécurité FRLimousine
- * Surveillance en temps réel des attaques et tentatives d'intrusion
- */
-
-// Inclure la sécurité
 require_once 'security.php';
 $security = initSecurity();
 
