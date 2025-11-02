@@ -16,7 +16,7 @@ header('Content-Type: application/json; charset=UTF-8');
 class SecurityHelper {
     private $logFile = 'pdfs/security.log';
     private $rateLimitFileDir = 'pdfs/ratelimit/';
-    private $maxRequestsPerMinute;
+    private $maxRequestsPerMinute = 20; // Valeur par défaut
 
     public function __construct($config = null) {
         global $config;
@@ -112,8 +112,8 @@ class SecurityHelper {
     }
 }
 
+$config = require_once 'config.php';
 $security = new SecurityHelper($config);
-
 
 $ip = $_SERVER['REMOTE_ADDR'];
 if (!$security->checkRateLimit($ip)) {
@@ -125,7 +125,6 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     echo json_encode(['error' => 'Méthode non autorisée.']);
     exit;
 }
-$config = require_once 'config.php';
 $uploadDir = $config['upload']['directory'];
 $emailNotification = $config['email']['notification'];
 $logFile = 'pdfs/reception.log';
@@ -168,6 +167,7 @@ foreach ($requiredFields as $field) {
     }
 }
 
+// Sécurisation : On reconstruit le tableau $client en utilisant les données nettoyées.
 $client = [];
 foreach ($data['client'] as $key => $value) {
     if ($security->detectAttack($value)) {

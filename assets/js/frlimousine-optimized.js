@@ -1,10 +1,10 @@
 const VEHICULE_PRICES = {
-    'mustang-rouge': 250,
-    'mustang-bleu': 250,
-    'excalibur': 250,
+    'mustang-rouge': 90,
+    'mustang-bleu': 95,
+    'excalibur': 110,
     'lincoln-limousine': 120,
-    'hummer-limousine': 280,
-    'mercedes-viano': 50,
+    'hummer-limousine': 150,
+    'mercedes-viano': 85,
 };
 
 const OPTIONS_PRICES = {
@@ -107,11 +107,12 @@ function calculatePrice() {
     const calculationDiv = document.getElementById('price-calculation');
     if (calculationDiv) {
         calculationDiv.style.setProperty('display', 'block');
-        calculationDiv.querySelector('#selected-vehicule').textContent = VEHICULE_NAMES[vehicule];
+        // Affiche le nom du véhicule et la durée pour plus de clarté
+        calculationDiv.querySelector('#selected-vehicule').textContent = `${VEHICULE_NAMES[vehicule]} (${duree}h)`;
         calculationDiv.querySelector('#vehicule-price').textContent = prixVehicule + '€';
-        calculationDiv.querySelector('#selected-duree').textContent = duree;
-        calculationDiv.querySelector('#duree-price').textContent = prixVehicule + '€';
 
+        // Masquer la ligne de durée qui est redondante
+        calculationDiv.querySelector('#duree-price-row').style.setProperty('display', 'none');
         const optionsRow = calculationDiv.querySelector('#options-price-row');
         const optionsPrice = calculationDiv.querySelector('#options-price');
         if (prixOptions > 0) {
@@ -239,24 +240,24 @@ function sendReservationEmail(data, form) { // Accepter 'form' comme argument
     submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Envoi en cours...';
     submitBtn.disabled = true;
 
+    // Générer le contenu HTML du devis
+    const pdfContent = generatePDF(data);
+
     // Envoi via fetch (plus rapide qu'EmailJS)
     fetch('https://frlimousine.ovh/receive-pdf.php', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
+            filename: `devis-frlimousine-${data.nom.replace(/\s+/g, '-')}-${Date.now()}.html`,
+            content: pdfContent,
             client: {
-                nom: data.nom,
-                email: data.email,
-                telephone: data.telephone,
-            },
-            details: {
                 nom: data.nom,
                 email: data.email,
                 telephone: data.telephone,
                 service: getServiceName(data.service),
                 vehicule: VEHICULE_NAMES[data.vehicule],
                 passagers: data.passagers,
-                date: formatDate(data.date) + ' à ' + data.heureDebut, // Combinaison date et heure
+                date: formatDate(data.date) + ' à ' + data.heureDebut,
                 duree: data.duree + ' heures',
                 lieuDepart: data.lieuDepart,
                 lieuArrivee: data.lieuArrivee,
@@ -268,6 +269,9 @@ function sendReservationEmail(data, form) { // Accepter 'form' comme argument
         })
     })
     .then(response => {
+        if (!response.ok) {
+            throw new Error(`Erreur serveur: ${response.status} ${response.statusText}`);
+        }
         console.log('✅ Devis PDF généré avec succès!');
         alert('✅ Devis envoyé automatiquement !\n\nLe devis PDF a été généré sur votre serveur.');
     })

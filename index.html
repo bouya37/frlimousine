@@ -690,11 +690,11 @@
 										<label for="vehicule-select">Véhicule souhaité *</label>
 										<select name="vehicule" id="vehicule-select" required aria-required="true" aria-describedby="vehicule-help">
 											<option value="">Choisissez un véhicule</option>
-											<option value="mustang-rouge">Mustang Rouge (3 passagers max) - 250€/h</option>
-											<option value="mustang-bleu">Mustang Bleu (3 passagers max) - 250€/h</option>
-											<option value="excalibur">Excalibur (2 passagers max) - 250€/h</option>
-											<option value="hummer-limousine">Hummer Limousine (8 passagers max) - 280€/h</option>
-											<option value="mercedes-viano">Mercedes Viano (7 passagers max) - 50€/h</option>
+											<option value="mustang-rouge">Mustang Rouge (3 passagers max) - 90€/h</option>
+											<option value="mustang-bleu">Mustang Bleu (3 passagers max) - 95€/h</option>
+											<option value="excalibur">Excalibur (2 passagers max) - 110€/h</option>
+											<option value="hummer-limousine">Hummer Limousine (8 passagers max) - 150€/h</option>
+											<option value="mercedes-viano">Mercedes Viano (7 passagers max) - 85€/h</option>
 										</select>
 									</div>
 									<div class="form-group">
@@ -788,10 +788,7 @@
 														<span>Véhicule (<span id="selected-vehicule">Non sélectionné</span>) :</span>
 														<span id="vehicule-price">0€</span>
 													</div>
-													<div class="price-item">
-														<span>Durée (<span id="selected-duree">0</span>h) :</span>
-														<span id="duree-price">0€</span>
-													</div>
+													<div class="price-item" id="duree-price-row" style="display: none;"></div>
 													<div class="price-item" id="options-price-row" style="display: none;">
 														<span>Options supplémentaires :</span>
 														<span id="options-price">0€</span>
