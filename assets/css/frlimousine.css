@@ -358,7 +358,7 @@ body.menu-open {
 	padding: 2rem;
 	position: relative;
 	overflow: hidden;
-	background-image: url('../images/webp/long_hummer.webp');
+	background-image: url('images/webp/long_hummer.webp');
 	background-size: cover;
 	background-position: center;
 	background-repeat: no-repeat;
@@ -1041,6 +1041,24 @@ body.menu-open {
 	height: 500px; /* Hauteur fixe pour uniformité */
 }
 
+.vehicle-image {
+	width: 100%;
+	height: 250px; /* Hauteur fixe pour l'image */
+	overflow: hidden;
+	position: relative;
+}
+
+.vehicle-image img {
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+	transition: transform 0.3s ease;
+}
+
+.vehicle-image:hover img {
+	transform: scale(1.05);
+}
+
 .vehicle-card:hover {
 	transform: translateY(-5px);
 	background: rgba(255, 255, 255, 0.1);
@@ -1050,7 +1068,7 @@ body.menu-open {
 /* Anciennes règles vehicle-image supprimées */
 
 .vehicle-info {
-	padding: 2rem;
+	padding: 1.5rem;
 	flex-grow: 1;
 	display: flex;
 	flex-direction: column;

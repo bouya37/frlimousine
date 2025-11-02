@@ -883,7 +883,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         vehiculeSelect.value = vehiculeValue;
                         // Déclencher l'événement change pour mettre à jour le calcul du prix
                         vehiculeSelect.dispatchEvent(new Event('change'));
-                        // Faire défiler vers le formulaire
+                        // Faire défiler vers le formulaire de contact sur toutes les résolutions
                         document.getElementById('contact').scrollIntoView({ behavior: 'smooth' });
                     }
                 }
