@@ -782,6 +782,8 @@ document.addEventListener('DOMContentLoaded', function() {
         initCarousel('.fleet-carousel', { autoplay: false, loop: true });
         initCarousel('.testimonials-carousel', { autoplay: false, loop: true });
         initCarousel('.pricing-carousel', { autoplay: false, loop: true });
+        initCarousel('.partners-carousel', { autoplay: false, loop: true });
+        initCarousel('.partners-carousel', { autoplay: false, loop: true, slidesPerView: 1 });
 
         // Écouteurs d'événements pour le formulaire
         const vehiculeSelect = document.getElementById('vehicule-select');
