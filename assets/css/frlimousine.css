@@ -3625,6 +3625,7 @@ img.lazy.loaded {
 	.hero-contact { gap: 0.5rem; }
 	.hero-icon { width: 40px; height: 40px; font-size: 1rem; }
 	.hero-icon i { font-size: 1rem; }
+}
 /* ============================================ */
 /* PARTNERS SECTION - Carrousel des Partenaires */
 /* ============================================ */
@@ -3643,6 +3644,18 @@ img.lazy.loaded {
 	gap: 2rem; /* Espace uniforme entre les logos */
 	padding: 1rem 0; /* Espace vertical */
 }
+
+.partners-logos > .partner-logo {
+	flex: 0 0 120px;   /* largeur fixe pour chaque logo */
+	max-width: 120px;  /* évite qu’il prenne toute la ligne */
+  }
+  
+  @media (max-width: 768px) {
+	.partners-logos > .partner-logo {
+	  flex-basis: 100px;
+	  max-width: 100px;
+	}
+  }  
 
 .partner-logo {
 	width: 120px; /* Taille de base pour les logos */
