@@ -65,7 +65,6 @@
 
 	<!-- Préchargement des ressources critiques -->
 	<link rel="preload" href="assets/css/main_clean.css" as="style">
-	<link rel="preload" href="assets/css/frlimousine.css" as="style">
 	<link rel="preload" href="assets/js/frlimousine-optimized.js" as="script">
 
 	<!-- Optimisation des performances -->
@@ -80,13 +79,12 @@
 
 	<!-- Styles -->
 	<link rel="stylesheet" href="assets/css/main_clean.css?v=1.1" />
-	<link rel="stylesheet" href="assets/css/frlimousine.css?v=1.1" media="print" onload="this.media='all'">
+	<link rel="stylesheet" href="assets/css/frlimousine.css?v=1.1">
 	<noscript><link rel="stylesheet" href="assets/css/frlimousine.css?v=1.1"></noscript>
 
 	<!-- Cache optimisé pour les ressources -->
 	<meta http-equiv="Cache-Control" content="public, max-age=31536000, immutable">
 	<link rel="preload" href="assets/css/main_clean.css" as="style" crossorigin>
-	<link rel="preload" href="assets/css/frlimousine.css" as="style" crossorigin>
 	<link rel="preload" href="assets/js/frlimousine-optimized.js" as="script" crossorigin>
 
 	<noscript><link rel="stylesheet" href="assets/css/noscript.css" /></noscript>
@@ -192,7 +190,7 @@
 				<div class="hero-content">
 					<h1 class="hero-title">Beverly Limousine</h1>
 					<p class="hero-subtitle">Location de voitures de luxe</p>
-					<p class="hero-description">Location de Limousines de Luxe à Paris - Service professionnel d'exception depuis 2001</p>
+					<p class="hero-description">Location de Voitures de Luxe à Paris - Service professionnel d'exception depuis 2001</p>
 
 					<div class="hero-contact">
 						<a href="tel:0612940540" class="hero-icon" aria-label="Appeler">
@@ -237,10 +235,11 @@
 						<div class="service-card">
 							<div class="service-content">
 								<h3>Mariages</h3>
-								<p>Limousines d'exception pour votre cérémonie. Mustang et Excalibur disponibles.</p>
+								<p>Voitures d'exception pour votre cérémonie. Mustang et Excalibur disponibles.</p>
 								<ul class="service-features">
 									<li>Décoration florale sur devis</li>
 									<li>Chauffeur professionnel</li>
+									<li>Champagne et boisson soft offert</li>
 								</ul>
 							</div>
 						</div>
@@ -248,11 +247,12 @@
 						<div class="service-card">
 							<div class="service-content">
 								<h3>Soirées Privées</h3>
-								<p>Limousines de luxe pour anniversaires, enterrement de vie de garçon/jeune fille et événements privés.</p>
+								<p>Voitures de luxe pour anniversaires, enterrement de vie de garçon/jeune fille et événements privés.</p>
 								<ul class="service-features">
 									<li>Ambiance festive</li>
 									<li>Enterrement de vie de garçon/jeune fille</li>
 									<li>Paris By Night</li>
+									<li>Champagne et boisson soft offert</li>
 								</ul>
 							</div>
 						</div>
@@ -262,8 +262,8 @@
 								<h3>Transferts</h3>
 								<p>Service premium vers aéroports et gares. Ponctualité garantie 24h/24.</p>
 								<ul class="service-features">
-									<li>Suivi vols temps réel</li>
-									<li>Accueil personnalisé</li>
+									<li>Acceuil VIP, aéroport et gares</li>
+									<li>Transports sur mesure</li>
 									<li>Véhicules adaptés</li>
 								</ul>
 							</div>
@@ -276,8 +276,8 @@
 								<ul class="service-features">
 									<li>Accueil aéroport VIP</li>
 									<li>Chauffeurs bilingues</li>
-									<li>Votre chauffeur pour une demi journée</li>
-									<li>Excursions avec un guide
+									<li>Votre chauffeur pour une journée/demi journée</li>
+									<li>Excursions avec un guide touristique
 								</ul>
 							</div>
 						</div>
@@ -458,7 +458,7 @@
 							<div class="pricing-card">
 								<div class="pricing-header">
 									<h3>Mustang Rouge</h3>
-									<div class="price">90€*<span>/heure</span></div>
+									<div class="price">200€*<span>/heure</span></div>
 								</div>
 								<div class="pricing-features">
 									<ul>
@@ -473,7 +473,7 @@
 							<div class="pricing-card featured">
 								<div class="pricing-header">
 									<h3>Mustang Bleu</h3>
-									<div class="price">95€*<span>/heure</span></div>
+									<div class="price">200€*<span>/heure</span></div>
 								</div>
 								<div class="pricing-features">
 									<ul>
@@ -488,7 +488,7 @@
 							<div class="pricing-card">
 								<div class="pricing-header">
 									<h3>Excalibur</h3>
-									<div class="price">110€*<span>/heure</span></div>
+									<div class="price">200€*<span>/heure</span></div>
 								</div>
 								<div class="pricing-features">
 									<ul>
@@ -504,7 +504,7 @@
 							<div class="pricing-card featured">
 								<div class="pricing-header">
 									<h3>Hummer Limousine</h3>
-									<div class="price">150€*<span>/heure</span></div>
+									<div class="price">250€*<span>/heure</span></div>
 								</div>
 								<div class="pricing-features">
 									<ul>
@@ -519,7 +519,7 @@
 							<div class="pricing-card">
 								<div class="pricing-header">
 									<h3>Mercedes Viano</h3>
-									<div class="price">85€*<span>/heure</span></div>
+									<div class="price">65€*<span>/heure</span></div>
 								</div>
 								<div class="pricing-features">
 									<ul>
@@ -917,10 +917,47 @@
 		<p>Les entreprises qui nous font confiance</p>
 	</div>
 
-	<!-- Logos des partenaires -->
+	<!-- Grille des logos partenaires -->
 	<div class="partners-logos">
+		<!-- Logo 1 -->
 		<div class="partner-logo">
-			<img src="images/logo/logo.png" alt="Nos Partenaires" loading="lazy">
+			<img src="images/logo/mariage.net.png" alt="Partenaire Mariages.net" loading="lazy">
+		</div>
+		<!-- Logo 2 -->
+		<div class="partner-logo">
+			<img src="images/logo/fashion.weel.png" alt="Partenaire Paris Fashion Week" loading="lazy">
+		</div>
+		<!-- Logo 3 -->
+		<div class="partner-logo">
+			<img src="images/logo/l'arc.paris.png" alt="Partenaire L'ARC Paris" loading="lazy">
+		</div>
+		<!-- Logo 4 -->
+		<div class="partner-logo">
+			<img src="images/logo/4.mariages.png" alt="Recommandé sur Mariages.net" loading="lazy">
+		</div>
+		<!-- Logo 5 -->
+		<div class="partner-logo">
+			<img src="images/logo/paris.society.png" alt="Partenaire Paris Society" loading="lazy">
+		</div>
+		<!-- Logo 6 -->
+		<div class="partner-logo">
+			<img src="images/logo/peninsula.png" alt="Partenaire The Peninsula Hotels" loading="lazy">
+		</div>
+		<!-- Logo 7 -->
+		<div class="partner-logo">
+			<img src="images/logo/rec118.png" alt="Partenaire REC. 118" loading="lazy">
+		</div>
+		<!-- Logo 8 -->
+		<div class="partner-logo">
+			<img src="images/logo/roadstr.png" alt="Partenaire Roadstr" loading="lazy">
+		</div>
+		<!-- Logo 9 -->
+		<div class="partner-logo">
+			<img src="images/logo/salon.hoche.png" alt="Partenaire Les Salons Hoche" loading="lazy">
+		</div>
+		<!-- Logo 10 -->
+		<div class="partner-logo">
+			<img src="images/logo/universal.png" alt="Partenaire Universal Music France" loading="lazy">
 		</div>
 	</div>
 </div>
@@ -938,7 +975,7 @@
 						<div class="map-placeholder">
 							<i class="fas fa-map-marked-alt"></i>
 							<h3>Île-de-France & Beauvais</h3>
-							<p>Service de location de limousines disponible dans nos zones d'intervention.</p>
+							<p>Service de location de voitures de luxe avec chauffeurs disponible dans nos zones d'intervention.</p>
 							<div class="map-info">
 								<div class="map-address">
 									<h4>Zone d'intervention principale :</h4>
@@ -946,7 +983,6 @@
 										<li>Paris et Île-de-France</li>
 										<li>Disneyland Paris</li>
 										<li>Aéroports : Orly, Charles de Gaulle, Beauvais</li>
-										<li>Paris by night</li>
 										<li>Transferts longue distance sur devis</li>
 									</ul>
 								</div>
