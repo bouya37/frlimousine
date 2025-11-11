@@ -375,9 +375,9 @@ body.menu-open {
 	color: white;
 	text-align: center;
 	padding: 2rem;
-	position: relative;
+	position: relative; /* Assurez-vous que le chemin vers votre image est correct */
 	overflow: hidden;
-	background-image: url('../images/fond-de-site/DSC06682.jpg');
+	background-image: url('../../images/fond-de-site/DSC06682.jpg');
 	background-size: cover;
 	background-position: center;
 	background-repeat: no-repeat;
