@@ -429,6 +429,14 @@ body.menu-open {
 .hero-contact {
 	margin-bottom: 2rem;
 	display: flex;
+	flex-direction: column;
+	gap: 0.9rem;
+	align-items: center;
+	justify-content: center;
+}
+
+.hero-contact-icons {
+	display: flex;
 	flex-direction: row;
 	gap: 1rem;
 	align-items: center;
@@ -460,6 +468,22 @@ body.menu-open {
 
 .hero-icon i {
 	font-size: 1.5rem;
+}
+
+.hero-phone {
+	color: #ffffff;
+	font-weight: 700;
+	font-size: 1.3rem;
+	letter-spacing: 0.02em;
+}
+
+.hero-phone a {
+	color: inherit;
+	text-decoration: none;
+}
+
+.hero-phone a:hover {
+	text-decoration: underline;
 }
 
 /* About Section */
@@ -1344,6 +1368,11 @@ body.menu-open {
 	font-weight: 900;
 	color: #2c2c2c;
 	margin-bottom: 1.8rem;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 0.45rem;
+	line-height: 1.1;
 }
 
 .price .price-prefix {

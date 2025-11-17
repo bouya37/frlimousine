@@ -1,4 +1,4 @@
-<!DOCTYPE HTML>
+﻿<!DOCTYPE HTML>
 <html lang="fr">
 <head>
 	<title>Beverly Limousine - Location Limousine Paris | Service de Luxe Professionnel</title>
@@ -193,18 +193,20 @@
 					<p class="hero-description">Location de Voitures de Luxe à Paris - Service professionnel d'exception depuis 2001</p>
 
 					<div class="hero-contact">
-						<a href="tel:0612940540" class="hero-icon" aria-label="Appeler">
-							<i class="fas fa-phone"></i>
-						</a>
-						<a href="#contact" class="hero-icon" aria-label="Réserver">
-							<i class="fas fa-envelope"></i>
-						</a>
-						<a href="https://wa.me/33612940540" class="hero-icon" aria-label="WhatsApp" target="_blank" rel="noopener noreferrer">
-							<i class="fab fa-whatsapp"></i>
-						</a>
-						<a href="https://www.instagram.com/frlimousine_/" class="hero-icon" aria-label="Instagram" target="_blank" rel="noopener noreferrer">
-							<i class="fab fa-instagram"></i>
-						</a>
+						<div class="hero-contact-icons">
+							<a href="#contact" class="hero-icon" aria-label="R�server">
+								<i class="fas fa-envelope"></i>
+							</a>
+							<a href="https://wa.me/33612940540" class="hero-icon" aria-label="WhatsApp" target="_blank" rel="noopener noreferrer">
+								<i class="fab fa-whatsapp"></i>
+							</a>
+							<a href="https://www.instagram.com/beverlylimousine" class="hero-icon" aria-label="Instagram" target="_blank" rel="noopener noreferrer">
+								<i class="fab fa-instagram"></i>
+							</a>
+						</div>
+						<div class="hero-phone">
+							<a href="tel:0612940540" aria-label="Appeler Beverly Limousine">06 12 94 05 40</a>
+						</div>
 					</div>
 				</div>
 			</section>
@@ -284,8 +286,9 @@
 
 						<div class="service-card">
 							<div class="service-content">
-								<h3>De grands artistes nous ont fait confiance !
-									chez beverly limousine nous avons eu le plaisir d’accueillir de grands artistes et acteurs pour des tournages de clips vidéo, mettant à disposition nos voitures de luxe pour des projets d’envergure. Beverly limousine peut également vous accompagner dans la recherche sur mesure d’un véhicule particulier.</h3>
+								<h3>Clip video/Shooting photo</h3>
+								<p>De grands artistes nous ont fait confiance !
+									chez beverly limousine nous avons eu le plaisir d’accueillir de grands artistes et acteurs pour des tournages de clips vidéo, mettant à disposition nos voitures de luxe pour des projets d’envergure. Beverly limousine peut également vous accompagner dans la recherche sur mesure d’un véhicule particulier.</p>
 									<li>Clip musical</li>
 									<li>Video publicitaire</li>
 									<li>Films et series</li>
@@ -335,7 +338,7 @@
 								<div class="carousel-slide">
 									<div class="vehicle-card">
 										<div class="vehicle-image">
-											<img src="images/Hummer PS/DSC06286.webp" alt="Hummer H3 Limousine blanche - vue 3/4 avant de nuit" loading="lazy">
+											<img src="images/Hummer PS/DSC06800.webp" alt="Hummer H3 Limousine blanche - vue 3/4 avant de nuit" loading="lazy">
 										</div>
 										<div class="vehicle-info">
 											<h3>Hummer Limousine</h3>
@@ -359,7 +362,7 @@
 								<div class="carousel-slide">
 									<div class="vehicle-card">
 										<div class="vehicle-image">
-											<img src="images/Viano PS/DSC06274.webp" alt="Mercedes Classe V - profil complet Place Vendôme" loading="lazy">
+											<img src="images/Viano PS/DSC06286.webp" alt="Mercedes Classe V - profil complet Place Vendôme" loading="lazy">
 										</div>
 										<div class="vehicle-info">
 											<h3>Mercedes Classe V</h3>
@@ -461,7 +464,7 @@
 								<div class="pricing-card featured">
 									<div class="pricing-header">
 										<h3>Excalibur</h3>
-										<div class="price">200€*</div>
+										<div class="price"><span class="price-prefix">À partir de</span> 200€*</div>
 									</div>
 									<div class="pricing-features">
 										<ul>
@@ -476,7 +479,7 @@
 								<div class="pricing-card featured">
 									<div class="pricing-header">
 										<h3>Hummer Limousine</h3>
-										<div class="price">250€*</div>
+										<div class="price"><span class="price-prefix">À partir de</span> 250€*</div>
 									</div>
 									<div class="pricing-features">
 										<ul>
@@ -491,7 +494,7 @@
 								<div class="pricing-card">
 									<div class="pricing-header">
 										<h3>Mercedes Classe V</h3>
-										<div class="price">65€*</div>
+										<div class="price"><span class="price-prefix">À partir de</span> 65€*</div>
 									</div>
 									<div class="pricing-features">
 										<ul>
@@ -506,7 +509,7 @@
 								<div class="pricing-card">
 									<div class="pricing-header">
 										<h3>Mustang Rouge</h3>
-										<div class="price">200€*</div>
+										<div class="price"><span class="price-prefix">À partir de</span> 200€*</div>
 									</div>
 									<div class="pricing-features">
 										<ul>
@@ -521,7 +524,7 @@
 								<div class="pricing-card featured">
 									<div class="pricing-header">
 										<h3>Mustang Bleu</h3>
-										<div class="price">200€*</div>
+										<div class="price"><span class="price-prefix">À partir de</span> 200€*</div>
 									</div>
 									<div class="pricing-features">
 										<ul>
@@ -590,6 +593,7 @@
 											<option value="evenement-pro">Événement d'entreprise</option>
 											<option value="transfert-aeroport">Transfert aéroport</option>
 											<option value="soiree-privee">Soirée privée</option>
+											<option value="soiree-privee">Clip/Shooting</option>
 											<option value="autre">Autre</option>
 										</select>
 									</div>
@@ -601,11 +605,11 @@
 										<label for="vehicule-select">Véhicule souhaité *</label>
 										<select name="vehicule" id="vehicule-select" required aria-required="true" aria-describedby="vehicule-help">
 											<option value="">Choisissez un véhicule</option>
-											<option value="excalibur">Excalibur (2 passagers max) - 200€</option>
-											<option value="hummer-limousine">Hummer Limousine (8 passagers max) - 250€</option>
-											<option value="mercedes-viano">Mercedes Classe V (7 passagers max) - 65€</option>
-											<option value="mustang-rouge">Mustang Rouge (3 passagers max) - 200€</option>
-											<option value="mustang-bleu">Mustang Bleu (3 passagers max) - 200€</option>
+											<option value="excalibur">Excalibur (2 passagers max) - À partir de 200€</option>
+											<option value="hummer-limousine">Hummer Limousine (8 passagers max) - À partir de 250€</option>
+											<option value="mercedes-viano">Mercedes Classe V (7 passagers max) - À partir de 65€</option>
+											<option value="mustang-rouge">Mustang Rouge (3 passagers max) - À partir de 200€</option>
+											<option value="mustang-bleu">Mustang Bleu (3 passagers max) - À partir de 200€</option>
 										</select>
 									</div>
 									<div class="form-group">
@@ -675,14 +679,6 @@
 													</div>
 												</label>
 
-												<label class="option-item featured">
-													<input type="checkbox" name="options[]" value="photographie-video" id="photographie-video">
-													<span class="checkmark"></span>
-													<div class="option-text">
-														<span class="option-title">Service photographie/vidéo professionnel</span>
-														<span class="option-price">+100€/h</span>
-													</div>
-												</label>
 											</div>
 										</div>
 									</div>
@@ -804,7 +800,7 @@
 								<i class="fab fa-instagram"></i>
 								<div>
 									<h4>Instagram</h4>
-									<a href="https://www.instagram.com/frlimousine_/" target="_blank" rel="noopener noreferrer">@frlimousine_</a>
+									<a href="https://www.instagram.com/beverlylimousine" target="_blank" rel="noopener noreferrer">@beverlylimousine</a>
 									<p>Suivez-nous</p>
 								</div>
 							</div>
@@ -1009,7 +1005,7 @@
 						<h3>Beverly Limousine</h3>
 						<p>Entreprise de location de voitures de luxe à Paris<br>Service professionnel depuis 2001</p>
 						<div class="footer-social">
-						<a href="https://www.instagram.com/frlimousine_/" class="social-link" aria-label="Suivez-nous sur Instagram (ouvre dans un nouvel onglet)" target="_blank" rel="noopener noreferrer">
+						<a href="https://www.instagram.com/beverlylimousine" class="social-link" aria-label="Suivez-nous sur Instagram (ouvre dans un nouvel onglet)" target="_blank" rel="noopener noreferrer">
 							<i class="fab fa-instagram"></i>
 							<span class="sr-only">Instagram Beverly Limousine</span>
 						</a>
@@ -1153,3 +1149,7 @@
 
 </body>
 </html>
+
+
+
+
