@@ -377,7 +377,7 @@ body.menu-open {
 	padding: 2rem;
 	position: relative; /* Assurez-vous que le chemin vers votre image est correct */
 	overflow: hidden;
-	background-image: url('../../images/fond-de-site/DSC06682.jpg');
+	background-image: url('../../images/fond-de-site/DSC06682.webp');
 	background-size: cover;
 	background-position: center;
 	background-repeat: no-repeat;
@@ -1344,6 +1344,13 @@ body.menu-open {
 	font-weight: 900;
 	color: #2c2c2c;
 	margin-bottom: 1.8rem;
+}
+
+.price .price-prefix {
+	font-size: 1.2rem; /* Taille de police plus petite */
+	font-weight: 600; /* Moins gras que le prix */
+	color: #333333; /* Couleur légèrement plus claire */
+	vertical-align: middle; /* Aligner verticalement avec le prix */
 }
 
 .price span {
