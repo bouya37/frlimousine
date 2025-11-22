@@ -1,4 +1,4 @@
-const VEHICULE_PRICES = {
+﻿const VEHICULE_PRICES = {
     'mustang-rouge': 200,
     'mustang-bleu': 200,
     'excalibur': 200,
@@ -40,7 +40,7 @@ function initBurgerMenu() {
             navLinks.classList.toggle('active');
             burgerMenu.classList.toggle('active');
             burgerMenu.setAttribute('aria-expanded', navLinks.classList.contains('active'));
-            // Empêche le scroll de la page quand le menu est ouvert
+            // EmpÃªche le scroll de la page quand le menu est ouvert
             document.body.classList.toggle('menu-open');
         });
 
@@ -63,9 +63,9 @@ function initBurgerMenu() {
 function getServiceName(code) {
     const services = {
         'mariage': 'Mariage',
-        'evenement-pro': 'Événement d\'entreprise',
-        'transfert-aeroport': 'Transfert aéroport',
-        'soiree-privee': 'Soirée privée',
+        'evenement-pro': 'Ã‰vÃ©nement d\'entreprise',
+        'transfert-aeroport': 'Transfert aÃ©roport',
+        'soiree-privee': 'SoirÃ©e privÃ©e',
         'autre': 'Autre'
     };
     return services[code] || code;
@@ -73,8 +73,8 @@ function getServiceName(code) {
 
 function getOptionName(code) {
     const options = {
-        'decoration-florale-sur-devis': 'Décoration florale (Sur devis)',
-        'photographie-video': 'Service photographie/vidéo professionnel (+100€/h)',
+        'decoration-florale-sur-devis': 'DÃ©coration florale (Sur devis)',
+        'photographie-video': 'Service photographie/vidÃ©o professionnel (+100â‚¬/h)',
     };
     return options[code] || code;
 }
@@ -104,26 +104,26 @@ function calculatePrice() {
     const prixOptions = Array.from(options).reduce((total, option) => total + OPTIONS_PRICES[option.value], 0);
     const prixTotal = prixVehicule + prixOptions;
 
-    // Mise à jour optimisée du DOM
+    // Mise Ã  jour optimisÃ©e du DOM
     const calculationDiv = document.getElementById('price-calculation');
     if (calculationDiv) {
         calculationDiv.style.setProperty('display', 'block');
-        // Affiche le nom du véhicule et la durée pour plus de clarté
+        // Affiche le nom du vÃ©hicule et la durÃ©e pour plus de clartÃ©
         calculationDiv.querySelector('#selected-vehicule').textContent = `${VEHICULE_NAMES[vehicule]} (${duree}h)`;
-        calculationDiv.querySelector('#vehicule-price').textContent = prixVehicule + '€';
+        calculationDiv.querySelector('#vehicule-price').textContent = prixVehicule + 'â‚¬';
 
-        // Masquer la ligne de durée qui est redondante
+        // Masquer la ligne de durÃ©e qui est redondante
         calculationDiv.querySelector('#duree-price-row').style.setProperty('display', 'none');
         const optionsRow = calculationDiv.querySelector('#options-price-row');
         const optionsPrice = calculationDiv.querySelector('#options-price');
         if (prixOptions > 0) {
             optionsRow.style.setProperty('display', 'flex');
-            optionsPrice.textContent = prixOptions + '€';
+            optionsPrice.textContent = prixOptions + 'â‚¬';
         } else {
             optionsRow.style.setProperty('display', 'none');
         }
 
-        calculationDiv.querySelector('#total-price').innerHTML = '<strong>' + prixTotal + '€</strong>';
+        calculationDiv.querySelector('#total-price').innerHTML = '<strong>' + prixTotal + 'â‚¬</strong>';
     }
 }
 
@@ -142,17 +142,17 @@ function checkRateLimit() {
     // Nettoyer les anciennes soumissions
     submissions = submissions.filter(sub => now - sub.timestamp < oneDay);
 
-    // Compter les soumissions récentes
+    // Compter les soumissions rÃ©centes
     const recentSubmissions = submissions.filter(sub => now - sub.timestamp < oneHour).length;
     const dailySubmissions = submissions.length;
 
     if (recentSubmissions >= MAX_SUBMISSIONS_PER_HOUR) {
-        alert(`Trop de soumissions récentes. Veuillez attendre ${Math.ceil((oneHour - (now - submissions[submissions.length - 1].timestamp)) / 60000)} minutes.`);
+        alert(`Trop de soumissions rÃ©centes. Veuillez attendre ${Math.ceil((oneHour - (now - submissions[submissions.length - 1].timestamp)) / 60000)} minutes.`);
         return false;
     }
 
     if (dailySubmissions >= MAX_SUBMISSIONS_PER_DAY) {
-        alert('Limite de soumissions journalières atteinte. Veuillez réessayer demain.');
+        alert('Limite de soumissions journaliÃ¨res atteinte. Veuillez rÃ©essayer demain.');
         return false;
     }
 
@@ -177,7 +177,7 @@ function validateReservation(event) {
         passagers: formData.get('passagers'),
         date: formData.get('date'),
         duree: formData.get('duree'),
-        heureDebut: formData.get('heure-debut'), // Ajout de l'heure de début
+        heureDebut: formData.get('heure-debut'), // Ajout de l'heure de dÃ©but
         lieuDepart: formData.get('lieu-depart'),
         lieuArrivee: formData.get('lieu-arrivee'),
         options: formData.getAll('options[]'),
@@ -192,11 +192,11 @@ function validateReservation(event) {
 
     // Validation passagers
     if (parseInt(data.passagers) > MAX_PASSAGERS[data.vehicule]) {
-        alert(`Ce véhicule ne peut pas accueillir plus de ${MAX_PASSAGERS[data.vehicule]} passagers.`);
+        alert(`Ce vÃ©hicule ne peut pas accueillir plus de ${MAX_PASSAGERS[data.vehicule]} passagers.`);
         return false;
     }
 
-    sendReservationEmail(data, form); // Passer l'élément 'form' à la fonction suivante
+    sendReservationEmail(data, form); // Passer l'Ã©lÃ©ment 'form' Ã  la fonction suivante
     return false;
 }
 
@@ -206,7 +206,7 @@ function sendReservationEmail(data, form) { // Accepter 'form' comme argument
     const prixOptions = data.options.reduce((total, option) => total + OPTIONS_PRICES[option], 0);
     const prixTotal = prixVehicule + prixOptions;
 
-    // Template email optimisé
+    // Template email optimisÃ©
     const templateParams = {
         to_email: 'proayoubfarkh@gmail.com',
         from_name: data.nom,
@@ -221,11 +221,11 @@ function sendReservationEmail(data, form) { // Accepter 'form' comme argument
         duration: data.duree + ' heures',
         departure_location: data.lieuDepart,
         arrival_location: data.lieuArrivee,
-        base_price: prixVehicule + '€',
-        options_price: prixOptions + '€',
-        total_price: prixTotal + '€',
-        options_list: data.options.map(opt => '• ' + getOptionName(opt)).join('\n'),
-        client_message: data.message || 'Aucun message complémentaire',
+        base_price: prixVehicule + 'â‚¬',
+        options_price: prixOptions + 'â‚¬',
+        total_price: prixTotal + 'â‚¬',
+        options_list: data.options.map(opt => 'â€¢ ' + getOptionName(opt)).join('\n'),
+        client_message: data.message || 'Aucun message complÃ©mentaire',
         submission_date: new Date().toLocaleString('fr-FR')
     };
 
@@ -235,11 +235,11 @@ function sendReservationEmail(data, form) { // Accepter 'form' comme argument
     submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Envoi en cours...';
     submitBtn.disabled = true;
 
-    // Générer le contenu HTML du devis
+    // GÃ©nÃ©rer le contenu HTML du devis
     const pdfContent = generatePDF(data);
 
     // Envoi via fetch (plus rapide qu'EmailJS)
-    fetch('https://beverlylimousine.fr/receive-pdf.php', {
+    fetch('/receive-pdf.php', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -252,12 +252,12 @@ function sendReservationEmail(data, form) { // Accepter 'form' comme argument
                 service: getServiceName(data.service),
                 vehicule: VEHICULE_NAMES[data.vehicule],
                 passagers: data.passagers,
-                date: formatDate(data.date) + ' à ' + data.heureDebut,
+                date: formatDate(data.date) + ' Ã  ' + data.heureDebut,
                 duree: data.duree + ' heures',
                 lieuDepart: data.lieuDepart,
                 lieuArrivee: data.lieuArrivee,
                 options: data.options.length > 0 ? data.options.map(opt => getOptionName(opt)).join(', ') : 'Aucune',
-                prix: prixTotal + '€',
+                prix: prixTotal + 'â‚¬',
                 message: data.message || 'Aucun message'
             },
             timestamp: new Date().toISOString()
@@ -267,16 +267,16 @@ function sendReservationEmail(data, form) { // Accepter 'form' comme argument
         if (!response.ok) {
             throw new Error(`Erreur serveur: ${response.status} ${response.statusText}`);
         }
-        console.log('✅ Devis PDF généré avec succès!');
-        alert('✅ Devis envoyé automatiquement !\n\nLe devis PDF a été généré sur votre serveur.');
+        console.log('âœ… Devis PDF gÃ©nÃ©rÃ© avec succÃ¨s!');
+        alert('âœ… Devis envoyÃ© automatiquement !\n\nLe devis PDF a Ã©tÃ© gÃ©nÃ©rÃ© sur votre serveur.');
     })
     .catch(error => {
-        console.error('❌ Erreur envoi:', error);
-        alert('⚠️ Envoi échoué\n\nVeuillez nous contacter directement à proayoubfarkh@gmail.com');
+        console.error('âŒ Erreur envoi:', error);
+        alert('âš ï¸ Envoi Ã©chouÃ©\n\nVeuillez nous contacter directement Ã  proayoubfarkh@gmail.com');
     })
     .finally(() => {
         // Restaurer le bouton
-        submitBtn.innerHTML = '<i class="fas fa-check"></i> Devis généré !';
+        submitBtn.innerHTML = '<i class="fas fa-check"></i> Devis gÃ©nÃ©rÃ© !';
         submitBtn.style.background = '#28a745';
 
         setTimeout(() => {
@@ -315,34 +315,34 @@ function generatePDF(data) {
 <body>
     <div class="header">
         <div class="logo">Beverly Limousine</div>
-        <h2>Devis de Réservation</h2>
+        <h2>Devis de RÃ©servation</h2>
         <p>Date: ${formatDate(data.date)}</p>
     </div>
 
     <div class="details">
         <h3>Informations Client</h3>
         <p><strong>Nom:</strong> ${data.nom}</p>
-        <p><strong>Téléphone:</strong> ${data.telephone}</p>
+        <p><strong>TÃ©lÃ©phone:</strong> ${data.telephone}</p>
         <p><strong>Email:</strong> ${data.email}</p>
         <p><strong>Service:</strong> ${getServiceName(data.service)}</p>
     </div>
 
     <div class="details">
-        <h3>Détails de Réservation</h3>
+        <h3>DÃ©tails de RÃ©servation</h3>
         <table>
-            <tr><td class="label">Véhicule:</td><td>${VEHICULE_NAMES[data.vehicule]}</td></tr>
+            <tr><td class="label">VÃ©hicule:</td><td>${VEHICULE_NAMES[data.vehicule]}</td></tr>
             <tr><td class="label">Passagers:</td><td>${data.passagers}</td></tr>
             <tr><td class="label">Date:</td><td>${formatDate(data.date)}</td></tr>
-            <tr><td class="label">Durée:</td><td>${data.duree} heures</td></tr>
-            <tr><td class="label">Départ:</td><td>${data.lieuDepart}</td></tr>
-            <tr><td class="label">Arrivée:</td><td>${data.lieuArrivee}</td></tr>
+            <tr><td class="label">DurÃ©e:</td><td>${data.duree} heures</td></tr>
+            <tr><td class="label">DÃ©part:</td><td>${data.lieuDepart}</td></tr>
+            <tr><td class="label">ArrivÃ©e:</td><td>${data.lieuArrivee}</td></tr>
             ${data.options.length > 0 ? `<tr><td class="label">Options:</td><td>${data.options.map(opt => getOptionName(opt)).join(', ')}</td></tr>` : ''}
         </table>
     </div>
 
     <div class="total">
-        <p><strong>Total: ${prixTotal}€</strong></p>
-        <p style="font-size: 12px; color: #666;">* Tarifs indicatifs. Devis personnalisé sur demande.</p>
+        <p><strong>Total: ${prixTotal}â‚¬</strong></p>
+        <p style="font-size: 12px; color: #666;">* Tarifs indicatifs. Devis personnalisÃ© sur demande.</p>
     </div>
 </body>
 </html>`;
@@ -361,11 +361,11 @@ function calculateEndTime() {
 
     const startTime = new Date('2000-01-01T' + startTimeInput.value);
     const duree = parseInt(dureeSelect.value);
-    const endDate = new Date(startTime.getTime()); // Crée une copie
+    const endDate = new Date(startTime.getTime()); // CrÃ©e une copie
     endDate.setHours(startTime.getHours() + duree);
 
     startTime.setHours(startTime.getHours() + duree);
-    // Gère le changement de jour
+    // GÃ¨re le changement de jour
     endTimeInput.value = endDate.toTimeString().slice(0, 5);
 }
 
@@ -376,7 +376,7 @@ function validatePassagers() {
     if (vehicule && passagersInput?.value) {
         const maxPassagers = MAX_PASSAGERS[vehicule];
         if (parseInt(passagersInput.value) > maxPassagers) {
-            alert(`Ce véhicule ne peut pas accueillir plus de ${maxPassagers} passagers.`);
+            alert(`Ce vÃ©hicule ne peut pas accueillir plus de ${maxPassagers} passagers.`);
             passagersInput.value = maxPassagers;
         }
     }
@@ -408,7 +408,7 @@ function initCarousel(selector, options = {}) {
     let touchStartX = 0;
     let touchEndX = 0;
 
-    // Créer la pagination
+    // CrÃ©er la pagination
     slides.forEach((_, index) => {
         const dot = document.createElement('div');
         dot.className = 'carousel-pagination-dot';
@@ -421,20 +421,20 @@ function initCarousel(selector, options = {}) {
     });
 
     function getSlidesPerView() {
-        // Toujours afficher un seul élément à la fois
+        // Toujours afficher un seul Ã©lÃ©ment Ã  la fois
         return 1;
     }
 
     function updateCarousel(manualNav = false) {
-        // Si navigation manuelle, on réinitialise l'autoplay
+        // Si navigation manuelle, on rÃ©initialise l'autoplay
         if (manualNav && options.autoplay) {
             resetAutoPlay();
         }
 
-        // Animation professionnelle avec transitions élégantes
+        // Animation professionnelle avec transitions Ã©lÃ©gantes
         slides.forEach((slide, index) => {
             if (index === currentIndex) {
-                // Slide entrant - animation d'entrée
+                // Slide entrant - animation d'entrÃ©e
                 slide.style.display = 'flex';
                 slide.classList.add('is-active', 'entering');
                 slide.classList.remove('leaving');
@@ -442,17 +442,17 @@ function initCarousel(selector, options = {}) {
                 // Slide sortant - animation de sortie
                 slide.classList.remove('is-active', 'entering');
                 slide.classList.add('leaving');
-                // Masquer après l'animation
+                // Masquer aprÃ¨s l'animation
                 setTimeout(() => {
                     if (!slide.classList.contains('is-active')) {
                         slide.style.display = 'none';
                         slide.classList.remove('leaving');
                     }
-                }, 600); // Durée de l'animation de sortie
+                }, 600); // DurÃ©e de l'animation de sortie
             }
         });
 
-        // Mettre à jour la pagination
+        // Mettre Ã  jour la pagination
         const dots = pagination.querySelectorAll('.carousel-pagination-dot');
         dots.forEach((dot, index) => {
             if (index === currentIndex) {
@@ -462,9 +462,9 @@ function initCarousel(selector, options = {}) {
             }
         });
 
-        // Gérer les boutons
+        // GÃ©rer les boutons
         if (prevBtn && nextBtn) {
-            const loop = options.loop !== false; // loop par défaut
+            const loop = options.loop !== false; // loop par dÃ©faut
             prevBtn.style.opacity = !loop && currentIndex === 0 ? '0.5' : '1';
             prevBtn.style.pointerEvents = !loop && currentIndex === 0 ? 'none' : 'auto';
 
@@ -510,7 +510,7 @@ function initCarousel(selector, options = {}) {
     // Ajouter la navigation au clavier
     carouselElement.addEventListener('keydown', handleKeyNavigation);
 
-    // Événements des boutons
+    // Ã‰vÃ©nements des boutons
     if (nextBtn && prevBtn) {
         nextBtn.addEventListener('click', () => {
             currentIndex = (currentIndex < slides.length - 1) ? currentIndex + 1 : 0;
@@ -553,11 +553,11 @@ function initCarousel(selector, options = {}) {
         touchEndX = e.touches[0].clientX;
     });
     wrapper.addEventListener('touchend', (e) => {
-        // Vérifier si le touchend vient d'un bouton protégé
+        // VÃ©rifier si le touchend vient d'un bouton protÃ©gÃ©
         const target = e.target.closest('.pricing-btn, .discover-btn');
         if (target) {
-            console.log('Touchend ignoré sur bouton protégé:', target.className);
-            return; // Ignorer l'événement sur les boutons protégés
+            console.log('Touchend ignorÃ© sur bouton protÃ©gÃ©:', target.className);
+            return; // Ignorer l'Ã©vÃ©nement sur les boutons protÃ©gÃ©s
         }
         
         const diff = touchStartX - touchEndX;
@@ -570,7 +570,7 @@ function initCarousel(selector, options = {}) {
         }
     });
 
-    // Réinitialiser au redimensionnement
+    // RÃ©initialiser au redimensionnement
     let resizeTimer;
     window.addEventListener('resize', () => {
         clearTimeout(resizeTimer);
@@ -586,7 +586,7 @@ function initCarousel(selector, options = {}) {
         }, 250);
     });
 
-    // Initialisation - Afficher immédiatement le premier slide
+    // Initialisation - Afficher immÃ©diatement le premier slide
     slides.forEach((slide, index) => {
         if (index === 0) {
             slide.style.display = 'flex';
@@ -596,7 +596,7 @@ function initCarousel(selector, options = {}) {
         }
     });
 
-    // Mettre à jour la pagination initiale
+    // Mettre Ã  jour la pagination initiale
     const dots = pagination.querySelectorAll('.carousel-pagination-dot');
     dots.forEach((dot, index) => {
         if (index === 0) {
@@ -642,7 +642,7 @@ function initBackToTop() {
         const windowHeight = window.innerHeight;
         const documentHeight = document.documentElement.scrollHeight;
 
-        // Afficher quand on a scrollé plus de 50% de la hauteur de la fenêtre
+        // Afficher quand on a scrollÃ© plus de 50% de la hauteur de la fenÃªtre
         if (scrollTop > windowHeight / 2) {
             backToTopBtn.classList.add('show');
         } else {
@@ -715,23 +715,23 @@ function initHapticFeedback() {
     });
 }
 function initCarouselButtonProtection() {
-    // Protéger les boutons avant tout autre gestionnaire d'événements
+    // ProtÃ©ger les boutons avant tout autre gestionnaire d'Ã©vÃ©nements
     
-    // Utiliser la capture d'événements pour intervenir avant les autres gestionnaires
+    // Utiliser la capture d'Ã©vÃ©nements pour intervenir avant les autres gestionnaires
     document.addEventListener('touchstart', function(event) {
         const target = event.target.closest('.pricing-btn, .discover-btn');
         if (target) {
-            console.log('Touchstart capturé sur bouton protégé:', target.className);
-            event.stopPropagation(); // Empêcher la propagation dès le début
+            console.log('Touchstart capturÃ© sur bouton protÃ©gÃ©:', target.className);
+            event.stopPropagation(); // EmpÃªcher la propagation dÃ¨s le dÃ©but
         }
     }, true); // true = capture phase
     
     document.addEventListener('click', function(event) {
         const target = event.target.closest('.pricing-btn, .discover-btn');
         if (target) {
-            console.log('Click capturé sur bouton protégé:', target.className);
+            console.log('Click capturÃ© sur bouton protÃ©gÃ©:', target.className);
             event.preventDefault();
-            event.stopPropagation(); // Empêcher tout autre gestionnaire
+            event.stopPropagation(); // EmpÃªcher tout autre gestionnaire
             
             // Navigation manuelle
             if (target.tagName === 'A' && target.href) {
@@ -751,16 +751,16 @@ function initCarouselButtonProtection() {
         }
     }, true); // true = capture phase
     
-    // Protéger spécifiquement les événements tactiles sur les boutons
+    // ProtÃ©ger spÃ©cifiquement les Ã©vÃ©nements tactiles sur les boutons
     const protectButtons = document.querySelectorAll('.pricing-btn, .discover-btn');
     protectButtons.forEach(button => {
-        // Gestionnaire touchend avec priorité haute
+        // Gestionnaire touchend avec prioritÃ© haute
         button.addEventListener('touchend', function(event) {
-            console.log('Touchend sur bouton protégé:', this.className);
+            console.log('Touchend sur bouton protÃ©gÃ©:', this.className);
             event.preventDefault();
             event.stopPropagation();
             
-            // Simuler un clic après touchend
+            // Simuler un clic aprÃ¨s touchend
             setTimeout(() => {
                 if (this.tagName === 'A' && this.href) {
                     if (this.getAttribute('href').startsWith('#')) {
@@ -777,7 +777,7 @@ function initCarouselButtonProtection() {
         }, { passive: false }); // passive: false pour permettre preventDefault
     });
     
-    console.log('Protection carrousel renforcée initialisée pour', protectButtons.length, 'boutons');
+    console.log('Protection carrousel renforcÃ©e initialisÃ©e pour', protectButtons.length, 'boutons');
 }
 
 
@@ -786,9 +786,9 @@ function registerServiceWorker() {
         window.addEventListener('load', function() {
             navigator.serviceWorker.register('/sw.js')
                 .then(function(registration) {
-                    console.log('✅ Service Worker registered successfully:', registration.scope);
+                    console.log('âœ… Service Worker registered successfully:', registration.scope);
 
-                    // Gestion des mises à jour
+                    // Gestion des mises Ã  jour
                     registration.addEventListener('updatefound', function() {
                         const newWorker = registration.installing;
                         if (newWorker) {
@@ -802,20 +802,20 @@ function registerServiceWorker() {
                     });
                 })
                 .catch(function(error) {
-                    console.log('❌ Service Worker registration failed:', error);
+                    console.log('âŒ Service Worker registration failed:', error);
                 });
         });
     }
 }
 
 function showUpdateNotification() {
-    // Créer une notification de mise à jour
+    // CrÃ©er une notification de mise Ã  jour
     const updateDiv = document.createElement('div');
     updateDiv.className = 'pwa-update-notification';
     updateDiv.innerHTML = `
         <div class="update-content">
-            <p>🚀 Nouvelle version disponible !</p>
-            <button onclick="location.reload()">Mettre à jour</button>
+            <p>ðŸš€ Nouvelle version disponible !</p>
+            <button onclick="location.reload()">Mettre Ã  jour</button>
             <button onclick="this.parentElement.parentElement.remove()">Plus tard</button>
         </div>
     `;
@@ -837,7 +837,7 @@ function showUpdateNotification() {
 
 document.addEventListener('DOMContentLoaded', function() {
     try {
-        // Initialiser les fonctionnalités essentielles uniquement
+        // Initialiser les fonctionnalitÃ©s essentielles uniquement
         initSmoothScrolling();
         initBurgerMenu();
         initBackToTop();
@@ -845,16 +845,16 @@ document.addEventListener('DOMContentLoaded', function() {
         initHapticFeedback();
         registerServiceWorker();
 
-        // Initialisation des carrousels avec la fonction générique (sans autoplay)
+        // Initialisation des carrousels avec la fonction gÃ©nÃ©rique (sans autoplay)
         initCarousel('.fleet-carousel', { autoplay: false, loop: true });
         initCarousel('.testimonials-carousel', { autoplay: false, loop: true });
         initCarousel('.pricing-carousel', { autoplay: false, loop: true });
         initCarousel('.partners-carousel', { autoplay: false, loop: true });
         initCarousel('.partners-carousel', { autoplay: false, loop: true, slidesPerView: 1 });
-        // Empêcher la navigation du carrousel lors du clic sur les boutons Réserver et + de photos
+        // EmpÃªcher la navigation du carrousel lors du clic sur les boutons RÃ©server et + de photos
         initCarouselButtonProtection();
 
-        // Écouteurs d'événements pour le formulaire
+        // Ã‰couteurs d'Ã©vÃ©nements pour le formulaire
         const vehiculeSelect = document.getElementById('vehicule-select');
         const dureeSelect = document.getElementById('duree-select');
         const heureDebutInput = document.getElementById('heure-debut-input');
@@ -866,12 +866,12 @@ document.addEventListener('DOMContentLoaded', function() {
         if (heureDebutInput) heureDebutInput.addEventListener('change', calculateEndTime);
         if (passagersInput) passagersInput.addEventListener('change', validatePassagers);
 
-        // Écouteurs pour les options
+        // Ã‰couteurs pour les options
         document.querySelectorAll('input[name="options[]"]').forEach(option => {
             option.addEventListener('change', calculatePrice);
         });
 
-        // Écouteurs pour les boutons de réservation (auto-remplissage)
+        // Ã‰couteurs pour les boutons de rÃ©servation (auto-remplissage)
         document.querySelectorAll('.pricing-btn[data-vehicule]').forEach(btn => {
             btn.addEventListener('click', function(event) {
                 const vehiculeValue = this.getAttribute('data-vehicule');
@@ -879,24 +879,25 @@ document.addEventListener('DOMContentLoaded', function() {
                     const vehiculeSelect = document.getElementById('vehicule-select');
                     if (vehiculeSelect) {
                         vehiculeSelect.value = vehiculeValue;
-                        // Déclencher l'événement change pour mettre à jour le calcul du prix
+                        // DÃ©clencher l'Ã©vÃ©nement change pour mettre Ã  jour le calcul du prix
                         vehiculeSelect.dispatchEvent(new Event('change'));
-                        // Faire défiler vers le formulaire de contact sur toutes les résolutions
+                        // Faire dÃ©filer vers le formulaire de contact sur toutes les rÃ©solutions
                         document.getElementById('contact').scrollIntoView({ behavior: 'smooth' });
                     }
                 }
             });
         });
 
-        // Retirer la classe preload après chargement
+        // Retirer la classe preload aprÃ¨s chargement
         window.addEventListener('load', function() {
             document.body.classList.remove('is-preload');
         });
 
-        console.log('🚀 Beverly Limousine website loaded - Optimisé & Performant');
+        console.log('ðŸš€ Beverly Limousine website loaded - OptimisÃ© & Performant');
     } catch (error) {
         console.error('Erreur lors de l\'initialisation du site:', error);
-        // Fallback : retirer la classe preload même en cas d'erreur
+        // Fallback : retirer la classe preload mÃªme en cas d'erreur
         document.body.classList.remove('is-preload');
     }
 });
+
