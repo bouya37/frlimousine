@@ -209,7 +209,7 @@ $infoFile = $uploadDir . str_replace('.html', '_info.json', $filename);
 file_put_contents($infoFile, json_encode($client, JSON_PRETTY_PRINT));
 
 $subject = '🚗 Nouveau devis PDF - ' . $client['nom'];
-$message = "Bonjour FRLimousine,
+$message = "Bonjour Beverly Limousine,
 
 Un nouveau devis a été généré automatiquement sur votre site :
 
@@ -233,7 +233,7 @@ Nom du fichier: $filename
 ⏰ Reçu le: " . date('d/m/Y à H:i:s') . "
 
 Cordialement,
-Système automatique FRLimousine";
+Système automatique Beverly Limousine";
 
 $headers = 'From: ' . $config['email']['from'] . "\r\n" .
            'Reply-To: ' . $client['email'] . "\r\n" .

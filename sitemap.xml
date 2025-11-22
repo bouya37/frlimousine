@@ -6,7 +6,7 @@
 
     <!-- Page d'accueil - Priorité maximale -->
     <url>
-        <loc>https://frlimousine.vercel.app/index.html</loc>
+        <loc>https://beverlylimousine.fr/index.html</loc>
         <lastmod>2025-10-30</lastmod>
         <changefreq>weekly</changefreq>
         <priority>1.0</priority>
@@ -14,7 +14,7 @@
 
     <!-- Page d'accueil (version sans .html) -->
     <url>
-        <loc>https://frlimousine.vercel.app/</loc>
+        <loc>https://beverlylimousine.fr/</loc>
         <lastmod>2025-10-30</lastmod>
         <changefreq>weekly</changefreq>
         <priority>1.0</priority>
@@ -22,7 +22,7 @@
 
     <!-- Galerie photos -->
     <url>
-        <loc>https://frlimousine.vercel.app/galerie.html</loc>
+        <loc>https://beverlylimousine.fr/galerie.html</loc>
         <lastmod>2025-10-30</lastmod>
         <changefreq>monthly</changefreq>
         <priority>0.8</priority>
@@ -30,7 +30,7 @@
 
     <!-- Mentions légales -->
     <url>
-        <loc>https://frlimousine.vercel.app/mentions-legales.html</loc>
+        <loc>https://beverlylimousine.fr/mentions-legales.html</loc>
         <lastmod>2025-10-30</lastmod>
         <changefreq>yearly</changefreq>
         <priority>0.3</priority>
@@ -38,56 +38,56 @@
 
     <!-- Sections de la page d'accueil (ancres) -->
     <url>
-        <loc>https://frlimousine.vercel.app/index.html#home</loc>
+        <loc>https://beverlylimousine.fr/index.html#home</loc>
         <lastmod>2025-10-30</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.9</priority>
     </url>
 
     <url>
-        <loc>https://frlimousine.vercel.app/index.html#about</loc>
+        <loc>https://beverlylimousine.fr/index.html#about</loc>
         <lastmod>2025-10-30</lastmod>
         <changefreq>monthly</changefreq>
         <priority>0.7</priority>
     </url>
 
     <url>
-        <loc>https://frlimousine.vercel.app/index.html#services</loc>
+        <loc>https://beverlylimousine.fr/index.html#services</loc>
         <lastmod>2025-10-30</lastmod>
         <changefreq>monthly</changefreq>
         <priority>0.8</priority>
     </url>
 
     <url>
-        <loc>https://frlimousine.vercel.app/index.html#fleet</loc>
+        <loc>https://beverlylimousine.fr/index.html#fleet</loc>
         <lastmod>2025-10-30</lastmod>
         <changefreq>monthly</changefreq>
         <priority>0.8</priority>
     </url>
 
     <url>
-        <loc>https://frlimousine.vercel.app/index.html#pricing</loc>
+        <loc>https://beverlylimousine.fr/index.html#pricing</loc>
         <lastmod>2025-10-30</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.8</priority>
     </url>
 
     <url>
-        <loc>https://frlimousine.vercel.app/index.html#testimonials</loc>
+        <loc>https://beverlylimousine.fr/index.html#testimonials</loc>
         <lastmod>2025-10-30</lastmod>
         <changefreq>monthly</changefreq>
         <priority>0.6</priority>
     </url>
 
     <url>
-        <loc>https://frlimousine.vercel.app/index.html#contact</loc>
+        <loc>https://beverlylimousine.fr/index.html#contact</loc>
         <lastmod>2025-10-30</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.9</priority>
     </url>
 
     <url>
-        <loc>https://frlimousine.vercel.app/index.html#map</loc>
+        <loc>https://beverlylimousine.fr/index.html#map</loc>
         <lastmod>2025-10-30</lastmod>
         <changefreq>monthly</changefreq>
         <priority>0.6</priority>
@@ -95,56 +95,56 @@
 
     <!-- Sections des mentions légales -->
     <url>
-        <loc>https://frlimousine.vercel.app/mentions-legales.html#mentions-legales-section</loc>
+        <loc>https://beverlylimousine.fr/mentions-legales.html#mentions-legales-section</loc>
         <lastmod>2025-10-30</lastmod>
         <changefreq>yearly</changefreq>
         <priority>0.2</priority>
     </url>
 
     <url>
-        <loc>https://frlimousine.vercel.app/mentions-legales.html#cgv</loc>
+        <loc>https://beverlylimousine.fr/mentions-legales.html#cgv</loc>
         <lastmod>2025-10-30</lastmod>
         <changefreq>yearly</changefreq>
         <priority>0.2</priority>
     </url>
 
     <url>
-        <loc>https://frlimousine.vercel.app/mentions-legales.html#confidentialite</loc>
+        <loc>https://beverlylimousine.fr/mentions-legales.html#confidentialite</loc>
         <lastmod>2025-10-30</lastmod>
         <changefreq>yearly</changefreq>
         <priority>0.2</priority>
     </url>
 
     <url>
-        <loc>https://frlimousine.vercel.app/mentions-legales.html#cookies</loc>
+        <loc>https://beverlylimousine.fr/mentions-legales.html#cookies</loc>
         <lastmod>2025-10-30</lastmod>
         <changefreq>yearly</changefreq>
         <priority>0.2</priority>
     </url>
 
     <url>
-        <loc>https://frlimousine.vercel.app/mentions-legales.html#accessibilite</loc>
+        <loc>https://beverlylimousine.fr/mentions-legales.html#accessibilite</loc>
         <lastmod>2025-10-30</lastmod>
         <changefreq>yearly</changefreq>
         <priority>0.2</priority>
     </url>
 
     <url>
-        <loc>https://frlimousine.vercel.app/mentions-legales.html#securite-paiements</loc>
+        <loc>https://beverlylimousine.fr/mentions-legales.html#securite-paiements</loc>
         <lastmod>2025-10-30</lastmod>
         <changefreq>yearly</changefreq>
         <priority>0.2</priority>
     </url>
 
     <url>
-        <loc>https://frlimousine.vercel.app/mentions-legales.html#mediation</loc>
+        <loc>https://beverlylimousine.fr/mentions-legales.html#mediation</loc>
         <lastmod>2025-10-30</lastmod>
         <changefreq>yearly</changefreq>
         <priority>0.2</priority>
     </url>
 
     <url>
-        <loc>https://frlimousine.vercel.app/mentions-legales.html#odr</loc>
+        <loc>https://beverlylimousine.fr/mentions-legales.html#odr</loc>
         <lastmod>2025-10-30</lastmod>
         <changefreq>yearly</changefreq>
         <priority>0.2</priority>

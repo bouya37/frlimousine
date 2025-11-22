@@ -239,7 +239,7 @@ function sendReservationEmail(data, form) { // Accepter 'form' comme argument
     const pdfContent = generatePDF(data);
 
     // Envoi via fetch (plus rapide qu'EmailJS)
-    fetch('https://frlimousine.ovh/receive-pdf.php', {
+    fetch('https://beverlylimousine.fr/receive-pdf.php', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

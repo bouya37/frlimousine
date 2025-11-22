@@ -2,7 +2,7 @@
 require_once 'security.php';
 $security = initSecurity();
 
-echo "<h1>🚗 Monitoring Sécurité FRLimousine</h1>";
+echo "<h1>🚗 Monitoring Sécurité Beverly Limousine</h1>";
 echo "<style>
     body { font-family: Arial, sans-serif; margin: 20px; }
     .stat { background: #f5f5f5; padding: 10px; margin: 10px 0; border-radius: 5px; }
@@ -141,6 +141,6 @@ echo "<button onclick='window.location.reload()' style='padding: 10px 20px; back
 echo "</div>";
 
 echo "<p style='text-align: center; color: #666; font-size: 12px;'>";
-echo "Monitoring généré le " . date('Y-m-d H:i:s') . " - FRLimousine Security System";
+echo "Monitoring généré le " . date('Y-m-d H:i:s') . " - Beverly Limousine Security System";
 echo "</p>";
 ?>

@@ -35,7 +35,7 @@ Disallow: /private/
 Crawl-delay: 1
 
 # Sitemap pour aider les moteurs de recherche
-Sitemap: https://frlimousine.vercel.app/sitemap.xml
+Sitemap: https://beverlylimousine.fr/sitemap.xml
 
 # Règles spécifiques pour les principaux moteurs de recherche
 User-agent: Googlebot
@@ -85,7 +85,7 @@ User-agent: SemrushBot
 Disallow: /
 
 # Host principal
-Host: frlimousine.vercel.app
+Host: beverlylimousine.fr
 
 # Contact
-# Contact: contact@frlimousine.com
+# Contact: contact@transvoyage.fr
