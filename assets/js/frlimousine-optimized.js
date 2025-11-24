@@ -30,6 +30,8 @@ const MAX_PASSAGERS = {
     'lincoln-limousine': 8,
 };
 
+const EURO = '€';
+
 function initBurgerMenu() {
     const burgerMenu = document.querySelector('.burger-menu');
     const navLinks = document.querySelector('.nav-links');
@@ -200,154 +202,70 @@ function validateReservation(event) {
     return false;
 }
 
-function sendReservationEmail(data, form) { // Accepter 'form' comme argument
+function sendReservationEmail(data, form) {
     // Calcul du prix
     const prixVehicule = VEHICULE_PRICES[data.vehicule] * parseInt(data.duree);
     const prixOptions = data.options.reduce((total, option) => total + OPTIONS_PRICES[option], 0);
     const prixTotal = prixVehicule + prixOptions;
 
-    // Template email optimisÃ©
-    const templateParams = {
-        to_email: 'proayoubfarkh@gmail.com',
-        from_name: data.nom,
-        client_name: data.nom,
-        client_email: data.email,
-        client_phone: data.telephone,
-        client_service: getServiceName(data.service),
-        vehicule_name: VEHICULE_NAMES[data.vehicule],
-        vehicule_passagers: data.passagers,
-        reservation_date: formatDate(data.date),
-        start_time: data.heureDebut,
-        duration: data.duree + ' heures',
-        departure_location: data.lieuDepart,
-        arrival_location: data.lieuArrivee,
-        base_price: prixVehicule + 'â‚¬',
-        options_price: prixOptions + 'â‚¬',
-        total_price: prixTotal + 'â‚¬',
-        options_list: data.options.map(opt => 'â€¢ ' + getOptionName(opt)).join('\n'),
-        client_message: data.message || 'Aucun message complÃ©mentaire',
-        submission_date: new Date().toLocaleString('fr-FR')
-    };
-
-    // Bouton de chargement
     const submitBtn = form.querySelector('.submit-btn');
     const originalText = submitBtn.innerHTML;
     submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Envoi en cours...';
     submitBtn.disabled = true;
 
-    // GÃ©nÃ©rer le contenu HTML du devis
-    const pdfContent = generatePDF(data);
+    const payload = {
+        client: {
+            nom: data.nom,
+            email: data.email,
+            telephone: data.telephone,
+            service: getServiceName(data.service),
+            vehicule: VEHICULE_NAMES[data.vehicule],
+            passagers: data.passagers,
+            date: formatDate(data.date),
+            heureDebut: data.heureDebut,
+            duree: data.duree,
+            lieuDepart: data.lieuDepart,
+            lieuArrivee: data.lieuArrivee,
+            options: data.options.length > 0 ? data.options.map(opt => getOptionName(opt)) : [],
+            message: data.message || 'Aucun message complementaire'
+        },
+        prix: {
+            vehicule: prixVehicule,
+            options: prixOptions,
+            total: prixTotal,
+            devise: EURO
+        },
+        submitted_at: new Date().toISOString()
+    };
 
-    // Envoi via fetch (plus rapide qu'EmailJS)
-    fetch('/receive-pdf.php', {
+    fetch('/send-reservation.php', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-            filename: `devis-beverly-limousine-${data.nom.replace(/\s+/g, '-')}-${Date.now()}.html`,
-            content: pdfContent,
-            client: {
-                nom: data.nom,
-                email: data.email,
-                telephone: data.telephone,
-                service: getServiceName(data.service),
-                vehicule: VEHICULE_NAMES[data.vehicule],
-                passagers: data.passagers,
-                date: formatDate(data.date) + ' Ã  ' + data.heureDebut,
-                duree: data.duree + ' heures',
-                lieuDepart: data.lieuDepart,
-                lieuArrivee: data.lieuArrivee,
-                options: data.options.length > 0 ? data.options.map(opt => getOptionName(opt)).join(', ') : 'Aucune',
-                prix: prixTotal + 'â‚¬',
-                message: data.message || 'Aucun message'
-            },
-            timestamp: new Date().toISOString()
-        })
+        body: JSON.stringify(payload)
     })
     .then(response => {
         if (!response.ok) {
             throw new Error(`Erreur serveur: ${response.status} ${response.statusText}`);
         }
-        console.log('âœ… Devis PDF gÃ©nÃ©rÃ© avec succÃ¨s!');
-        alert('âœ… Devis envoyÃ© automatiquement !\n\nLe devis PDF a Ã©tÃ© gÃ©nÃ©rÃ© sur votre serveur.');
+        return response.json().catch(() => ({}));
+    })
+    .then(() => {
+        submitBtn.innerHTML = '<i class="fas fa-check"></i> Demande envoyee !';
+        submitBtn.style.background = '#28a745';
+        showConfirmationMessage();
     })
     .catch(error => {
-        console.error('âŒ Erreur envoi:', error);
-        alert('âš ï¸ Envoi Ã©chouÃ©\n\nVeuillez nous contacter directement Ã  proayoubfarkh@gmail.com');
+        console.error('Erreur envoi:', error);
+        alert('Envoi echoue. Veuillez nous contacter directement a contact@beverlylimousine.fr');
     })
     .finally(() => {
-        // Restaurer le bouton
-        submitBtn.innerHTML = '<i class="fas fa-check"></i> Devis gÃ©nÃ©rÃ© !';
-        submitBtn.style.background = '#28a745';
-
         setTimeout(() => {
             submitBtn.innerHTML = originalText;
             submitBtn.disabled = false;
             submitBtn.style.background = '';
         }, 3000);
     });
-
-    showConfirmationMessage();
 }
-
-
-function generatePDF(data) {
-    const prixVehicule = VEHICULE_PRICES[data.vehicule] * parseInt(data.duree);
-    const prixOptions = data.options.reduce((total, option) => total + OPTIONS_PRICES[option], 0);
-    const prixTotal = prixVehicule + prixOptions;
-
-    return `
-<!DOCTYPE html>
-<html>
-<head>
-    <meta charset="utf-8">
-    <title>Devis Beverly Limousine</title>
-    <style>
-        body { font-family: Arial, sans-serif; margin: 20px; line-height: 1.6; }
-        .header { text-align: center; margin-bottom: 30px; color: #d42121; }
-        .logo { font-size: 24px; font-weight: bold; }
-        .details { margin: 20px 0; }
-        .total { font-size: 18px; font-weight: bold; margin-top: 20px; }
-        table { width: 100%; border-collapse: collapse; }
-        td { padding: 8px; border-bottom: 1px solid #ddd; }
-        .label { font-weight: bold; }
-    </style>
-</head>
-<body>
-    <div class="header">
-        <div class="logo">Beverly Limousine</div>
-        <h2>Devis de RÃ©servation</h2>
-        <p>Date: ${formatDate(data.date)}</p>
-    </div>
-
-    <div class="details">
-        <h3>Informations Client</h3>
-        <p><strong>Nom:</strong> ${data.nom}</p>
-        <p><strong>TÃ©lÃ©phone:</strong> ${data.telephone}</p>
-        <p><strong>Email:</strong> ${data.email}</p>
-        <p><strong>Service:</strong> ${getServiceName(data.service)}</p>
-    </div>
-
-    <div class="details">
-        <h3>DÃ©tails de RÃ©servation</h3>
-        <table>
-            <tr><td class="label">VÃ©hicule:</td><td>${VEHICULE_NAMES[data.vehicule]}</td></tr>
-            <tr><td class="label">Passagers:</td><td>${data.passagers}</td></tr>
-            <tr><td class="label">Date:</td><td>${formatDate(data.date)}</td></tr>
-            <tr><td class="label">DurÃ©e:</td><td>${data.duree} heures</td></tr>
-            <tr><td class="label">DÃ©part:</td><td>${data.lieuDepart}</td></tr>
-            <tr><td class="label">ArrivÃ©e:</td><td>${data.lieuArrivee}</td></tr>
-            ${data.options.length > 0 ? `<tr><td class="label">Options:</td><td>${data.options.map(opt => getOptionName(opt)).join(', ')}</td></tr>` : ''}
-        </table>
-    </div>
-
-    <div class="total">
-        <p><strong>Total: ${prixTotal}â‚¬</strong></p>
-        <p style="font-size: 12px; color: #666;">* Tarifs indicatifs. Devis personnalisÃ© sur demande.</p>
-    </div>
-</body>
-</html>`;
-}
-
 
 function calculateEndTime() {
     const startTimeInput = document.getElementById('heure-debut-input');
