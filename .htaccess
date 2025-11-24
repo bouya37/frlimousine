@@ -3,6 +3,9 @@ RewriteEngine On
 RewriteCond %{HTTPS} off
 RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
 
+# Prioritise the new site index files (avoids OVH default page)
+DirectoryIndex index.php index.html index.htm
+
 # Sécurité - Headers de sécurité
 <IfModule mod_headers.c>
     # HSTS (HTTP Strict Transport Security)
@@ -28,9 +31,11 @@ RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
         Header set Expires "Wed, 21 Oct 2030 07:28:00 GMT"
     </FilesMatch>
 
-    # Cache court pour les pages HTML
+    # Désactivation du cache pour les pages HTML (forcer l'affichage de la dernière version)
     <FilesMatch "\.(html|htm)$">
-        Header set Cache-Control "public, max-age=3600"
+        Header set Cache-Control "no-cache, no-store, must-revalidate"
+        Header set Pragma "no-cache"
+        Header set Expires "0"
     </FilesMatch>
 </IfModule>
 
@@ -50,7 +55,7 @@ RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
 
 # Protection contre les hotlinks
 RewriteCond %{HTTP_REFERER} !^$
-RewriteCond %{HTTP_REFERER} !^https?://(www\.)?frlimousine\.com [NC]
+RewriteCond %{HTTP_REFERER} !^https?://(www\.)?(beverlylimousine\.fr|frlimousine\.com) [NC]
 RewriteCond %{REQUEST_FILENAME} \.(png|jpg|jpeg|gif|svg|ico|css|js)$ [NC]
 RewriteRule . - [F,L]
 
