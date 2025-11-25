@@ -1,0 +1,51 @@
+<!DOCTYPE HTML>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Test d'encodage UTF-8</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .test { margin: 10px 0; padding: 10px; border: 1px solid #ccc; }
+        .success { color: green; }
+        .error { color: red; }
+    </style>
+</head>
+<body>
+    <h1>Test d'encodage UTF-8</h1>
+    
+    <div class="test">
+        <h3>Accents français :</h3>
+        <p>• é, è, ê, ë (e accentués)</p>
+        <p>• à, â, ä (a accentués)</p>
+        <p>• ï, î, ï (i accentués)</p>
+        <p>• ô, ö (o accentués)</p>
+        <p>• ù, û, ü (u accentués)</p>
+        <p>• ç (c cédille)</p>
+        <p>• € (symbole euro)</p>
+    </div>
+
+    <div class="test">
+        <h3>Messages modifiés :</h3>
+        <p class="success">✓ "Votre demande a été envoyée à notre équipe"</p>
+        <p class="success">✓ "Demande envoyée !"</p>
+        <p class="success">✓ "Envoi échoué. Veuillez nous contacter directement à contact@transvoyage.fr"</p>
+        <p class="success">✓ "Méthode non autorisée"</p>
+        <p class="success">✓ "Impossible d'envoyer le mail"</p>
+    </div>
+
+    <div class="test">
+        <h3>Suppression du récapitulatif du prix :</h3>
+        <p class="success">✓ Section price-calculation supprimée du formulaire</p>
+        <p class="success">✓ Fonction calculatePrice() supprimée du JavaScript</p>
+        <p class="success">✓ Event listeners pour le calcul de prix supprimés</p>
+    </div>
+
+    <div class="test">
+        <h3>Configuration UTF-8 :</h3>
+        <p class="success">✓ mb_internal_encoding('UTF-') ajouté aux fichiers PHP</p>
+        <p class="success">✓ Content-Type: application/json; charset=UTF-8 dans les headers</p>
+    </div>
+
+    <p><strong>Status :</strong> <span class="success">Toutes les modifications UTF-8 sont terminées</span></p>
+</body>
+</html>

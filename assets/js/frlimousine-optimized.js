@@ -92,42 +92,6 @@ function formatDate(dateString) {
 }
 
 
-function calculatePrice() {
-    const vehicule = document.getElementById('vehicule-select')?.value;
-    const duree = parseInt(document.getElementById('duree-select')?.value);
-    const options = document.querySelectorAll('input[name="options[]"]:checked');
-
-    if (!vehicule || !duree) {
-        document.getElementById('price-calculation')?.style.setProperty('display', 'none');
-        return;
-    }
-
-    const prixVehicule = VEHICULE_PRICES[vehicule] * duree;
-    const prixOptions = Array.from(options).reduce((total, option) => total + OPTIONS_PRICES[option.value], 0);
-    const prixTotal = prixVehicule + prixOptions;
-
-    // Mise à jour optimisée du DOM
-    const calculationDiv = document.getElementById('price-calculation');
-    if (calculationDiv) {
-        calculationDiv.style.setProperty('display', 'block');
-        // Affiche le nom du véhicule et la durée pour plus de clarté
-        calculationDiv.querySelector('#selected-vehicule').textContent = `${VEHICULE_NAMES[vehicule]} (${duree}h)`;
-        calculationDiv.querySelector('#vehicule-price').textContent = prixVehicule + '€';
-
-        // Masquer la ligne de durée qui est redondante
-        calculationDiv.querySelector('#duree-price-row').style.setProperty('display', 'none');
-        const optionsRow = calculationDiv.querySelector('#options-price-row');
-        const optionsPrice = calculationDiv.querySelector('#options-price');
-        if (prixOptions > 0) {
-            optionsRow.style.setProperty('display', 'flex');
-            optionsPrice.textContent = prixOptions + '€';
-        } else {
-            optionsRow.style.setProperty('display', 'none');
-        }
-
-        calculationDiv.querySelector('#total-price').innerHTML = '<strong>' + prixTotal + '€</strong>';
-    }
-}
 
 
 const RATE_LIMIT_STORAGE_KEY = 'beverly_limousine_form_submissions';
@@ -250,13 +214,33 @@ function sendReservationEmail(data, form) {
         return response.json().catch(() => ({}));
     })
     .then(() => {
-        submitBtn.innerHTML = '<i class="fas fa-check"></i> Demande envoyee !';
+        submitBtn.innerHTML = '<i class="fas fa-check"></i> Demande envoyée !';
         submitBtn.style.background = '#28a745';
         showConfirmationMessage();
     })
     .catch(error => {
         console.error('Erreur envoi:', error);
-        alert('Envoi echoue. Veuillez nous contacter directement a contact@beverlylimousine.fr');
+        
+        // Affichage d'erreur plus détaillé pour le debug
+        let errorMessage = 'Envoi échoué. ';
+        if (error.message) {
+            errorMessage += 'Erreur: ' + error.message + '. ';
+        }
+        if (error.response && error.response.status) {
+            errorMessage += 'Code HTTP: ' + error.response.status + '. ';
+        }
+        errorMessage += 'Veuillez nous contacter directement à contact@transvoyage.fr';
+        
+        alert(errorMessage);
+        
+        // Log détaillé pour debug
+        console.log('Détails erreur:', {
+            message: error.message,
+            response: error.response,
+            status: error.response?.status,
+            statusText: error.response?.statusText,
+            headers: error.response?.headers
+        });
     })
     .finally(() => {
         setTimeout(() => {
@@ -778,16 +762,9 @@ document.addEventListener('DOMContentLoaded', function() {
         const heureDebutInput = document.getElementById('heure-debut-input');
         const passagersInput = document.getElementById('passagers-input');
 
-        if (vehiculeSelect) vehiculeSelect.addEventListener('change', calculatePrice);
-        if (dureeSelect) dureeSelect.addEventListener('change', calculatePrice);
         if (dureeSelect) dureeSelect.addEventListener('change', calculateEndTime);
         if (heureDebutInput) heureDebutInput.addEventListener('change', calculateEndTime);
         if (passagersInput) passagersInput.addEventListener('change', validatePassagers);
-
-        // Écouteurs pour les options
-        document.querySelectorAll('input[name="options[]"]').forEach(option => {
-            option.addEventListener('change', calculatePrice);
-        });
 
         // Écouteurs pour les boutons de réservation (auto-remplissage)
         document.querySelectorAll('.pricing-btn[data-vehicule]').forEach(btn => {

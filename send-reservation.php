@@ -1,6 +1,11 @@
 <?php
 declare(strict_types=1);
 
+// Configuration debug (à désactiver en production)
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
+ini_set('log_errors', 1);
+
 mb_internal_encoding('UTF-8');
 header('Content-Type: application/json; charset=UTF-8');
 header('X-Content-Type-Options: nosniff');
@@ -16,12 +21,22 @@ function clean(string $value): string {
 function write_log(string $message): void {
     $logFile = __DIR__ . '/pdfs/mail.log';
     $line = '[' . date('Y-m-d H:i:s') . '] ' . $message . PHP_EOL;
-    @file_put_contents($logFile, $line, FILE_APPEND);
+    
+    // Créer le dossier s'il n'existe pas
+    $logDir = dirname($logFile);
+    if (!is_dir($logDir)) {
+        @mkdir($logDir, 0755, true);
+    }
+    
+    @file_put_contents($logFile, $line, FILE_APPEND | LOCK_EX);
+    
+    // Log aussi dans error_log PHP si disponible
+    error_log($message);
 }
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     http_response_code(405);
-    echo json_encode(['error' => 'Methode non autorisee']);
+    echo json_encode(['error' => 'Méthode non autorisée']);
     exit;
 }
 
@@ -84,12 +99,44 @@ $headers = [
     'X-Mailer: PHP/' . phpversion()
 ];
 
+// Logs détaillés avant envoi
+write_log('=== DEBUT ENVOI EMAIL ===');
+write_log('TO: ' . $config['email']['notification']);
+write_log('FROM: ' . $config['email']['from']);
+write_log('SUBJECT: ' . $subject);
+write_log('PHP_VERSION: ' . phpversion());
+write_log('SMTP_SERVER: ' . ini_get('SMTP') . ':' . ini_get('smtp_port'));
+write_log('SENDMAIL_PATH: ' . (ini_get('sendmail_path') ?: 'non défini'));
+write_log('CLIENT_EMAIL: ' . $client['email']);
+
+// Tentative d'envoi
 $sent = mail($config['email']['notification'], $subject, $message, implode("\r\n", $headers));
-write_log($sent ? 'EMAIL_SENT ' . $client['email'] : 'EMAIL_FAILED ' . $client['email']);
+
+// Logs détaillés après envoi
+$lastError = error_get_last();
+if ($lastError) {
+    write_log('PHP_LAST_ERROR: ' . $lastError['message']);
+}
+
+write_log('MAIL_RESULT: ' . ($sent ? 'SUCCESS' : 'FAILED'));
+write_log('=== FIN ENVOI EMAIL ===');
 
 if (!$sent) {
+    write_log('ENVOI_ECHOUE - Details: ' . print_r($lastError, true));
+    
+    // Réponse d'erreur améliorée pour le debug
+    $errorResponse = [
+        'error' => 'Impossible d\'envoyer le mail',
+        'debug_info' => [
+            'php_version' => phpversion(),
+            'smtp_config' => ini_get('SMTP') . ':' . ini_get('smtp_port'),
+            'sendmail_path' => ini_get('sendmail_path'),
+            'last_error' => $lastError
+        ]
+    ];
+    
     http_response_code(500);
-    echo json_encode(['error' => 'Impossible denvoyer le mail']);
+    echo json_encode($errorResponse, JSON_UNESCAPED_UNICODE);
     exit;
 }
 

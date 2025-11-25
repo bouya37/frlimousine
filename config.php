@@ -1,4 +1,5 @@
 <?php
+mb_internal_encoding('UTF-8');
 return [
     'domain' => [
         'name' => 'beverlylimousine.fr',
