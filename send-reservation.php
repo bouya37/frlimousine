@@ -13,6 +13,15 @@ header('Referrer-Policy: strict-origin-when-cross-origin');
 
 $config = require __DIR__ . '/config.php';
 
+// Inclure PHPMailer
+require __DIR__ . '/PHPMailer/PHPMailer.php';
+require __DIR__ . '/PHPMailer/SMTP.php';
+require __DIR__ . '/PHPMailer/Exception.php';
+
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\SMTP;
+use PHPMailer\PHPMailer\Exception;
+
 // Utilitaires simples
 function clean(string $value): string {
     return trim(filter_var($value, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES));
@@ -32,6 +41,63 @@ function write_log(string $message): void {
     
     // Log aussi dans error_log PHP si disponible
     error_log($message);
+}
+
+function sendEmailWithSMTP(array $config, string $to, string $subject, string $message, array $headers = []): array {
+    $mail = new PHPMailer(true);
+    
+    try {
+        // Configuration du serveur
+        $mail->isSMTP();
+        $mail->Host = $config['smtp']['host'];
+        $mail->SMTPAuth = $config['smtp']['auth'];
+        $mail->Username = $config['smtp']['username'];
+        $mail->Password = $config['smtp']['password'];
+        $mail->SMTPSecure = $config['smtp']['encryption'];
+        $mail->Port = $config['smtp']['port'];
+        
+        // Configuration d'encodage
+        $mail->CharSet = 'UTF-8';
+        $mail->Encoding = '8bit';
+        
+        // Destinataires
+        $mail->setFrom($config['smtp']['from_email'], $config['smtp']['from_name']);
+        $mail->addAddress($to);
+        
+        // Contenu
+        $mail->isHTML(false);
+        $mail->Subject = $subject;
+        $mail->Body = $message;
+        
+        // Headers supplémentaires
+        foreach ($headers as $header) {
+            if (strpos($header, 'Reply-To:') === 0) {
+                $replyTo = trim(str_replace('Reply-To:', '', $header));
+                $mail->addReplyTo(trim($replyTo));
+            }
+        }
+        
+        // Mode debug si activé
+        if ($config['debug'] ?? false) {
+            $mail->SMTPDebug = SMTP::DEBUG_SERVER;
+        }
+        
+        // Envoi
+        $result = $mail->send();
+        
+        return [
+            'success' => $result,
+            'message' => 'Email envoyé avec succès via SMTP',
+            'message_id' => $mail->getLastMessageID()
+        ];
+        
+    } catch (Exception $e) {
+        return [
+            'success' => false,
+            'message' => 'Erreur SMTP: ' . $mail->ErrorInfo,
+            'exception' => $e->getMessage()
+        ];
+    }
 }
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
@@ -91,47 +157,44 @@ $message =
 
 $subject = 'Nouvelle demande - Beverly Limousine - ' . clean($client['nom']);
 $headers = [
-    'From: ' . $config['email']['from'],
-    'Reply-To: ' . clean($client['email']),
-    'MIME-Version: 1.0',
-    'Content-Type: text/plain; charset=UTF-8',
-    'Content-Transfer-Encoding: 8bit',
-    'X-Mailer: PHP/' . phpversion()
+    'Reply-To: ' . clean($client['email'])
 ];
 
 // Logs détaillés avant envoi
-write_log('=== DEBUT ENVOI EMAIL ===');
+write_log('=== DEBUT ENVOI EMAIL SMTP ===');
 write_log('TO: ' . $config['email']['notification']);
-write_log('FROM: ' . $config['email']['from']);
+write_log('FROM: ' . $config['smtp']['from_email']);
+write_log('SMTP_HOST: ' . $config['smtp']['host'] . ':' . $config['smtp']['port']);
 write_log('SUBJECT: ' . $subject);
 write_log('PHP_VERSION: ' . phpversion());
-write_log('SMTP_SERVER: ' . ini_get('SMTP') . ':' . ini_get('smtp_port'));
-write_log('SENDMAIL_PATH: ' . (ini_get('sendmail_path') ?: 'non défini'));
 write_log('CLIENT_EMAIL: ' . $client['email']);
 
-// Tentative d'envoi
-$sent = mail($config['email']['notification'], $subject, $message, implode("\r\n", $headers));
+// Tentative d'envoi avec SMTP
+$result = sendEmailWithSMTP($config, $config['email']['notification'], $subject, $message, $headers);
 
 // Logs détaillés après envoi
-$lastError = error_get_last();
-if ($lastError) {
-    write_log('PHP_LAST_ERROR: ' . $lastError['message']);
+write_log('SMTP_RESULT: ' . ($result['success'] ? 'SUCCESS' : 'FAILED'));
+write_log('SMTP_MESSAGE: ' . $result['message']);
+if (isset($result['message_id'])) {
+    write_log('MESSAGE_ID: ' . $result['message_id']);
 }
-
-write_log('MAIL_RESULT: ' . ($sent ? 'SUCCESS' : 'FAILED'));
+if (!$result['success'] && isset($result['exception'])) {
+    write_log('SMTP_EXCEPTION: ' . $result['exception']);
+}
 write_log('=== FIN ENVOI EMAIL ===');
 
-if (!$sent) {
-    write_log('ENVOI_ECHOUE - Details: ' . print_r($lastError, true));
+if (!$result['success']) {
+    write_log('ENVOI_ECHOUE_SMTP - Details: ' . print_r($result, true));
     
     // Réponse d'erreur améliorée pour le debug
     $errorResponse = [
-        'error' => 'Impossible d\'envoyer le mail',
+        'error' => 'Impossible d\'envoyer le mail via SMTP',
         'debug_info' => [
+            'smtp_host' => $config['smtp']['host'] . ':' . $config['smtp']['port'],
+            'smtp_auth' => $config['smtp']['auth'] ? 'activé' : 'désactivé',
+            'smtp_error' => $result['message'],
             'php_version' => phpversion(),
-            'smtp_config' => ini_get('SMTP') . ':' . ini_get('smtp_port'),
-            'sendmail_path' => ini_get('sendmail_path'),
-            'last_error' => $lastError
+            'client_email' => $client['email']
         ]
     ];
     

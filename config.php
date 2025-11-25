@@ -16,6 +16,19 @@ return [
         // Adresse utilisée en expéditeur
         'from' => 'contact@transvoyage.fr',
     ],
+    'smtp' => [
+        // Configuration SMTP pour OVH (recommandée)
+        'host' => 'mail.ovh.net',
+        'port' => 587,
+        'encryption' => 'tls', // ou 'ssl'
+        'auth' => true,
+        'username' => 'contact@transvoyage.fr',
+        'password' => 'VOTRE_MOT_DE_PASSE_SMTP', // À remplacer par le vrai mot de passe
+        'from_email' => 'contact@transvoyage.fr',
+        'from_name' => 'Beverly Limousine',
+    ],
+    // Mode debug : true pour activer les logs détaillés, false pour production
+    'debug' => true,
     'security' => [
         // Limite par minute pour receive-pdf.php
         'rate_limit' => 20,
