@@ -11,9 +11,9 @@ return [
     ],
     'email' => [
         // Adresse qui recevra les notifications de réservation
-        'notification' => 'proayoubfarkh@gmail.com',
+        'notification' => 'contact@transvoyage.fr',
         // Adresse utilisée en expéditeur
-        'from' => 'contact@beverlylimousine.fr',
+        'from' => 'contact@transvoyage.fr',
     ],
     'security' => [
         // Limite par minute pour receive-pdf.php
