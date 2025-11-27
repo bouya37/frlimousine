@@ -3742,3 +3742,119 @@ img.lazy.loaded {
 		height: 100px;
 	}
 }
+
+/* ============================================
+   IT DEVELOPER LINK - Icône IT dans les réseaux sociaux
+   ============================================ */
+
+.it-social-link i {
+	color: #4CAF50;
+	transition: all 0.3s ease;
+}
+
+.it-social-link:hover i {
+	color: #66BB6A;
+	transform: scale(1.1);
+}
+
+/* ============================================
+   IT DEVELOPER LINK STANDALONE - Icône IT seule
+   ============================================ */
+
+.it-developer-link {
+	margin-top: 1.5rem;
+	margin-bottom: 1rem;
+}
+
+.it-icon-link {
+	display: inline-flex;
+	align-items: center;
+	gap: 0.8rem;
+	padding: 1rem 1.5rem;
+	background: rgba(255, 255, 255, 0.1);
+	border: 2px solid rgba(255, 255, 255, 0.3);
+	border-radius: 25px;
+	color: #ffffff;
+	text-decoration: none;
+	font-weight: 600;
+	font-size: 1rem;
+	transition: all 0.3s ease;
+	text-transform: none;
+	backdrop-filter: blur(10px);
+	-webkit-backdrop-filter: blur(10px);
+	position: relative;
+	overflow: hidden;
+}
+
+.it-icon-link::before {
+	content: '';
+	position: absolute;
+	top: 0;
+	left: -100%;
+	width: 100%;
+	height: 100%;
+	background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+	transition: left 0.5s ease;
+}
+
+.it-icon-link:hover::before {
+	left: 100%;
+}
+
+.it-icon-link:hover {
+	background: rgba(255, 255, 255, 0.2);
+	border-color: rgba(255, 255, 255, 0.6);
+	color: #ffffff;
+	transform: translateY(-2px);
+	box-shadow: 0 8px 25px rgba(255, 255, 255, 0.15);
+}
+
+.it-icon-link i {
+	font-size: 1.4rem;
+	color: #4CAF50;
+	transition: all 0.3s ease;
+}
+
+.it-icon-link:hover i {
+	color: #66BB6A;
+	transform: scale(1.1);
+}
+
+.it-text {
+	font-weight: 600;
+	letter-spacing: 0.02em;
+}
+
+/* Animation au chargement */
+.it-developer-link {
+	animation: fadeInUp 0.8s ease-out;
+}
+
+@keyframes fadeInUp {
+	from {
+		opacity: 0;
+		transform: translateY(20px);
+	}
+	to {
+		opacity: 1;
+		transform: translateY(0);
+	}
+}
+
+/* Mobile responsive */
+@media screen and (max-width: 768px) {
+	.it-icon-link {
+		padding: 0.8rem 1.2rem;
+		font-size: 0.9rem;
+		gap: 0.6rem;
+	}
+	
+	.it-icon-link i {
+		font-size: 1.2rem;
+	}
+	
+	.it-developer-link {
+		margin-top: 1rem;
+		margin-bottom: 0.8rem;
+	}
+}
