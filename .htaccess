@@ -6,6 +6,7 @@ RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
 # Prioritise the new site index files (avoids OVH default page)
 DirectoryIndex index.php index.html index.htm
 
+
 # Sécurité - Headers de sécurité
 <IfModule mod_headers.c>
     # HSTS (HTTP Strict Transport Security)

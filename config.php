@@ -14,7 +14,7 @@ return [
         // Adresse qui recevra les notifications de réservation
         'notification' => 'contact@transvoyage.fr',
         // Adresse utilisée en expéditeur
-        'from' => 'contact@transvoyage.fr',
+        'from' => 'contact@beverlylimousine.fr',
     ],
     'smtp' => [
         // Configuration SMTP pour OVH (recommandée)
@@ -22,13 +22,17 @@ return [
         'port' => 587,
         'encryption' => 'tls', // ou 'ssl'
         'auth' => true,
-        'username' => 'contact@transvoyage.fr',
+        'username' => 'contact@beverlylimousine.fr',
         'password' => 'VOTRE_MOT_DE_PASSE_SMTP', // À remplacer par le vrai mot de passe
-        'from_email' => 'contact@transvoyage.fr',
+        'from_email' => 'contact@beverlylimousine.fr',
         'from_name' => 'Beverly Limousine',
+        'timeout' => 20,
     ],
     // Mode debug : true pour activer les logs détaillés, false pour production
     'debug' => true,
+    'logging' => [
+        'path' => __DIR__ . '/logs/reservation-handler.log',
+    ],
     'security' => [
         // Limite par minute pour receive-pdf.php
         'rate_limit' => 20,
