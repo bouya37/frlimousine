@@ -14,17 +14,17 @@ return [
         // Adresse qui recevra les notifications de réservation
         'notification' => 'contact@transvoyage.fr',
         // Adresse utilisée en expéditeur
-        'from' => 'contact@beverlylimousine.fr',
+        'from' => 'contact@transvoyage.fr',
     ],
     'smtp' => [
-        // Configuration SMTP pour OVH (recommandée)
-        'host' => 'mail.ovh.net',
-        'port' => 587,
-        'encryption' => 'tls', // ou 'ssl'
+        // Configuration SMTP o2switch (compte contact@transvoyage.fr)
+        'host' => 'dolphin.o2switch.net',
+        'port' => 465,
+        'encryption' => 'ssl', // ou 'tls' selon le port choisi
         'auth' => true,
-        'username' => 'contact@beverlylimousine.fr',
-        'password' => 'VOTRE_MOT_DE_PASSE_SMTP', // À remplacer par le vrai mot de passe
-        'from_email' => 'contact@beverlylimousine.fr',
+        'username' => 'contact@transvoyage.fr',
+        'password' => '19Massenet!!', // Mot de passe du compte mail
+        'from_email' => 'contact@transvoyage.fr',
         'from_name' => 'Beverly Limousine',
         'timeout' => 20,
     ],
