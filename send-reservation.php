@@ -4,6 +4,16 @@ declare(strict_types=1);
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 
+// Journalisation des erreurs fatales pour faciliter le debug en prod
+$bootstrapLogDir = __DIR__ . '/logs';
+if (!is_dir($bootstrapLogDir)) {
+    @mkdir($bootstrapLogDir, 0755, true);
+}
+$bootstrapLogFile = $bootstrapLogDir . '/send-reservation-error.log';
+@ini_set('log_errors', '1');
+@ini_set('display_errors', '0');
+@ini_set('error_log', $bootstrapLogFile);
+
 $config = require __DIR__ . '/config.php';
 require __DIR__ . '/security.php';
 require __DIR__ . '/vendor/phpmailer/src/Exception.php';
