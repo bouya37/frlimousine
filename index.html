@@ -567,7 +567,7 @@
 
 					<div class="contact-content">
 						<div class="contact-form">
-							<form class="booking-form" onsubmit="return validateReservation(event)" role="form" aria-labelledby="contact-title">
+							<form class="booking-form" action="send_mail.php" method="POST" onsubmit="return validateReservation(event)" role="form" aria-labelledby="contact-title">
 								<!-- Informations personnelles -->
 								<div class="form-row">
 									<div class="form-group">
@@ -593,7 +593,7 @@
 											<option value="evenement-pro">Événement d'entreprise</option>
 											<option value="transfert-aeroport">Transfert aéroport</option>
 											<option value="soiree-privee">Soirée privée</option>
-											<option value="soiree-privee">Clip/Shooting</option>
+											<option value="clip-shooting">Clip/Shooting</option>
 											<option value="autre">Autre</option>
 										</select>
 									</div>
@@ -635,7 +635,6 @@
 										<label for="duree-select">Durée (heures) *</label>
 										<select name="duree" id="duree-select" required aria-required="true" aria-describedby="duree-help">
 											<option value="">Choisissez la durée</option>
-											<option value="1">1 heures (minimum)</option>
 											<option value="2">2 heures</option>
 											<option value="3">3 heures</option>
 											<option value="4">4 heures</option>
