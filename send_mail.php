@@ -24,27 +24,20 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $subject = "Nouvelle demande de réservation via le site beverlylimousine.fr";
 
     // --- NETTOYAGE DES DONNÉES ---
-    // Utilisons la fonction de nettoyage robuste de votre classe de sécurité
-    function clean_input($data) {
-        global $security;
-        return $security->sanitizeInput($data);
-    }
-
     // Récupération et nettoyage de chaque champ du formulaire
-    $nom = clean_input($_POST['nom'] ?? '');
-    $telephone = clean_input($_POST['telephone'] ?? '');
-    $email = clean_input($_POST['email'] ?? '');
-    $service = clean_input($_POST['service'] ?? '');
-    $vehicule = clean_input($_POST['vehicule'] ?? '');
-    $passagers = clean_input($_POST['passagers'] ?? '');
-    $date = clean_input($_POST['date'] ?? '');
-    $heure_debut = clean_input($_POST['heure-debut'] ?? '');
-    $duree = clean_input($_POST['duree'] ?? '');
-    $lieu_depart = clean_input($_POST['lieu-depart'] ?? '');
-    $lieu_arrivee = clean_input($_POST['lieu-arrivee'] ?? '');
-    $options = isset($_POST['options']) && is_array($_POST['options']) ? $_POST['options'] : [];
-    $options_propres = array_map('clean_input', $options);
-    $message = clean_input($_POST['message'] ?? 'Aucun message.');
+    $nom = $security->sanitizeInput($_POST['nom'] ?? '');
+    $telephone = $security->sanitizeInput($_POST['telephone'] ?? '');
+    $email = $security->sanitizeInput($_POST['email'] ?? '');
+    $service = $security->sanitizeInput($_POST['service'] ?? '');
+    $vehicule = $security->sanitizeInput($_POST['vehicule'] ?? '');
+    $passagers = $security->sanitizeInput($_POST['passagers'] ?? '');
+    $date = $security->sanitizeInput($_POST['date'] ?? '');
+    $heure_debut = $security->sanitizeInput($_POST['heure-debut'] ?? '');
+    $duree = $security->sanitizeInput($_POST['duree'] ?? '');
+    $lieu_depart = $security->sanitizeInput($_POST['lieu-depart'] ?? '');
+    $lieu_arrivee = $security->sanitizeInput($_POST['lieu-arrivee'] ?? '');
+    $options = isset($_POST['options']) && is_array($_POST['options']) ? $security->sanitizeInput($_POST['options']) : [];
+    $message = $security->sanitizeInput($_POST['message'] ?? 'Aucun message.');
 
     // Validation simple
     if (empty($nom) || empty($telephone) || !$security->validateEmail($email)) {
@@ -64,7 +57,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $email_body .= "Date: $date\n";
     $email_body .= "Heure de début: $heure_debut\n";
     $email_body .= "Durée: $duree heure(s)\n\n";
-    $email_body .= "Options: " . (count($options_propres) > 0 ? implode(', ', $options_propres) : 'Aucune') . "\n";
+    $email_body .= "Options: " . (count($options) > 0 ? implode(', ', $options) : 'Aucune') . "\n";
     $email_body .= "Lieu de départ: $lieu_depart\n";
     $email_body .= "Lieu d'arrivée: $lieu_arrivee\n\n";
     $email_body .= "Message complémentaire:\n$message\n";
