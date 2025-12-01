@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Diagnostic Email - Beverly Limousine</title>
+    <style>
+        body { font-family: monospace; margin: 20px; background: #f5f5f5; }
+        .container { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        .error { color: red; font-weight: bold; }
+        .success { color: green; font-weight: bold; }
+        .warning { color: orange; font-weight: bold; }
+        pre { background: #f0f0f0; padding: 15px; border-radius: 4px; overflow-x: auto; }
+        h1 { color: #333; border-bottom: 2px solid #333; padding-bottom: 10px; }
+        .test-section { margin: 20px 0; padding: 15px; border-left: 4px solid #007cba; background: #f9f9f9; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔍 Diagnostic Email - Beverly Limousine</h1>
+        
+        <div class="test-section">
+            <h2>📋 Problèmes identifiés dans votre code</h2>
+            <p>Après analyse de votre code, voici les problèmes potentiels qui empêchent l'envoi d'emails :</p>
+            
+            <h3>❌ Problème 1: Dépendances PHPMailer</h3>
+            <p>Vos scripts tentent de charger PHPMailer depuis <code>/vendor/phpmailer/src/</code> mais il semble y avoir des problèmes de compatibilité.</p>
+            
+            <h3>❌ Problème 2: Configuration SMTP</h3>
+            <p>La configuration utilise dolphin.o2switch.net avec port 465/SSL. Vérifiez :</p>
+            <ul>
+                <li>Les identifiants de connexion (contact@transvoyage.fr / 19Massenet!!)</li>
+                <li>La résolution DNS du serveur SMTP</li>
+                <li>Les restrictions du pare-feu</li>
+            </ul>
+            
+            <h3>❌ Problème 3: Gestion d'erreurs</h3>
+            <p>Vos scripts redirigent sans afficher les erreurs détaillées, ce qui rend le débogage difficile.</p>
+            
+            <h3>❌ Problème 4: Permissions des dossiers</h3>
+            <p>Les dossiers <code>logs/</code> et <code>pdfs/</code> doivent être inscriptibles par PHP.</p>
+        </div>
+
+        <div class="test-section">
+            <h2>🛠️ Solutions recommandées</h2>
+            
+            <h3>Solution 1: Réinstallez PHPMailer</h3>
+            <pre># Via Composer (recommandé)
+composer require phpmailer/phpmailer
+
+# Ou téléchargement manuel
+# Téléchargez depuis https://github.com/PHPMailer/PHPMailer/releases
+# Extrayez dans vendor/phpmailer/</pre>
+            
+            <h3>Solution 2: Test de connexion SMTP</h3>
+            <p>Créez un fichier <code>test-smtp.php</code> avec ce code :</p>
+            <pre><?php
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\SMTP;
+use PHPMailer\PHPMailer\Exception;
+
+require 'vendor/autoload.php';
+
+$mail = new PHPMailer(true);
+
+try {
+    $mail->SMTPDebug = SMTP::DEBUG_SERVER;
+    $mail->isSMTP();
+    $mail->Host       = 'dolphin.o2switch.net';
+    $mail->SMTPAuth   = true;
+    $mail->Username   = 'contact@transvoyage.fr';
+    $mail->Password   = '19Massenet!!';
+    $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;
+    $mail->Port       = 465;
+
+    $mail->setFrom('contact@transvoyage.fr', 'Test');
+    $mail->addAddress('contact@transvoyage.fr');
+    $mail->Subject = 'Test SMTP';
+    $mail->Body    = 'Test de connexion';
+
+    $mail->send();
+    echo 'Message envoyé avec succès';
+} catch (Exception $e) {
+    echo "Erreur: {$mail->ErrorInfo}";
+}
+?></pre>
+            
+            <h3>Solution 3: Vérifiez les permissions</h3>
+            <pre># Sous Linux/Mac
+chmod 755 logs/ pdfs/
+chown www-data:www-data logs/ pdfs/
+
+# Sous Windows (via l'explorateur)
+# Clic droit > Propriétés > Sécurité > Modifier les permissions</pre>
+        </div>
+
+        <div class="test-section">
+            <h2>🔧 Test rapide à faire</h2>
+            <p><strong>Testez ceci directement sur votre serveur :</strong></p>
+            <ol>
+                <li>Créez un fichier <code>quick-test.php</code> avec le code ci-dessus</li>
+                <li>Exécutez-le via votre navigateur : <code>https://votre-domaine.com/quick-test.php</code></li>
+                <li>Consultez les logs de debug pour identifier l'erreur exacte</li>
+            </ol>
+        </div>
+
+        <div class="test-section">
+            <h2>📞 Support technique</h2>
+            <p>Si les problèmes persistent, vérifiez :</p>
+            <ul>
+                <li><strong>Configuration o2switch :</strong> Connectez-vous à votre panneau o2switch pour vérifier les paramètres email</li>
+                <li><strong>Logs du serveur :</strong> Consultez les logs d'erreur PHP sur votre hébergement</li>
+                <li><strong>Test externe :</strong> Utilisez un service comme <a href="https://www.ssllabs.com/ssltest/" target="_blank">SSL Labs</a> pour tester la connectivité SMTP</li>
+            </ul>
+        </div>
+
+        <div class="test-section">
+            <h2>✅ Checklist finale</h2>
+            <ul>
+                <li>☐ PHPMailer installé et accessible</li>
+                <li>☐ Configuration SMTP vérifiée (dolphin.o2switch.net:465)</li>
+                <li>☐ Identifiants validés (contact@transvoyage.fr)</li>
+                <li>☐ Permissions des dossiers vérifiées</li>
+                <li>☐ Test de connexion SMTP réussi</li>
+                <li>☐ Logs consultés pour identifier les erreurs</li>
+            </ul>
+        </div>
+    </div>
+</body>
+</html>
