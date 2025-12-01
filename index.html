@@ -571,6 +571,8 @@
 					<div class="contact-content">
 						<div class="contact-form">
 							<form class="booking-form" id="contact-form" onsubmit="return validateReservation(event)" role="form" aria-labelledby="contact-title">
+								<input type="hidden" name="to_email" value="contact@transvoyage.fr">
+								<input type="hidden" name="to_name" value="Beverly Limousine">
 								<!-- Informations personnelles -->
 								<div class="form-row">
 									<div class="form-group">
@@ -1155,6 +1157,61 @@
 					}
 				});
 		}
+	</script>
+
+	<!-- Surcharge de la fonction EmailJS pour garantir un destinataire valide -->
+	<script>
+		(function() {
+			const OWNER_EMAIL = 'contact@transvoyage.fr';
+			const SERVICE_ID = 'service_wilwak2';
+			const TEMPLATE_ID = 'template_nsbdejv';
+
+			window.sendEmailJS = function(form) {
+				// S'assurer que les champs cachés existent
+				let toEmailInput = form.querySelector('input[name="to_email"]');
+				if (!toEmailInput) {
+					toEmailInput = document.createElement('input');
+					toEmailInput.type = 'hidden';
+					toEmailInput.name = 'to_email';
+					form.appendChild(toEmailInput);
+				}
+				toEmailInput.value = OWNER_EMAIL;
+
+				const userEmail = form.querySelector('input[name="email"]')?.value || '';
+				const userName = form.querySelector('input[name="nom"]')?.value || '';
+
+				let replyToInput = form.querySelector('input[name="reply_to"]');
+				if (!replyToInput) {
+					replyToInput = document.createElement('input');
+					replyToInput.type = 'hidden';
+					replyToInput.name = 'reply_to';
+					form.appendChild(replyToInput);
+				}
+				replyToInput.value = userEmail;
+
+				let fromNameInput = form.querySelector('input[name="from_name"]');
+				if (!fromNameInput) {
+					fromNameInput = document.createElement('input');
+					fromNameInput.type = 'hidden';
+					fromNameInput.name = 'from_name';
+					form.appendChild(fromNameInput);
+				}
+				fromNameInput.value = userName;
+
+				emailjs.sendForm(SERVICE_ID, TEMPLATE_ID, form)
+					.then(() => {
+						console.log('Email envoyé avec succès via EmailJS!');
+					}, (err) => {
+						console.error('Erreur EmailJS:', JSON.stringify(err));
+						alert('Erreur lors de l\'envoi de l\'email. Veuillez réessayer.');
+						const submitBtn = form.querySelector('.submit-btn');
+						if (submitBtn) {
+							submitBtn.disabled = false;
+							submitBtn.innerHTML = '<i class="fas fa-paper-plane"></i> Confirmer la réservation';
+						}
+					});
+			};
+		})();
 	</script>
 
 </body>
