@@ -138,6 +138,11 @@ function checkRateLimit() {
 function validateReservation(event) {
     event.preventDefault();
 
+    // 1. Vérifier la limite de soumissions pour éviter le spam
+    if (!checkRateLimit()) {
+        return false;
+    }
+
     const form = event.target;
     const formData = new FormData(form);
     const data = {
@@ -177,30 +182,26 @@ function validateReservation(event) {
         submitBtn.disabled = true;
     }
 
+    // 2. Appeler la fonction d'envoi et gérer la promesse correctement
     if (typeof sendEmailJS === 'function') {
-        const result = sendEmailJS(form);
-
-        if (result && typeof result.then === 'function') {
-            result.then(() => {
+        sendEmailJS(form)
+            .then(() => {
+                // Succès : afficher le message et vider le formulaire
                 showConfirmationMessage();
-                if (submitBtn) {
-                    submitBtn.disabled = false;
-                    submitBtn.innerHTML = '<i class="fas fa-paper-plane"></i> Confirmer la réservation';
-                }
-            }).catch(() => {
+                form.reset();
+            })
+            .catch((error) => {
+                // Erreur : alerter l'utilisateur
                 alert('Erreur lors de l\'envoi de l\'email. Veuillez réessayer.');
+                console.error("Erreur d'envoi EmailJS:", error);
+            })
+            .finally(() => {
+                // Dans tous les cas (succès ou erreur), réactiver le bouton
                 if (submitBtn) {
                     submitBtn.disabled = false;
                     submitBtn.innerHTML = '<i class="fas fa-paper-plane"></i> Confirmer la réservation';
                 }
             });
-        } else {
-            showConfirmationMessage();
-            if (submitBtn) {
-                submitBtn.disabled = false;
-                submitBtn.innerHTML = '<i class="fas fa-paper-plane"></i> Confirmer la réservation';
-            }
-        }
     } else {
         console.error("La fonction sendEmailJS n'est pas définie. Assurez-vous que le script EmailJS est chargé dans index.html.");
         alert("Erreur de configuration. Veuillez contacter le support.");
