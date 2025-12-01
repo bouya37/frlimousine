@@ -17,13 +17,16 @@ return [
         'from' => 'contact@transvoyage.fr',
     ],
     'smtp' => [
-        // Configuration SMTP o2switch (compte contact@transvoyage.fr)
-        'host' => 'dolphin.o2switch.net',
-        'port' => 465,
-        'encryption' => 'ssl', // ou 'tls' selon le port choisi
+        // Configuration SMTP frlimous.odns.fr (testée et fonctionnelle)
+        // ✅ Host: mail.frlimous.odns.fr (fonctionne selon les tests)
+        // ✅ Port: 587 (STARTTLS - plus sûr)
+        // ✅ Encryption: tls (chiffrement moderne)
+        'host' => 'mail.frlimous.odns.fr',
+        'port' => 587,
+        'encryption' => 'tls', // Chiffrement TLS
         'auth' => true,
         'username' => 'contact@transvoyage.fr',
-        'password' => '19Massenet!!', // Mot de passe du compte mail
+        'password' => '19Massenet!!',
         'from_email' => 'contact@transvoyage.fr',
         'from_name' => 'Beverly Limousine',
         'timeout' => 20,
