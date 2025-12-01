@@ -17,13 +17,12 @@ return [
         'from' => 'contact@transvoyage.fr',
     ],
     'smtp' => [
-        // Configuration SMTP frlimous.odns.fr (testée et fonctionnelle)
-        // ✅ Host: mail.frlimous.odns.fr (fonctionne selon les tests)
-        // ✅ Port: 587 (STARTTLS - plus sûr)
-        // ✅ Encryption: tls (chiffrement moderne)
-        'host' => 'mail.frlimous.odns.fr',
-        'port' => 587,
-        'encryption' => 'tls', // Chiffrement TLS
+        // Configuration SMTP o2switch selon les paramètres officiels
+        // Serveur sortant : dolphin.o2switch.net
+        // SMTP Port: 465 avec SSL
+        'host' => 'dolphin.o2switch.net',
+        'port' => 465,
+        'encryption' => 'ssl', // SSL/TLS selon les paramètres o2switch
         'auth' => true,
         'username' => 'contact@transvoyage.fr',
         'password' => '19Massenet!!',
