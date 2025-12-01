@@ -11,10 +11,7 @@ const STATIC_ASSETS = [
   '/assets/css/frlimousine.css',
   '/assets/js/frlimousine-optimized.js',
   '/manifest.json',
-  '/favicon.ico',
-  '/apple-touch-icon.png'
-];
-
+  '/favicon.ico'
 // Installation du Service Worker
 self.addEventListener('install', event => {
   console.log('🔧 Service Worker installing...');
