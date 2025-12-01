@@ -149,14 +149,13 @@ function validateReservation(event) {
         passagers: formData.get('passagers'),
         date: formData.get('date'),
         duree: formData.get('duree'),
-        heureDebut: formData.get('heure-debut'), // Ajout de l'heure de début
+        heureDebut: formData.get('heure-debut'),
         lieuDepart: formData.get('lieu-depart'),
         lieuArrivee: formData.get('lieu-arrivee'),
         options: formData.getAll('options[]'),
         message: formData.get('message')
     };
 
-    // Validation rapide
     if (!data.nom || !data.telephone || !data.email || !data.vehicule || !data.passagers || !data.date || !data.duree || !data.lieuDepart || !data.lieuArrivee) {
         alert('Veuillez remplir tous les champs obligatoires.');
         return false;
@@ -167,25 +166,48 @@ function validateReservation(event) {
         return false;
     }
 
-    // Validation passagers
     if (parseInt(data.passagers) > MAX_PASSAGERS[data.vehicule]) {
         alert(`Ce véhicule ne peut pas accueillir plus de ${MAX_PASSAGERS[data.vehicule]} passagers.`);
         return false;
     }
 
-    // --- NOUVELLE LOGIQUE AVEC EMAILJS ---
     const submitBtn = form.querySelector('.submit-btn');
-    submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Envoi en cours...';
-    submitBtn.disabled = true;
+    if (submitBtn) {
+        submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Envoi en cours...';
+        submitBtn.disabled = true;
+    }
 
-    // Appel de la fonction EmailJS qui est dans index.html
     if (typeof sendEmailJS === 'function') {
-        sendEmailJS(form);
-        // Le message de succès sera affiché par la fonction showConfirmationMessage
-        showConfirmationMessage();
+        const result = sendEmailJS(form);
+
+        if (result && typeof result.then === 'function') {
+            result.then(() => {
+                showConfirmationMessage();
+                if (submitBtn) {
+                    submitBtn.disabled = false;
+                    submitBtn.innerHTML = '<i class="fas fa-paper-plane"></i> Confirmer la réservation';
+                }
+            }).catch(() => {
+                alert('Erreur lors de l\'envoi de l\'email. Veuillez réessayer.');
+                if (submitBtn) {
+                    submitBtn.disabled = false;
+                    submitBtn.innerHTML = '<i class="fas fa-paper-plane"></i> Confirmer la réservation';
+                }
+            });
+        } else {
+            showConfirmationMessage();
+            if (submitBtn) {
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = '<i class="fas fa-paper-plane"></i> Confirmer la réservation';
+            }
+        }
     } else {
         console.error("La fonction sendEmailJS n'est pas définie. Assurez-vous que le script EmailJS est chargé dans index.html.");
         alert("Erreur de configuration. Veuillez contacter le support.");
+        if (submitBtn) {
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = '<i class=\"fas fa-paper-plane\"></i> Confirmer la réservation';
+        }
     }
 
     return false;
