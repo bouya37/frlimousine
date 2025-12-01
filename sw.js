@@ -1,9 +1,8 @@
-// Service Worker pour Beverly Limousine PWA
-const CACHE_NAME = 'beverly-limousine-v1.3';
-const STATIC_CACHE = 'beverly-limousine-static-v1.3';
-const DYNAMIC_CACHE = 'beverly-limousine-dynamic-v1.3';
+// Service Worker for Beverly Limousine PWA
+const CACHE_VERSION = 'v1.4';
+const STATIC_CACHE = `beverly-limousine-static-${CACHE_VERSION}`;
+const DYNAMIC_CACHE = `beverly-limousine-dynamic-${CACHE_VERSION}`;
 
-// Ressources à mettre en cache
 const STATIC_ASSETS = [
   '/',
   '/index.html',
@@ -11,135 +10,107 @@ const STATIC_ASSETS = [
   '/assets/css/frlimousine.css',
   '/assets/js/frlimousine-optimized.js',
   '/manifest.json',
-  '/favicon.ico'
-// Installation du Service Worker
+  '/favicon.ico',
+  '/favicon-16x16.png',
+  '/favicon-32x32.png',
+  '/icon-192.png',
+  '/icon-512.png'
+];
+
 self.addEventListener('install', event => {
-  console.log('🔧 Service Worker installing...');
+  console.log('Service Worker installing...');
   event.waitUntil(
     caches.open(STATIC_CACHE)
-      .then(cache => {
-        console.log('📦 Caching static assets...');
-        return cache.addAll(STATIC_ASSETS);
-      })
+      .then(cache => cache.addAll(STATIC_ASSETS))
       .then(() => self.skipWaiting())
   );
 });
 
-// Activation du Service Worker
 self.addEventListener('activate', event => {
-  console.log('🚀 Service Worker activating...');
+  console.log('Service Worker activating...');
   event.waitUntil(
-    caches.keys().then(cacheNames => {
-      return Promise.all(
-        cacheNames.map(cacheName => {
-          if (cacheName !== STATIC_CACHE && cacheName !== DYNAMIC_CACHE) {
-            console.log('🗑️ Deleting old cache:', cacheName);
-            return caches.delete(cacheName);
-          }
-        })
-      );
-    }).then(() => self.clients.claim())
+    caches.keys().then(cacheNames => Promise.all(
+      cacheNames.map(name => {
+        if (name !== STATIC_CACHE && name !== DYNAMIC_CACHE) {
+          console.log('Deleting old cache:', name);
+          return caches.delete(name);
+        }
+        return null;
+      })
+    )).then(() => self.clients.claim())
   );
 });
 
-// Interception des requêtes
 self.addEventListener('fetch', event => {
   const { request } = event;
   const url = new URL(request.url);
 
-  // Stratégie Cache First pour les ressources statiques
+  // Cache-first for static assets
   if (STATIC_ASSETS.includes(url.pathname) || request.destination === 'style' || request.destination === 'script') {
     event.respondWith(
-      caches.match(request)
-        .then(response => {
-          if (response) {
-            return response;
+      caches.match(request).then(cached => {
+        if (cached) return cached;
+        return fetch(request).then(response => {
+          if (response.status === 200) {
+            const clone = response.clone();
+            caches.open(STATIC_CACHE).then(cache => cache.put(request, clone));
           }
-          return fetch(request).then(response => {
-            // Cache les nouvelles ressources statiques
-            if (response.status === 200) {
-              const responseClone = response.clone();
-              caches.open(STATIC_CACHE).then(cache => {
-                cache.put(request, responseClone);
-              });
-            }
-            return response;
-          });
-        })
+          return response;
+        });
+      })
     );
+    return;
   }
-  // Stratégie Network First pour les API et contenu dynamique
-  else if (url.pathname.includes('/receive-pdf.php') || request.method === 'POST') {
+
+  // Network-first for API and POST
+  if (url.pathname.includes('/receive-pdf.php') || request.method === 'POST') {
     event.respondWith(
       fetch(request)
         .then(response => {
-          // Cache les réponses réussies
           if (response.status === 200) {
-            const responseClone = response.clone();
-            caches.open(DYNAMIC_CACHE).then(cache => {
-              cache.put(request, responseClone);
-            });
+            const clone = response.clone();
+            caches.open(DYNAMIC_CACHE).then(cache => cache.put(request, clone));
           }
           return response;
         })
-        .catch(() => {
-          // Fallback vers le cache si offline
-          return caches.match(request);
-        })
+        .catch(() => caches.match(request))
     );
+    return;
   }
-  // Stratégie Stale While Revalidate pour les autres ressources
-  else {
-    event.respondWith(
-      caches.match(request)
-        .then(response => {
-          const fetchPromise = fetch(request).then(networkResponse => {
-            if (networkResponse.status === 200) {
-              const responseClone = networkResponse.clone();
-              caches.open(DYNAMIC_CACHE).then(cache => {
-                cache.put(request, responseClone);
-              });
-            }
-            return networkResponse;
-          });
 
-          return response || fetchPromise;
-        })
-    );
-  }
-});
-
-// Gestion des notifications push (pour futures fonctionnalités)
-self.addEventListener('push', event => {
-  if (event.data) {
-    const data = event.data.json();
-    const options = {
-      body: data.body,
-      icon: '/assets/images/icon-192.png',
-      badge: '/assets/images/icon-192.png',
-      vibrate: [100, 50, 100],
-      data: {
-        dateOfArrival: Date.now(),
-        primaryKey: data.primaryKey
-      }
-    };
-
-    event.waitUntil(
-      self.registration.showNotification(data.title, options)
-    );
-  }
-});
-
-// Gestion des clics sur notifications
-self.addEventListener('notificationclick', event => {
-  event.notification.close();
-
-  event.waitUntil(
-    clients.openWindow('/')
+  // Stale-while-revalidate for everything else
+  event.respondWith(
+    caches.match(request).then(cached => {
+      const fetchPromise = fetch(request).then(networkResponse => {
+        if (networkResponse.status === 200) {
+          const clone = networkResponse.clone();
+          caches.open(DYNAMIC_CACHE).then(cache => cache.put(request, clone));
+        }
+        return networkResponse;
+      });
+      return cached || fetchPromise;
+    })
   );
 });
 
-// Synchronisation en arrière-plan (pour futures fonctionnalités)
+self.addEventListener('push', event => {
+  if (!event.data) return;
+  const data = event.data.json();
+  const options = {
+    body: data.body,
+    icon: '/icon-192.png',
+    badge: '/icon-192.png',
+    vibrate: [100, 50, 100],
+    data: { dateOfArrival: Date.now(), primaryKey: data.primaryKey }
+  };
+  event.waitUntil(self.registration.showNotification(data.title, options));
+});
+
+self.addEventListener('notificationclick', event => {
+  event.notification.close();
+  event.waitUntil(clients.openWindow('/'));
+});
+
 self.addEventListener('sync', event => {
   if (event.tag === 'background-sync') {
     event.waitUntil(doBackgroundSync());
@@ -147,13 +118,11 @@ self.addEventListener('sync', event => {
 });
 
 function doBackgroundSync() {
-  // Logique de synchronisation en arrière-plan
-  console.log('🔄 Background sync executed');
+  console.log('Background sync executed');
 }
 
-// Gestion de l'état hors ligne
 self.addEventListener('message', event => {
   if (event.data && event.data.type === 'GET_VERSION') {
-    event.ports[0].postMessage({ version: CACHE_NAME });
+    event.ports[0].postMessage({ version: CACHE_VERSION });
   }
 });

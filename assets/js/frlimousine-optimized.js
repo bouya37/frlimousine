@@ -91,6 +91,12 @@ function formatDate(dateString) {
     });
 }
 
+function isValidEmail(email) {
+    const value = (email || '').trim();
+    const pattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return pattern.test(value);
+}
+
 
 
 
@@ -153,6 +159,11 @@ function validateReservation(event) {
     // Validation rapide
     if (!data.nom || !data.telephone || !data.email || !data.vehicule || !data.passagers || !data.date || !data.duree || !data.lieuDepart || !data.lieuArrivee) {
         alert('Veuillez remplir tous les champs obligatoires.');
+        return false;
+    }
+
+    if (!isValidEmail(data.email)) {
+        alert('Veuillez entrer une adresse e-mail valide.');
         return false;
     }
 
