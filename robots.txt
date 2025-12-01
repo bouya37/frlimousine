@@ -13,10 +13,6 @@ Allow: /mentions-legales.html
 Disallow: /assets/js/
 Disallow: /assets/css/
 Disallow: /images/
-Disallow: /pdfs/
-Disallow: /receive-pdf.php
-Disallow: /monitor.php
-Disallow: /security.php
 Disallow: /.htaccess
 
 # Interdire les fichiers temporaires et de backup

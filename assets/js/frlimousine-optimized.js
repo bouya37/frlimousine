@@ -162,93 +162,22 @@ function validateReservation(event) {
         return false;
     }
 
-    sendReservationEmail(data, form); // Passer l'élément 'form' à la fonction suivante
-    return false;
-}
-
-function sendReservationEmail(data, form) {
-    // Calcul du prix
-    const prixVehicule = VEHICULE_PRICES[data.vehicule] * parseInt(data.duree);
-    const prixOptions = data.options.reduce((total, option) => total + OPTIONS_PRICES[option], 0);
-    const prixTotal = prixVehicule + prixOptions;
-
+    // --- NOUVELLE LOGIQUE AVEC EMAILJS ---
     const submitBtn = form.querySelector('.submit-btn');
-    const originalText = submitBtn.innerHTML;
     submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Envoi en cours...';
     submitBtn.disabled = true;
 
-    const payload = {
-        client: {
-            nom: data.nom,
-            email: data.email,
-            telephone: data.telephone,
-            service: getServiceName(data.service),
-            vehicule: VEHICULE_NAMES[data.vehicule],
-            passagers: data.passagers,
-            date: formatDate(data.date),
-            heureDebut: data.heureDebut,
-            duree: data.duree,
-            lieuDepart: data.lieuDepart,
-            lieuArrivee: data.lieuArrivee,
-            options: data.options.length > 0 ? data.options.map(opt => getOptionName(opt)) : [],
-            message: data.message || 'Aucun message complementaire'
-        },
-        prix: {
-            vehicule: prixVehicule,
-            options: prixOptions,
-            total: prixTotal,
-            devise: EURO
-        },
-        submitted_at: new Date().toISOString()
-    };
-
-    fetch('/send-reservation.php', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload)
-    })
-    .then(response => {
-        if (!response.ok) {
-            throw new Error(`Erreur serveur: ${response.status} ${response.statusText}`);
-        }
-        return response.json().catch(() => ({}));
-    })
-    .then(() => {
-        submitBtn.innerHTML = '<i class="fas fa-check"></i> Demande envoyée !';
-        submitBtn.style.background = '#28a745';
+    // Appel de la fonction EmailJS qui est dans index.html
+    if (typeof sendEmailJS === 'function') {
+        sendEmailJS(form);
+        // Le message de succès sera affiché par la fonction showConfirmationMessage
         showConfirmationMessage();
-    })
-    .catch(error => {
-        console.error('Erreur envoi:', error);
-        
-        // Affichage d'erreur plus détaillé pour le debug
-        let errorMessage = 'Envoi échoué. ';
-        if (error.message) {
-            errorMessage += 'Erreur: ' + error.message + '. ';
-        }
-        if (error.response && error.response.status) {
-            errorMessage += 'Code HTTP: ' + error.response.status + '. ';
-        }
-        errorMessage += 'Veuillez nous contacter directement à contact@transvoyage.fr';
-        
-        alert(errorMessage);
-        
-        // Log détaillé pour debug
-        console.log('Détails erreur:', {
-            message: error.message,
-            response: error.response,
-            status: error.response?.status,
-            statusText: error.response?.statusText,
-            headers: error.response?.headers
-        });
-    })
-    .finally(() => {
-        setTimeout(() => {
-            submitBtn.innerHTML = originalText;
-            submitBtn.disabled = false;
-            submitBtn.style.background = '';
-        }, 3000);
-    });
+    } else {
+        console.error("La fonction sendEmailJS n'est pas définie. Assurez-vous que le script EmailJS est chargé dans index.html.");
+        alert("Erreur de configuration. Veuillez contacter le support.");
+    }
+
+    return false;
 }
 
 function calculateEndTime() {
@@ -795,4 +724,3 @@ document.addEventListener('DOMContentLoaded', function() {
         document.body.classList.remove('is-preload');
     }
 });
-

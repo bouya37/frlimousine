@@ -1,7 +1,7 @@
 ﻿<!DOCTYPE HTML>
 <html lang="fr">
 <head>
-	<title>Beverly Limousine - Location Limousine Paris | Service De Luxe Professionnel</title>
+	<title>Beverly Limousine - Location Limousine Paris  | Service De Luxe Professionnel</title>
 	<meta charset="utf-8" />
 	<meta name="robots" content="index, follow">
 	<meta name="author" content="Beverly Limousine" />
@@ -86,6 +86,9 @@
 	<meta http-equiv="Cache-Control" content="public, max-age=31536000, immutable">
 	<link rel="preload" href="assets/css/main_clean.css" as="style" crossorigin>
 	<link rel="preload" href="assets/js/frlimousine-optimized.js" as="script" crossorigin>
+
+	<!-- Ajout du SDK EmailJS -->
+	<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 
 	<noscript><link rel="stylesheet" href="assets/css/noscript.css" /></noscript>
 
@@ -567,7 +570,7 @@
 
 					<div class="contact-content">
 						<div class="contact-form">
-							<form class="booking-form" action="send_mail.php" method="POST" onsubmit="return validateReservation(event)" role="form" aria-labelledby="contact-title">
+							<form class="booking-form" id="contact-form" onsubmit="return validateReservation(event)" role="form" aria-labelledby="contact-title">
 								<!-- Informations personnelles -->
 								<div class="form-row">
 									<div class="form-group">
@@ -1121,6 +1124,37 @@
 
 			console.log('?? Analytics & A/B Testing initialized');
 		})();
+	</script>
+
+	<!-- Script pour EmailJS -->
+	<script type="text/javascript">
+		(function() {
+			// Remplacez par vos propres clés depuis votre compte EmailJS
+			emailjs.init({
+				publicKey: "igNXicjeOK11IeFrt"",
+			});
+		})();
+
+		function sendEmailJS(form) {
+			// Remplacez par vos propres IDs depuis votre compte EmailJS
+			const serviceID = 'service_wilwak2';
+			const templateID = 'template_nsbdejv'';
+
+			emailjs.sendForm(serviceID, templateID, form)
+				.then(() => {
+					console.log('Email envoyé avec succès via EmailJS!');
+					// Le message de confirmation est déjà géré par validateReservation
+				}, (err) => {
+					console.error('Erreur EmailJS:', JSON.stringify(err));
+					alert('Erreur lors de l\'envoi de l\'email. Veuillez réessayer.');
+					// Réactiver le bouton en cas d'erreur
+					const submitBtn = form.querySelector('.submit-btn');
+					if (submitBtn) {
+						submitBtn.disabled = false;
+						submitBtn.innerHTML = '<i class="fas fa-paper-plane"></i> Confirmer la réservation';
+					}
+				});
+		}
 	</script>
 
 </body>
