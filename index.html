@@ -1145,7 +1145,7 @@
 
 			// Le template attend : name, email, title, message (d'après EmailJS)
 			const payload = {
-				name: data.get('nom') || 'Client',
+				nom: data.get('nom') || 'Client',
 				email: data.get('email') || '',
 				title: data.get('service') || data.get('vehicule') || 'Demande de contact',
 				message: data.get('message') || '',
@@ -1153,11 +1153,11 @@
 				vehicule: data.get('vehicule') || '',
 				passagers: data.get('passagers') || '',
 				date: data.get('date') || '',
-				heure_debut: data.get('heure-debut') || '',
-				heure_fin: data.get('heure-fin') || '',
+				'heure-debut': data.get('heure-debut') || '',
+				'heure-fin': data.get('heure-fin') || '',
 				duree: data.get('duree') || '',
-				lieu_depart: data.get('lieu-depart') || '',
-				lieu_arrivee: data.get('lieu-arrivee') || '',
+				'lieu-depart': data.get('lieu-depart') || '',
+				'lieu-arrivee': data.get('lieu-arrivee') || '',
 				options: (data.getAll('options[]') || []).join(', ')
 			};
 
