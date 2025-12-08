@@ -1,73 +1,21 @@
 # Robots.txt pour Beverly Limousine - Location de limousines de luxe à Paris
-# Créé le 30 octobre 2025
+# Mis à jour pour de meilleures pratiques SEO.
 
 User-agent: *
-Allow: /
-
-# Pages principales à indexer en priorité
-Allow: /index.html
-Allow: /galerie.html
-Allow: /mentions-legales.html
-
-# Interdire l'indexation des dossiers sensibles
-Disallow: /assets/js/
-Disallow: /assets/css/
-Disallow: /images/
+# Autoriser l'accès à tous les fichiers, sauf ceux explicitement interdits.
+# Il est important de laisser les crawlers accéder aux CSS, JS et images pour un rendu correct.
 Disallow: /.htaccess
-
-# Interdire les fichiers temporaires et de backup
 Disallow: /*.bak
 Disallow: /*.tmp
 Disallow: /*.old
 Disallow: /*~
-
-# Interdire les répertoires de développement
 Disallow: /node_modules/
 Disallow: /.git/
 Disallow: /admin/
 Disallow: /private/
 
-# Crawl-delay pour éviter la surcharge du serveur
-Crawl-delay: 1
-
-# Sitemap pour aider les moteurs de recherche
-Sitemap: https://beverlylimousine.fr/sitemap.xml
-
-# Règles spécifiques pour les principaux moteurs de recherche
-User-agent: Googlebot
-Allow: /
-Crawl-delay: 1
-
-User-agent: Bingbot
-Allow: /
-Crawl-delay: 1
-
-User-agent: Slurp
-Allow: /
-Crawl-delay: 2
-
-User-agent: DuckDuckBot
-Allow: /
-Crawl-delay: 1
-
-User-agent: Baiduspider
-Allow: /
-Crawl-delay: 5
-
-User-agent: YandexBot
-Allow: /
-Crawl-delay: 2
-
-# Règles pour les bots d'images
-User-agent: Googlebot-Image
-Allow: /images/
-Allow: /galerie.html
-
-# Règles pour les bots mobiles
-User-agent: Googlebot-Mobile
-Allow: /
-
-# Interdire les bots malveillants connus
+# Il est généralement préférable de ne pas bloquer les bots SEO comme Ahrefs ou Semrush,
+# car leurs outils peuvent vous être utiles. Si vous souhaitez les bloquer, gardez ces lignes.
 User-agent: AhrefsBot
 Disallow: /
 
@@ -80,8 +28,5 @@ Disallow: /
 User-agent: SemrushBot
 Disallow: /
 
-# Host principal
-Host: beverlylimousine.fr
-
-# Contact
-# Contact: contact@transvoyage.fr
+# Sitemap pour aider les moteurs de recherche
+Sitemap: https://beverlylimousine.fr/sitemap.xml

@@ -6,7 +6,7 @@
 	<meta name="robots" content="index, follow">
 	<meta name="author" content="Beverly Limousine" />
 	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
-	<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://www.google-analytics.com https://www.googletagmanager.com https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https: blob:; connect-src 'self' https://beverlylimousine.fr https://www.beverlylimousine.fr https://www.google-analytics.com https://www.googletagmanager.com https://api.emailjs.com; frame-src 'none'; object-src 'none'; base-uri 'self'; form-action 'self' https://beverlylimousine.fr https://www.beverlylimousine.fr;">
+	<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://www.google-analytics.com https://www.googletagmanager.com https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https: blob:; connect-src 'self' https://beverlylimousine.fr https://www.beverlylimousine.fr https://www.google-analytics.com https://www.googletagmanager.com https://api.emailjs.com https://fonts.googleapis.com; frame-src 'none'; object-src 'none'; base-uri 'self'; form-action 'self' https://beverlylimousine.fr https://www.beverlylimousine.fr;">
 	<meta name="theme-color" content="#ffffff">
 
 	 <!-- SEO Optimisé -->
@@ -570,7 +570,7 @@
 
 					<div class="contact-content">
 						<div class="contact-form">
-							<form class="booking-form" id="contact-form" onsubmit="return validateReservation(event)" role="form" aria-labelledby="contact-title">
+							<form class="booking-form" id="contact-form" onsubmit="handleFormSubmit(event)" role="form" aria-labelledby="contact-title">
 								<input type="hidden" name="to_email" value="contact@transvoyage.fr">
 								<input type="hidden" name="to_name" value="Beverly Limousine">
 								<!-- Informations personnelles -->
@@ -1169,6 +1169,27 @@
 					console.error('Erreur EmailJS:', JSON.stringify(err));
 					throw err;
 				});
+		}
+	</script>
+
+	<!-- Script de gestion du formulaire -->
+	<script>
+		function handleFormSubmit(event) {
+			event.preventDefault(); // Empêche la soumission par défaut du formulaire
+			const form = event.target;
+
+			// La fonction validateReservation est définie dans frlimousine-optimized.js
+			// On suppose qu'elle retourne `true` si la validation est réussie, et `false` sinon.
+			if (typeof validateReservation === 'function' && !validateReservation(event, false)) { // Le `false` est pour éviter un double preventDefault si la fonction en a un
+				console.log('La validation du formulaire a échoué.');
+				return; // Arrête l'exécution si la validation échoue
+			}
+
+			// Si la validation est réussie, on envoie l'email
+			sendEmailJS(form).then(() => {
+				// Affiche le message de confirmation (si la fonction de validation ne le fait pas déjà)
+				document.getElementById('confirmation-message').style.display = 'block';
+			});
 		}
 	</script>
 
