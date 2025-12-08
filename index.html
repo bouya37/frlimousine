@@ -192,8 +192,8 @@
 			<section id="home" class="hero">
 				<div class="hero-content">
 					<h1 class="hero-title">Beverly Limousine</h1>
-					<p class="hero-subtitle">Location de voitures de luxe??</p>
-					<p class="hero-description">Location de Voitures de Luxe à Paris Service professionnel d'exception depuis 2001</p>
+					<p class="hero-subtitle">Location de voitures de luxe</p>
+					<p class="hero-description">Location de Voitures de Luxe à Paris - Service professionnel d'exception depuis 2001</p>
 
 					<div class="hero-contact">
 						<div class="hero-contact-icons">
@@ -1128,16 +1128,39 @@
 		})();
 	</script>
 
-	<!-- Script pour EmailJS -->
+	<!-- Script pour EmailJS avec vérification de chargement -->
 	<script type="text/javascript">
-		(function() {
-			// Remplacez par vos propres clés depuis votre compte EmailJS
-			emailjs.init({
-				publicKey: "As8ZDttfzuQ2-KrBt",
-			});
-		})();
+		// Attendre que EmailJS soit chargé
+		function waitForEmailJS(callback) {
+			if (typeof emailjs !== 'undefined') {
+				callback();
+			} else {
+				setTimeout(function() {
+					waitForEmailJS(callback);
+				}, 100);
+			}
+		}
+
+		// Initialiser EmailJS une fois chargé
+		waitForEmailJS(function() {
+			try {
+				// Remplacez par vos propres clés depuis votre compte EmailJS
+				emailjs.init({
+					publicKey: "As8ZDttfzuQ2-KrBt",
+				});
+				console.log('EmailJS initialisé avec succès');
+			} catch (error) {
+				console.error('Erreur lors de l\'initialisation d\'EmailJS:', error);
+			}
+		});
 
 		function sendEmailJS(form) {
+			// Vérifier si EmailJS est disponible
+			if (typeof emailjs === 'undefined') {
+				console.error('EmailJS n\'est pas chargé');
+				return Promise.reject(new Error('EmailJS library not loaded'));
+			}
+
 			const serviceID = 'service_wilwak2';
 			const templateID = 'template_nsbdejv';
 
