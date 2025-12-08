@@ -183,8 +183,8 @@ function validateReservation(event) {
     }
 
     // 2. Appeler la fonction d'envoi et gérer la promesse correctement
-    if (typeof sendEmailJS === 'function') {
-        sendEmailJS(form)
+    if (typeof sendReservation === 'function') {
+        sendReservation(form)
             .then(() => {
                 // Succès : afficher le message et vider le formulaire
                 showConfirmationMessage();
@@ -192,8 +192,8 @@ function validateReservation(event) {
             })
             .catch((error) => {
                 // Erreur : alerter l'utilisateur
-                alert('Erreur lors de l\'envoi de l\'email. Veuillez réessayer.');
-                console.error("Erreur d'envoi EmailJS:", error);
+                alert('Erreur lors de l\'envoi de votre réservation. Veuillez réessayer ou nous contacter directement.');
+                console.error("Erreur d'envoi:", error);
             })
             .finally(() => {
                 // Dans tous les cas (succès ou erreur), réactiver le bouton
@@ -203,7 +203,7 @@ function validateReservation(event) {
                 }
             });
     } else {
-        console.error("La fonction sendEmailJS n'est pas définie. Assurez-vous que le script EmailJS est chargé dans index.html.");
+        console.error("La fonction sendReservation n'est pas définie. Vérifiez que le script est correctement chargé.");
         alert("Erreur de configuration. Veuillez contacter le support.");
         if (submitBtn) {
             submitBtn.disabled = false;

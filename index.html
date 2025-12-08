@@ -1128,69 +1128,55 @@
 		})();
 	</script>
 
-	<!-- Script pour EmailJS avec vérification de chargement -->
+	<!-- Script pour envoi d'email via PHP -->
 	<script type="text/javascript">
-		// Attendre que EmailJS soit chargé
-		function waitForEmailJS(callback) {
-			if (typeof emailjs !== 'undefined') {
-				callback();
-			} else {
-				setTimeout(function() {
-					waitForEmailJS(callback);
-				}, 100);
+		function sendReservation(form) {
+			// Créer un objet FormData à partir du formulaire
+			const formData = new FormData(form);
+			
+			// Convertir FormData en objet pour le debugging
+			const data = {};
+			for (let [key, value] of formData.entries()) {
+				if (key === 'options[]') {
+					if (!data[key]) data[key] = [];
+					data[key].push(value);
+				} else {
+					data[key] = value;
+				}
 			}
-		}
-
-		// Initialiser EmailJS une fois chargé
-		waitForEmailJS(function() {
-			try {
-				// Remplacez par vos propres clés depuis votre compte EmailJS
-				emailjs.init({
-					publicKey: "As8ZDttfzuQ2-KrBt",
-				});
-				console.log('EmailJS initialisé avec succès');
-			} catch (error) {
-				console.error('Erreur lors de l\'initialisation d\'EmailJS:', error);
-			}
-		});
-
-		function sendEmailJS(form) {
-			// Vérifier si EmailJS est disponible
-			if (typeof emailjs === 'undefined') {
-				console.error('EmailJS n\'est pas chargé');
-				return Promise.reject(new Error('EmailJS library not loaded'));
-			}
-
-			const serviceID = 'service_wilwak2';
-			const templateID = 'template_nsbdejv';
-
-			const data = new FormData(form);
-
-			// Le template attend : name, email, title, message (d'après EmailJS)
-			const payload = {
-				nom: data.get('nom') || 'Client',
-				email: data.get('email') || '',
-				title: data.get('service') || data.get('vehicule') || 'Demande de contact',
-				message: data.get('message') || '',
-				telephone: data.get('telephone') || '',
-				vehicule: data.get('vehicule') || '',
-				passagers: data.get('passagers') || '',
-				date: data.get('date') || '',
-				'heure-debut': data.get('heure-debut') || '',
-				'heure-fin': data.get('heure-fin') || '',
-				duree: data.get('duree') || '',
-				'lieu-depart': data.get('lieu-depart') || '',
-				'lieu-arrivee': data.get('lieu-arrivee') || '',
-				options: (data.getAll('options[]') || []).join(', ')
+			
+			console.log('Envoi des données de réservation:', data);
+			
+			// Configuration de la requête
+			const options = {
+				method: 'POST',
+				body: formData,
+				headers: {
+					'X-Requested-With': 'XMLHttpRequest'
+				}
 			};
-
-			return emailjs.send(serviceID, templateID, payload)
-				.then(() => {
-					console.log('Email envoyé avec succès via EmailJS!');
+			
+			// Envoyer la requête
+			return fetch('send-reservation.php', options)
+				.then(response => {
+					console.log('Réponse reçue:', response.status, response.statusText);
+					if (!response.ok) {
+						throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+					}
+					return response.json();
 				})
-				.catch((err) => {
-					console.error('Erreur EmailJS:', JSON.stringify(err));
-					throw err;
+				.then(result => {
+					console.log('Résultat de l\'envoi:', result);
+					if (result.success) {
+						console.log('Réservation envoyée avec succès!');
+					} else {
+						throw new Error(result.message || 'Erreur inconnue');
+					}
+					return result;
+				})
+				.catch(error => {
+					console.error('Erreur lors de l\'envoi:', error);
+					throw error;
 				});
 		}
 	</script>
@@ -1208,11 +1194,27 @@
 				return; // Arrête l'exécution si la validation échoue
 			}
 
-			// Si la validation est réussie, on envoie l'email
-			sendEmailJS(form).then(() => {
-				// Affiche le message de confirmation (si la fonction de validation ne le fait pas déjà)
-				document.getElementById('confirmation-message').style.display = 'block';
-			});
+			// Si la validation est réussie, on envoie la réservation via PHP
+			sendReservation(form)
+				.then(result => {
+					// Succès : afficher le message et vider le formulaire
+					showConfirmationMessage();
+					form.reset();
+				})
+				.catch(error => {
+					// Erreur : alerter l'utilisateur
+					alert('Erreur lors de l\'envoi de votre réservation : ' + error.message);
+					console.error("Erreur d'envoi:", error);
+				});
+		}
+		
+		function showConfirmationMessage() {
+			const confirmationDiv = document.getElementById('confirmation-message');
+			if (confirmationDiv) {
+				confirmationDiv.style.display = 'block';
+				confirmationDiv.scrollIntoView({ behavior: 'smooth', block: 'center' });
+				setTimeout(() => { confirmationDiv.style.display = 'none'; }, 10000);
+			}
 		}
 	</script>
 
