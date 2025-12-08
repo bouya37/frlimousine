@@ -1,5 +1,5 @@
 // Service Worker for Beverly Limousine PWA
-const CACHE_VERSION = 'v1.4';
+const CACHE_VERSION = 'v1.5';
 const STATIC_CACHE = `beverly-limousine-static-${CACHE_VERSION}`;
 const DYNAMIC_CACHE = `beverly-limousine-dynamic-${CACHE_VERSION}`;
 
@@ -45,19 +45,18 @@ self.addEventListener('fetch', event => {
   const { request } = event;
   const url = new URL(request.url);
 
-  // Cache-first for static assets
+  // Network-first for static assets to avoid serving anciennes versions après déploiement
   if (STATIC_ASSETS.includes(url.pathname) || request.destination === 'style' || request.destination === 'script') {
     event.respondWith(
-      caches.match(request).then(cached => {
-        if (cached) return cached;
-        return fetch(request).then(response => {
+      fetch(request, { cache: 'no-store' })
+        .then(response => {
           if (response.status === 200) {
             const clone = response.clone();
             caches.open(STATIC_CACHE).then(cache => cache.put(request, clone));
           }
           return response;
-        });
-      })
+        })
+        .catch(() => caches.match(request))
     );
     return;
   }
