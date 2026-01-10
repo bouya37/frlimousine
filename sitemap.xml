@@ -7,7 +7,7 @@
     <!-- Page d'accueil - Priorité maximale -->
     <url>
         <loc>https://beverlylimousine.fr/</loc>
-        <lastmod>2024-05-20</lastmod> <!-- Mettez la date de la dernière modification réelle -->
+        <lastmod>2026-01-10</lastmod>
         <changefreq>weekly</changefreq>
         <priority>1.0</priority>
     </url>
@@ -15,7 +15,7 @@
     <!-- Galerie photos -->
     <url>
         <loc>https://beverlylimousine.fr/galerie.html</loc>
-        <lastmod>2024-05-20</lastmod>
+        <lastmod>2026-01-10</lastmod>
         <changefreq>monthly</changefreq>
         <priority>0.8</priority>
     </url>
@@ -23,7 +23,7 @@
     <!-- Mentions légales -->
     <url>
         <loc>https://beverlylimousine.fr/mentions-legales.html</loc>
-        <lastmod>2024-05-20</lastmod>
+        <lastmod>2026-01-10</lastmod>
         <changefreq>yearly</changefreq>
         <priority>0.3</priority>
     </url>
