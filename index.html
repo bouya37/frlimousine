@@ -47,6 +47,15 @@
 	<meta name="twitter:title" content="Beverly Limousine - Location Limousine Paris" />
 	<meta name="twitter:description" content="Service de location de voitures de luxe à Paris avec chauffeur professionnel 24/7." />
 
+	<!-- Google tag (gtag.js) -->
+	<script async src="https://www.googletagmanager.com/gtag/js?id=AW-17805142386"></script>
+	<script>
+		window.dataLayer = window.dataLayer || [];
+		function gtag(){dataLayer.push(arguments);}
+		gtag('js', new Date());
+		gtag('config', 'AW-17805142386');
+	</script>
+
 	<!-- DNS prefetch pour les polices -->
 	<link rel="dns-prefetch" href="//fonts.googleapis.com">
 	<link rel="dns-prefetch" href="//fonts.gstatic.com">
@@ -228,7 +237,7 @@
 
 					<div class="about-content">
 						<p class="about-text">
-							<strong>Beverly Limousine</strong> : Service de location de voitures de luxe à Paris depuis 2001. Flotte haut de gamme, chauffeurs professionnels, service 24h/24hh.
+							<strong>Beverly Limousine</strong> : Service de location de voitures de luxe à Paris depuis 2001. Flotte haut de gamme, chauffeurs professionnels, service 24h/24h.
 						</p>
 					</div>
 				</div>
@@ -578,6 +587,7 @@
 							<form class="booking-form" id="contact-form" onsubmit="handleFormSubmit(event)" role="form" aria-labelledby="contact-title">
 								<input type="hidden" name="to_email" value="contact@transvoyage.fr">
 								<input type="hidden" name="to_name" value="Beverly Limousine">
+								<input type="hidden" name="csrf_token" id="csrf-token" value="">
 								<!-- Informations personnelles -->
 								<div class="form-row">
 									<div class="form-group">
@@ -1135,52 +1145,65 @@
 
 	<!-- Script pour envoi d'email via PHP -->
 	<script type="text/javascript">
+		// Récupérer le token CSRF au chargement de la page
+		document.addEventListener('DOMContentLoaded', function() {
+			fetch('get-csrf-token.php')
+				.then(response => response.json())
+				.then(data => {
+					const csrfTokenInput = document.getElementById('csrf-token');
+					if (csrfTokenInput) {
+						csrfTokenInput.value = data.csrf_token;
+					}
+				})
+				.catch(error => {
+					console.error('Erreur lors de la récupération du token CSRF:', error);
+				});
+		});
+
 		function sendReservation(form) {
 			// Créer un objet FormData à partir du formulaire
 			const formData = new FormData(form);
 			
-			// Convertir FormData en objet pour le debugging
-			const data = {};
-			for (let [key, value] of formData.entries()) {
-				if (key === 'options[]') {
-					if (!data[key]) data[key] = [];
-					data[key].push(value);
-				} else {
-					data[key] = value;
-				}
+			// Vérifier que le token CSRF est présent
+			const csrfToken = formData.get('csrf_token');
+			if (!csrfToken) {
+				console.error('Token CSRF manquant');
+				return Promise.reject(new Error('Token de sécurité manquant. Veuillez recharger la page.'));
 			}
-			
-			console.log('Envoi des données de réservation:', data);
 			
 			// Configuration de la requête
 			const options = {
 				method: 'POST',
 				body: formData,
 				headers: {
-					'X-Requested-With': 'XMLHttpRequest'
+					'X-Requested-With': 'XMLHttpRequest',
+					'X-CSRF-Token': csrfToken
 				}
 			};
 			
-			// Envoyer la requête
+			// Envoyer la requête (logs sensibles supprimés pour sécurité)
 			return fetch('send-reservation.php', options)
 				.then(response => {
-					console.log('Réponse reçue:', response.status, response.statusText);
 					if (!response.ok) {
-						throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+						if (response.status === 403) {
+							throw new Error('Erreur de sécurité. Veuillez recharger la page et réessayer.');
+						} else if (response.status === 429) {
+							throw new Error('Trop de tentatives. Veuillez attendre quelques minutes.');
+						}
+						throw new Error(`Erreur ${response.status}`);
 					}
 					return response.json();
 				})
 				.then(result => {
-					console.log('Résultat de l\'envoi:', result);
 					if (result.success) {
-						console.log('Réservation envoyée avec succès!');
+						// Succès - pas de log pour éviter l'exposition de données
 					} else {
 						throw new Error(result.message || 'Erreur inconnue');
 					}
 					return result;
 				})
 				.catch(error => {
-					console.error('Erreur lors de l\'envoi:', error);
+					console.error('Erreur lors de l\'envoi:', error.message);
 					throw error;
 				});
 		}
@@ -1195,7 +1218,6 @@
 			// La fonction validateReservation est définie dans frlimousine-optimized.js
 			// On suppose qu'elle retourne `true` si la validation est réussie, et `false` sinon.
 			if (typeof validateReservation === 'function' && !validateReservation(event, false)) { // Le `false` est pour éviter un double preventDefault si la fonction en a un
-				console.log('La validation du formulaire a échoué.');
 				return; // Arrête l'exécution si la validation échoue
 			}
 

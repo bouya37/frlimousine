@@ -87,10 +87,23 @@ Redirect 301 /ancienne-page /nouvelle-page
     Deny from all
 </Files>
 
-<Files "*.log">
+# Protection des fichiers de log (tous formats)
+<FilesMatch "\.(log|txt)$">
     Order Allow,Deny
     Deny from all
-</Files>
+</FilesMatch>
+
+# Protection spécifique des logs de réservation (plusieurs noms possibles)
+<FilesMatch "(reservation_log|.*_log)\.(log|txt)$">
+    Order Allow,Deny
+    Deny from all
+</FilesMatch>
+
+# Protection du répertoire logs/ si il existe
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteRule ^logs/ - [F,L]
+</IfModule>
 
 # Optimisation des requêtes de base de données (si applicable)
 # Les optimisations spécifiques dépendront de votre système de base de données
